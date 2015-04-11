@@ -739,10 +739,10 @@ You can check the math, but the debit_total and credit_total columns
 show the sum over all rows of the debit and credit values, respectively,
 and the 'balance' column is just the difference between those two, or
 the net food balance (i.e., the food surplus) at the end of the
-click. Over time, as culitvation maximizes the land productivity
+click. Over time, as cultivation maximizes the land productivity
 and Alice's proficiency and health improve, this net surplus will
 grow. As it grows, the amount of food spoilage will accordingly
-increase until the surplus growth reaches an equilibrium point.
+increase until the net surplus growth reaches an equilibrium point.
 Exactly how much food can be maximally retained and how quickly
 that maximum is achieved will be depended upon the various game
 parameters randomly determined at game start up.
@@ -889,7 +889,7 @@ INSERT 0 1
 --------------------------------------------
 
 Note Bob has employed the +default values+ shorthand, effectively
-specifying and expiration of one and productivity of zero.
+specifying an expiration of one and productivity of zero.
 
 As Alice experienced previously, Bob's market order was not stored 
 because there were no open land sell orders:
