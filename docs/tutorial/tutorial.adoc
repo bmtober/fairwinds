@@ -3,8 +3,7 @@
 :copyright: 2015, Berend Tober
 :backend:   slidy
 :max-width: 45em
-:data-uri:
-:icons:
+:toc:
 
 == Fairwinds Game Tutorial 0 - Basic Requirements: Client Software
 
