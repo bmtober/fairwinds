@@ -376,8 +376,8 @@ fairwinds=> \dS land_bid
     Column    |        Type         | Modifiers
 --------------+---------------------+-----------
  expiration   | bigint              |
- productivity | private.probability |
- price        | private.faircoin    |
+ productivity | probability         |
+ price        | faircoin            |
  fairian_name | name                |
 
 --------------------------------------------
@@ -512,7 +512,7 @@ fairwinds=> \dS work
  supplier        | name                  | 
  work_place      | name                  | 
  active          | boolean               | 
- skill_name      | private.skill_type    | 
+ skill_name      | skill_type            |         
 --------------------------------------------
 
 and sees eight columns. The contract_number, issue_date, and active
@@ -970,7 +970,7 @@ fairwinds=> \dS bond_ask
 --------------+------------------+-----------
  expiration   | bigint           | 
  term         | bigint           | 
- price        | private.faircoin | 
+ price        | faircoin         |         
  fairian_name | name             | 
 --------------------------------------------
 
@@ -1234,7 +1234,7 @@ fairwinds=# \d note_bid
  fairian_name  | name                  |
  serial_number | character varying(14) |
  expiration    | bigint                |
- price         | private.faircoin      |
+ price         | faircoin              |
 --------------------------------------------
 
 As in past examples, it is not necessary to specify the 
