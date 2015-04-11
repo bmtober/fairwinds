@@ -737,7 +737,7 @@ fairwinds==> select sum(debit) as debit_total,
 
 You can check the math, but the debit_total and credit_total columns
 show the sum over all rows of the debit and credit values, respectively,
-and the 'balance' column is just difference between those two, or
+and the 'balance' column is just the difference between those two, or
 the net food balance (i.e., the food surplus) at the end of the
 click. Over time, as culitvation maximizes the land productivity
 and Alice's proficiency and health improve, this net surplus will
