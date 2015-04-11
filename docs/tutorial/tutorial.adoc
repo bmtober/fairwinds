@@ -733,7 +733,8 @@ fairwinds==> select sum(debit) as debit_total,
 -------------+--------------+---------------------
     4.000146 |     4.000001 | 0.00014499999999984
 (1 row)
----------------------------------------
+--------------------------------------------
+
 
 You can check the math, but the debit_total and credit_total columns
 show the sum over all rows of the debit and credit values, respectively,
