@@ -12,8 +12,9 @@ bring your computer with network connectivity and the psql client software
 ready to connect to a data base server.
 
 You will want to read the "Fairwinds Overview" and "Fairwinds Tutorial" in
-advance as well as possibly enjoy the "Fairwinds Equations" reference page.
-These documents will prepare you to be a competitive player.
+advance as well as possibly enjoy the "Fairwinds Equations" reference page
+available at https://github.com/bmtober/fairwinds. These documents will 
+prepare you to be a competitive player. 
 
 Speaker: Berend Tober has been a PostgreSQL user for over 15 years. His
 experience includes both private industry and federal government roles in
