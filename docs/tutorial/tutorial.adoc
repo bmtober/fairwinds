@@ -4,6 +4,9 @@
 :backend:   slidy
 :max-width: 45em
 :toc:
+:data-uri:
+:icons:
+
 
 == Fairwinds Game Tutorial 0 - Basic Requirements: Client Software
 
@@ -512,7 +515,7 @@ fairwinds=> \dS work
  supplier        | name                  | 
  work_place      | name                  | 
  active          | boolean               | 
- skill_name      | skill_type            |         
+ skill_name      | skill_type            |        
 --------------------------------------------
 
 and sees eight columns. The contract_number, issue_date, and active
@@ -733,7 +736,6 @@ fairwinds==> select sum(debit) as debit_total,
     4.000146 |     4.000001 | 0.00014499999999984
 (1 row)
 --------------------------------------------
-
 
 You can check the math, but the debit_total and credit_total columns
 show the sum over all rows of the debit and credit values, respectively,
@@ -970,7 +972,7 @@ fairwinds=> \dS bond_ask
 --------------+------------------+-----------
  expiration   | bigint           | 
  term         | bigint           | 
- price        | faircoin         |         
+ price        | faircoin         |        
  fairian_name | name             | 
 --------------------------------------------
 

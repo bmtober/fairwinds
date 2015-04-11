@@ -1,5 +1,7 @@
 = Fairwinds Game - Important Equations
 
+:asciimath:
+
 Your strategy and how your implement it depends on understanding the
 implications of your moves, and understanding that requires
 understanding the equations that govern the game. This tutorial will
