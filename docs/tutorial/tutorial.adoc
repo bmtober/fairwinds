@@ -997,7 +997,7 @@ INSERT 0 1
 The +default values+ short-hand effectively specifies a market order 
 selling a bond with a term of one click, but, as with bootstrapping 
 the land market, since there were no open orders on the opposite
-side, the order placed is not recorded in the order book. However,
+side, the sell order is not recorded in the order book. However,
 a bond buy order has been created by the governing market authority:
 
 --------------------------------------------
