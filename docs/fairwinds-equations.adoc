@@ -1,0 +1,354 @@
+= Fairwinds Game - Important Equations
+
+Your strategy and how your implement it depends on understanding the
+implications of your moves, and understanding that requires
+understanding the equations that govern the game. This tutorial will
+outline the important equations that govern game activities.
+
+== Bond Yield
+
+The effective, continuous-componded yield on a bond is calculated with 
+
+$Y=[ln(F//P)]/T$
+
+where 
+
+* F is the future value, or face amount (always 1000 in 'Fairwinds')
+* P is the present value, or the price of the bond offered right now
+* T is the bond term to maturity
+
+For example, for a term of 10 clicks and various bond prices, the 
+yield is shown below. Notice how increasing bond price corresponds 
+to decreasing yield:
+
+--------------------------------------------
+ term | price |  yield  
+------+-------+---------
+   10 |   950 | 0.00513
+   10 |   955 | 0.00460
+   10 |   960 | 0.00408
+   10 |   965 | 0.00356
+   10 |   970 | 0.00305
+   10 |   975 | 0.00253
+   10 |   980 | 0.00202
+   10 |   985 | 0.00151
+   10 |   990 | 0.00101
+   10 |   995 | 0.00050
+   10 |  1000 | 0.00000
+--------------------------------------------
+
+Similarly, for a fixed bond price of fc900 and various terms
+to maturities the yield decreases with increasing term length:
+
+--------------------------------------------
+ term | price |  yield  
+------+-------+---------
+   10 |   900 | 0.01054
+   11 |   900 | 0.00958
+   12 |   900 | 0.00878
+   13 |   900 | 0.00810
+   14 |   900 | 0.00753
+   15 |   900 | 0.00702
+   16 |   900 | 0.00659
+   17 |   900 | 0.00620
+   18 |   900 | 0.00585
+   19 |   900 | 0.00555
+   20 |   900 | 0.00527
+--------------------------------------------
+
+
+
+
+== Land Scarcity
+
+When a new plot of land is surveyed and brought to market, it is priced
+according to a 'scarcity' function of the form
+
+$p_n = a*(n-1)^2$
+
+where
+
+* $p_n$ is the price of the $n^(th)$ land plot
+* $n$ is the number of land plots
+* $a$ is a small constant number chosen randomly when the game is initialized
+
+Note that for the first land plot $n=1$, the price is zero.
+
+
+== Proficiency
+
+Proficiency, or skill, at conducting an activity, such as farming
+varies over time depending upon practise. Proficiency is
+expressed as a percentage and is initially equal to zero.
+
+=== Improving Skill
+
+Proficiency will continue to improve each click so long as a 'Fairian'
+is the supplier to an active labor contract according to the formula:
+
+$s_n = s_[n-1] + r_g*(1-s_[n-1])$
+
+where
+
+* $s_n$ is the proficiency level at click $n$
+* $r_g$ is the proficiency growth rate defined at game initialization
+
+
+=== Atrophying Skill
+
+When not involved in a labor contract, proficiency atrophys by a small
+percentage each click according to the formula:
+
+$ s_n = s_[n-1]*(1-r_a)$
+
+where
+
+* $s_n$ is the proficiency level at click $n$
+* $r_a$ is the proficiency atrophy rate defined at game initialization
+
+== Health
+
+'Fairian' health is somewhat similar to proficiency. Health and
+proficiency are similar in that they are expressed as percentages and
+vary over time.  However, these parameters differ in that upon initial
+entry to the game, a 'Fairian' is endowed with perfect health, i.e.
+$100%$. The operative factor for maintaining health is securing a food
+supply sufficient to meet the sustenance requirement of one food unit
+per click. Otherwise health diminishes by a small percentage. 
+
+== Food Production
+
+Food can be purchased on the commodity market or grown on land through
+cultivation. A 'Fairian' can cultivate any land plot they own, they 
+can hire other 'Fairian''s' to work owned land, or they can hire out 
+to work other's land. 
+
+'Fairwinds' computes per land plot, per click food production based on the
+combination of a few factors including the land productivity, the number of
+suppliers working the land, and their respective effectiveness at 'farming'.
+Effectiveness is itself proportional to net proficiency and net health.
+
+With $m$ workers supplying labor, the total quantity $Q_m$ of food 
+production of a land plot is 
+
+
+$ Q_m = m*(1 + p_L * uuu_(i=1)^m (s_(L_i) * h_(L_i))) $
+
+
+where
+
+* $m$ is the number of workers
+* $p_L$ is the land productivity
+* $uuu_(i=1)^m$ is the union, or the 'exlusive-or combination', over suppliers ${1..m}$
+* $s_(L_i)$ is the skill level, or proficiency, of the $i^(th)$ supplier
+* $h_(L_i)$ is the health level of the $i^(th)$ supplier
+
+
+This quantity is added to a land owner's food stores each click.
+
+As part of a cultivation labor contract, the hired workers receive 
+at least enough food to sustain health as well as a share of the 
+excess production. More specifically, it can be shown that 
+each worker is due the following total quantity share of 
+the production:
+
+
+$ q_m = 1 + m/(1+m)*p_L * uuu_(i=1)^m (s_(L_i) * h_(L_i)) $
+
+
+This amount is deducted from the land-owner's food stores each click per each 
+contracted supplier.
+
+There is a lot to say about this formula.
+
+=== Proficiency, Health, and Effectiveness
+
+Starting with the inner-most term of the equation, the product of
+'Fairian' proficiency $s_(L_i)$ and health $h_(L_i)$ is called
+'effectiveness', 'i.e.', effectiveness is proportional to a 'Fairian''s'
+skill level (or proficiency) and health. Proficiency is augmented by
+practice or engagement in the skilled activity over time.  health is
+maintained by assuring availability of sufficient sustenance (i.e.,
+food) to meet the periodic sustenance requirement of one food unit
+per click.  Thus it is possible to maintain a high proficiency, but for
+want of food suffer poor 'effectiveness' at an activity.
+
+Note that zero effectiveness is usually only a transient condition. Over
+time, all members of a cultivation team will increase their effectiveness 
+simply by virtue of being on the team and participating in cultivation,
+so over a sufficient length of time all contracted suppliers will achieve
+maximum effectiveness. 
+
+
+=== The Union Operator
+
+The union operator $uuu_(i=1)^m$ combines the effectiveness of all $m$
+suppliers in the same way that sets are combined. That is, for sets $A$
+and $B$, the union $A uu B$ is given by 
+
+$A uu B = A + B - A nn B$
+
+In terms of Venn diagrams, picture the area of $A$ added to the area of
+$B$, but $A$ and $B$ overlap. The the overlapping part would be added
+twice if you only did the addition operation above, and so the
+subtraction of the intersection is required so as not to double-count
+the overlapping region.
+
+The union operator is one of the mathematical underpinnings of
+'diminishing returns' in 'Fairwinds': whenever you add a supplier, the
+net effectiveness of the team improves, but since the combined
+effectiveness is at most one, as you add more suppliers the amount of
+increased effectiveness continually diminishes, no matter how highly
+skilled the new supplier is.
+
+Made mathematically explicit, this means that, so long as there are only
+a limited number of zero-effectiveness suppliers
+
+$lim_(m->oo)uuu_(i=1)^m (s_(L_i) * h_(L_i)) = 1$
+
+That is, on the one hand, no matter how many suppliers cultivate a plot of
+land, the combined effectiveness of the team is at most unity; on the other
+hand, hiring many suppliers results in a combined effectiveness that
+approaches $100%$.
+
+For example, say that at some time, players have the following
+proficiency, health, and corresponding effectiveness values:
+
+
+
+--------------------------------------------
+ fairian_name | proficiency | health | effectiveness 
+--------------+-------------+--------+---------------
+ alice        |       0.319 | 0.8831 |     0.2817089
+ bob          |       0.319 | 0.8831 |     0.2817089
+ cathy        |       0     | 0.1581 |     0
+ david        |       0.647 | 0.8657 |     0.5601079
+ elaine       |       0.319 | 0.8831 |     0.2817089
+ francis      |       0.307 | 0.8657 |     0.2657699
+--------------------------------------------
+
+
+the combined team effectiveness is 0.880304.
+
+To illustrate the notion of dimishing returns, take the case 
+of combining two workers of similar, low effectiveness values 
+of 0.08 and 0.09. The combined effectiveness of 0.1628 is 
+pretty close to the arithmetic sum of the individual values.
+For two moderately proficienct workers with effectiveness 
+values of 0.44 and 0.46, the combined effectiveness of 
+0.6976 is noticeably less than the arithmetic sum. Combining 
+highly skilled workers with individual effectiveness of 
+0.97 and 0.98 produces a combined effectiveness of 0.9994, 
+which is hardly much improvement over the individual values.
+
+.Dimishing Returns of Combined Effectiveness
+[width="60%",options="header"]
+|==========================================
+|Worker A Effectiveness|Worker B Effectiveness |Combined $AuuB$ Effectiveness
+|0.08                  |0.09                   |0.1628
+|0.44                  |0.46                   |0.6976
+|0.97                  |0.98                   |0.9994
+|==========================================
+
+
+=== Maximum Production
+
+A consequence of this last point is that, over time and with a large
+number of suppliers, the maximum food production of a plot is approaches
+to $1 + p_L$ per 'Fairian' since as shown above, the combined
+effectiveness of the cultivation team approaches one.
+
+The other factor is the term $m/(1+m)$. For a large number of suppliers
+we have
+
+$lim_(m->oo)m/(1+m) = 1$
+
+
+Combining these factors gives the maximum food share per click as
+
+
+$lim_(m->oo)q_m = 1+p_L$
+
+Note that this per supplier, per click share exceeds the minimum 
+required to maintain supplier health and will result in supplier 
+food surplus accumulation.
+
+
+=== Single Supplier
+
+So far, we have considered the case of hiring many suppliers. Let's
+look at the other extreme.
+
+If only a single supplier is engaged to cultivate a plot ('i.e.' $m=1$),
+then the food production share is
+
+
+$ q_1 = 1 + 1/2 * p_L * s_(L_1) * h_(L_1)$
+
+And since the product asciimath:[p_L * s_(L_1) * h_(L_1) <= 1], the
+single supplier share by itself per click is at most $1+ p_L//2$ in the
+long term as the supplier effectiveness improves maximally. This 
+share is also enough to maintain health and develope a surplus,
+albeit at a slower pace than with a large cultivation team.
+
+
+=== The Non-Cultivating Land Owner
+
+The land owner ends up with a net amount after paying out the sustenance and share amount to each contracted worker. In the case of the non-cultivating land owner. This can be shown to be equal to one share of the excess production, namely
+
+$ q_(NC,m) = Q_m - m*q_m = m/(1+m)*p_L * uuu_(i=1)^m (s_(L_i) * h_(L_i)) $
+
+And in the the long term after the team achieves near perfect
+effectiveness, for a large number of suppliers this is 
+
+$lim_(m->oo)q_(NC,m) = p_L
+
+Note that since asciimath:[p_L <= 1], this by itself is almost certainly not enough for the land owner to maintain health. 
+
+
+=== The Customer-Supplier Land Owner
+
+In the case of the cultivating land owner, the land owner receives a
+share just like any other supplier, and additionally retains any net 
+balance after payout to the suppliers. In this case 
+
+$ q_(CS,m) = Q_m - (m-1)*q_m = 1 + 2m/(1+m)*p_L * uuu_(i=1)^m (s_(L_i) * h_(L_i)) $
+
+
+In the long term as the team effectiveness improves maximally, this 
+approaches
+
+$lim_(m->oo)q_(CS,m) = 1 + 2*p_L$
+
+
+
+Even if a cultivating land owner begins with zero skill and zero health, 
+both skill and health will continuously improve after one click, and so 
+for a plot with non-zero productivity, the cultivating land owner will 
+begin to develope a food surplus faster than the hired suppliers.
+
+== Food Spoilage
+
+Similar to in the real world, Fairian sustenance has a limited shelf 
+life. During each click, any accumulated food surplus experiences 
+spoilage of a fixed percentage $omega$ of the accumulated amount.
+
+The food spoilage factor $omega$ is a small constant fixed at 
+game initiation.
+
+Eventually, as food production increases, the per click spoilage 
+offsets the net production so that the amount of food surplus 
+accumulation levels off.
+
+For the self-owned land cultivation scenario with $m$ contracted, 
+maximally effective suppliers, this 
+balance happens at a maximum accumulation of $Q_(MAX)$ 
+
+
+
+$ Q_(MAX) = 2*p_L*(m/(1+m))*((1-omega)/omega) $
+
+
+This shows that adding more suppliers to the cultivation team will 
+always increase the steady-state equilibrium accumulation, but with
+a continually decreasing amount of improvement.

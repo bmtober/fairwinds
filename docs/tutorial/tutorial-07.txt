@@ -1,0 +1,80 @@
+== Fairwinds Game Tutorial 7 - Cultivation and the Food Journal
+
+Another important consequence of Alice engaging in cultivation of her
+own plot of land is that this activity results in food production.
+
+A record of the fruits of her labor is recorded in the food_journal
+view:
+
+
+--------------------------------------------
+fairwinds=> select click, debit, credit, description 
+				from food_journal where fairian_name = 'alice';
+
+ click |  debit   | credit |                description                
+-------+----------+--------+-------------------------------------------
+     4 |        1 |        | total production from land 356a192b7913b0
+     4 |          |      1 | daily sustenance
+     5 |  1.00001 |        | total production from land 356a192b7913b0
+     5 |          |      1 | daily sustenance
+     6 | 1.000042 |        | total production from land 356a192b7913b0
+     6 |          |      1 | daily sustenance
+     7 | 1.000094 |        | total production from land 356a192b7913b0
+     7 |          |      1 | daily sustenance
+     7 |          |  1e-06 | spoilage
+(9 rows)
+--------------------------------------------
+
+The rows resulting from this query show that during each of clicks 4
+through 7 Alice recieved the total food production (by virtue of her
+owning the land) associated with the particular contract.  Note the
+trend of increasing total food production. This increase is a due to a
+combination of Alice's improving proficiency and the increasing land
+productivity, as discussed in the previous tutorials, and results in a
+food surplus (i.e., a net balance of excess food).
+
+Daily sustenance is a game constant: every 'Fairian' consumes one unit
+of food per click, or the net balance if the net balance is less than
+one. The consequence of this latter situation (i.e., having insufficient
+food to meet the sustenance requirement) adversely affects 'Fairian'
+health and is discussed more fully in a subsequent tutorial.
+
+The deduction for spoilage is a small constant percentage calculated on
+the 'Fairian''s net balance of food. This ensures that no 'Fairian' can
+hord food indefinitely.
+
+=== More on Aggregation
+
+Aggregation functions summarize the data by operating over a range of
+rows and producing a single row that characterizes the entire set of
+data. One such aggregate function available in 'Fairwinds' is the
+'sum()' function. This acts to, as the name implies, add together the
+column values of set of result rows and presents the total. The result
+of aggregate functions can be combined by arithmetic operations. Applied
+to the +food_journal+ listing above, Alice can list her net food balance
+using aggregation:
+
+--------------------------------------------
+fairwinds==> select sum(debit) as debit_total, 
+                   sum(credit) as credit_total, 
+                   sum(debit)-sum(credit) as balance 
+		   from food_journal where fairian_name = 'alice';
+
+ debit_total | credit_total |       balance       
+-------------+--------------+---------------------
+    4.000146 |     4.000001 | 0.00014499999999984
+(1 row)
+---------------------------------------
+
+You can check the math, but the debit_total and credit_total columns
+show the sum over all rows of the debit and credit values, respectively,
+and the 'balance' column is just difference between those two, or
+the net food balance (i.e., the food surplus) at the end of the
+click. Over time, as culitvation maximizes the land productivity
+and Alice's proficiency and health improve, this net surplus will
+grow. As it grows, the amount of food spoilage will accordingly
+increase until the surplus growth reaches an equilibrium point.
+Exactly how much food can be maximally retained and how quickly
+that maximum is achieved will be depended upon the various game
+parameters randomly determined at game start up.
+

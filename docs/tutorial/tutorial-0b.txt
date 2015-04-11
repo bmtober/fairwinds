@@ -1,0 +1,57 @@
+== Fairwinds Game Tutorial B - The Cash Journal
+
+The cash_journal records transactions involving faircoin. For 
+example all executed buy and sell transactions, bond issues 
+and redemptions, etc. 
+
+There is also a fee imposed for "excessive"
+transactions. During each click, a count is maintained of the 
+number of transactions each 'Fairian' makes. The first transaction during
+each click is free; additional transactions are assessed a fee. The 
+amount of the fee increases for each additional transaction
+during the click, but the counter is reset to zero when the next 
+click begins.
+
+The entire transaction log is available to all 'Fairians' for 
+viewing, so 
+either Bob or Alice, or any other player, could run this query:
+
+
+--------------------------------------------
+fairwinds=> select click, fairian_name, account, debit, credit, description 
+		from cash_journal;
+
+ click | fairian_name | account | debit |   credit   |         description          
+-------+--------------+---------+-------+------------+------------------------------
+     2 | alice        | land    |       |          0 | Bought land 356a192b7913b0
+     7 | bob          | bond    |  1000 |            | Issued bond 1b6453892473a4
+     7 | bob          | cost    |       |          1 | Trade order transaction fee
+     7 | bob          | land    |       |   0.001028 | Bought land 77de68daecd823
+     9 | bob          | bond    |       | 998.998972 | Redeemed bond 1b6453892473a4
+(5 rows)
+
+--------------------------------------------
+
+This listing shows the zero-cost land purchase by Alice at click 2. Then
+several transactions by Bob are recorded. First at click 7 is the 
+distribution to Bob of the proceeds of him issuing a bond (which is his 
+first transaction during click 7), the transaction fee listed next is 
+actually associated with the following transaction when he bought 
+land. (The order of items output by the data base is not always what 
+you expect, unless you specify an +order by+ clause.).
+
+The bond matured at click 9. 
+Since Bob spent some of the money on land and 
+additionally incurred a transaction fee, he did not have sufficient 
+funds to fully repay the loan.
+
+Note that, from the lenders perspective Bob's cash shortfall is irrelevant.
+Bonds are guaranteed investments as far as the lender is concerned. The 
+governing market authority creates enough faircoin to fully repay the
+lender at bond maturity.
+
+But Bob does not necessarily get let off the hook for the shortfall.
+
+
+
+

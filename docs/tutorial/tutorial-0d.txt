@@ -1,0 +1,365 @@
+== Fairwinds Game Tutorial D - Hiring Labor
+
+In the earlier examples with Alice and Bob, they each
+bought a land plot and became cultivating land owners, 
+working their own plot of land.
+
+We now introduce third and fourth players, Cathy and David, 
+who offer to provide labor under contract for pay 
+cultivating other\'s land.
+
+Cathy places a limit order to sell a labor contract by
+inserting a row in the +work_ask+ relation specifying that 
+she offers to work as a farmer. The offer is good for 
+5 clicks and offers a committment to contract for as much 
+as 20 clicks, and for a up-front fee of +fc50+, which 
+is equivalent to +fc2.5+ per click:
+
+--------------------------------------------
+fairwinds=> insert into work_ask (skill_name,expiration,term,price) values ('farmer', 5, 20, 50);
+INSERT 0 1
+--------------------------------------------
+
+David similarly offers to work, but at a lower effective 
+hourly rate of approximately +fc2.3684+ per click. Once 
+the orders are placed, they appear in the work_ask view as 
+
+--------------------------------------------
+fairwinds=> select *, price/term as rate from work_ask;
+
+ skill_name | expiration | term | effectiveness | price | fairian_name | rate
+------------+------------+------+---------------+-------+--------------+---------
+ farmer     |         25 |   19 |             0 |    45 | david        | 2.3684
+ farmer     |         25 |   20 |             0 |    50 | cathy        | 2.5
+(2 rows)
+
+--------------------------------------------
+
+Since Cathy and David are new players their proficiency, and 
+hence their effectiveness, at the 
+farming skill is zero, since neither has worked in that capacity
+yet.
+
+Alice is on the lookout to hire a laborer because 
+she wants to build a food surplus and so takes 
+notice of these labor contract sell offers.
+
+Alice invokes the bond bootstrapping process seen in an
+earlier tutorial in order to raise capital in support 
+of her planned bid to buy a labor contract.
+
+--------------------------------------------
+fairwinds=> select * from bond;    
+ serial_number  | issue_date | term | face_amount | bond_owner | bond_issuer 
+----------------+------------+------+-------------+------------+-------------
+ 902ba3cda18838 |         21 |    2 |        1000 |            | alice
+(1 row)
+--------------------------------------------
+
+Alice places a market order bid for labor with
+
+--------------------------------------------
+fairwinds=> insert into work_bid (work_place, skill_name) values ('356a192b7913b0','farmer');
+INSERT 0 1
+--------------------------------------------
+
+and then confirms that her trade executed at the best price by 
+as seen in the the cash_journal, which shows the +fc45+ payment
+by Alice to David at click +22+ ratifying contract $'fe5dbbcea5ce7e'$:
+
+--------------------------------------------
+fairwinds=# select click, fairian_name, account, debit, credit, description 
+		from cash_journal where click>20;
+
+ click | fairian_name | account | debit | credit |           description            
+-------+--------------+---------+-------+--------+----------------------------------
+    21 | alice        | bond    |  1000 |        | Issued bond 902ba3cda18838
+    22 | david        | work    |    45 |        | Ratified contract fe5dbbcea5ce7e
+    22 | alice        | work    |       |     45 | Ratified contract fe5dbbcea5ce7e
+(3 rows)
+--------------------------------------------
+
+and that that new labor contract between her and David 
+appears in the work view:
+
+--------------------------------------------
+fairwinds=> select contract_number, issue_date, term, customer, 
+			supplier, work_place, skill_name from work;
+
+ contract_number | issue_date | term | customer | supplier |   work_place   | skill_name 
+-----------------+------------+------+----------+----------+----------------+------------
+ da4b9237bacccd  |          3 |    1 | alice    | alice    | 356a192b7913b0 | farmer
+ ac3478d69a3c81  |          7 |    1 | bob      | bob      | 77de68daecd823 | farmer
+ fe5dbbcea5ce7e  |         22 |   19 | alice    | david    | 356a192b7913b0 | farmer
+(3 rows)
+--------------------------------------------
+
+Note that the term of this new contract is +19+. The game assigns the 
+most generous term to the labor buyer in the case of a market order.
+
+The effect on food production of hired help after some time has 
+elapsed is illustrated below. The most recent food_journal 
+entries for Alice appear as follows:
+
+--------------------------------------------
+fairwinds=# select click, debit, credit, description 
+		from food_journal 
+		where fairian_name = 'alice' and click>20;
+
+ click |  debit   |  credit  |                         description                         
+-------+----------+----------+-------------------------------------------------------------
+    21 | 1.002948 |          | total production from land 356a192b7913b0
+    21 |          |        1 | daily sustenance
+    21 |          | 0.000115 | spoilage
+    22 | 1.003290 |          | total production from land 356a192b7913b0
+    22 |          |        1 | daily sustenance
+    22 |          | 0.000135 | spoilage
+    23 | 2.007296 |          | total production from land 356a192b7913b0
+    23 |          | 1.002432 | supplier production share paid from contract fe5dbbcea5ce7e
+    23 |          |        1 | daily sustenance
+    23 |          | 0.000166 | spoilage
+(10 rows)
+--------------------------------------------
+
+
+During each of clicks 21 and 22, the slowly increasing excess production 
+is evident due to Alice's self-owned cultivation. At click 23 the 
+effect of hiring David is apparent in two ways. First, the total
+production doubles, since now two Fairians are working the land plot; 
+second, Alice makes a distribution of a share of the production 
+with David. 
+
+Listing a similar query result for David shows receipt of that 
+distribution:
+
+--------------------------------------------
+fairwinds=# select click, debit, credit, description 
+		from food_journal 
+		where fairian_name = 'david' and click>20;
+
+ click |  debit   | credit  |                           description                           
+-------+----------+---------+-----------------------------------------------------------------
+    23 | 1.002432 |         | supplier production share received from contract fe5dbbcea5ce7e
+    23 |          |       1 | daily sustenance
+    23 |          | 1.6e-05 | spoilage
+(3 rows)
+--------------------------------------------
+
+Alice thinks this is working out pretty well, so she places
+another market order to hire Cathy. The result on the 
+contracts view listing the new contract between her and Cathy
+shows up as:
+
+--------------------------------------------
+fairwinds=> select contract_number, issue_date, term, customer,
+                        supplier, work_place, skill_name from work;
+
+ contract_number | issue_date | term | customer | supplier |   work_place   | skill_name 
+-----------------+------------+------+----------+----------+----------------+------------
+ da4b9237bacccd  |          3 |    1 | alice    | alice    | 356a192b7913b0 | farmer
+ ac3478d69a3c81  |          7 |    1 | bob      | bob      | 77de68daecd823 | farmer
+ fe5dbbcea5ce7e  |         22 |   19 | alice    | david    | 356a192b7913b0 | farmer
+ b1d5781111d84f  |         23 |   20 | alice    | cathy    | 356a192b7913b0 | farmer
+(4 rows)
+--------------------------------------------
+
+
+and the effect on the food production shows the resulting increase
+in total production as well as the additional equal distribution to 
+both Cathy and David:
+
+--------------------------------------------
+fairwinds=> select click, debit, credit, description
+                 from food_journal
+                 where fairian_name = 'alice' and click>20;
+ click |  debit   |  credit  |                         description                         
+-------+----------+----------+-------------------------------------------------------------
+    24 | 3.012545 |          | total production from land 356a192b7913b0
+    24 |          | 1.003136 | supplier production share paid from contract fe5dbbcea5ce7e
+    24 |          | 1.003136 | supplier production share paid from contract b1d5781111d84f
+    24 |          |        1 | daily sustenance
+    24 |          | 0.000205 | spoilage
+(5 rows)
+--------------------------------------------
+
+
+=== More Players and More Hiring
+
+Bob notices that suddenly a number of new players have entered 
+the game:
+
+--------------------------------------------
+fairwinds=> select fairian_name from fairian order by 1;
+
+ fairian_name 
+--------------+
+ alice
+ bob
+ cathy
+ david
+ edwin
+ fredrick
+ gina
+ hendrik
+ ingrid
+ james
+ karen
+ leonard
+ michelle
+ norman
+ olivia
+ peter
+ quincy
+ robert
+ samantha
+ thomas
+ ursula
+ vincent
+ wendy
+ xavier
+ zachary
+(25 rows)
+--------------------------------------------
+
+and wants to emulate and expand upon Alice's success with hiring.
+
+After bootstapping the bond market, Bob has cash and places many  
+labor market bid orders, hoping to entice the newcomers to work
+cultivating his land plot. He offers a graded variety of labor 
+rates, hoping to entice earlier adopters to commit:
+
+
+--------------------------------------------
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 25);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 22);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 20);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 18);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 16);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 15);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 14);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 13);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 12);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 10);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 9);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 8);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 7);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 6);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 5);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 4);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 3);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 3);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 2);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 1);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 0);
+--------------------------------------------
+
+
+and he verifies his offers:
+
+
+--------------------------------------------
+fairwinds=> select *, price/term as rate from work_bid order by rate desc;
+
+ skill_name | expiration | term | effectiveness | price | fairian_name |   work_place   | rate 
+------------+------------+------+---------------+-------+--------------+----------------+------
+ farmer     |         29 |   10 |             0 |    25 | bob          | 77de68daecd823 |  2.5
+ farmer     |         29 |   10 |             0 |    22 | bob          | 77de68daecd823 |  2.2
+ farmer     |         29 |   10 |             0 |    20 | bob          | 77de68daecd823 |    2
+ farmer     |         29 |   10 |             0 |    18 | bob          | 77de68daecd823 |  1.8
+ farmer     |         29 |   10 |             0 |    16 | bob          | 77de68daecd823 |  1.6
+ farmer     |         29 |   10 |             0 |    15 | bob          | 77de68daecd823 |  1.5
+ farmer     |         29 |   10 |             0 |    14 | bob          | 77de68daecd823 |  1.4
+ farmer     |         29 |   10 |             0 |    13 | bob          | 77de68daecd823 |  1.3
+ farmer     |         29 |   10 |             0 |    12 | bob          | 77de68daecd823 |  1.2
+ farmer     |         29 |   10 |             0 |    10 | bob          | 77de68daecd823 |    1
+ farmer     |         29 |   10 |             0 |     9 | bob          | 77de68daecd823 |  0.9
+ farmer     |         29 |   10 |             0 |     8 | bob          | 77de68daecd823 |  0.8
+ farmer     |         29 |   10 |             0 |     7 | bob          | 77de68daecd823 |  0.7
+ farmer     |         29 |   10 |             0 |     6 | bob          | 77de68daecd823 |  0.6
+ farmer     |         29 |   10 |             0 |     5 | bob          | 77de68daecd823 |  0.5
+ farmer     |         29 |   10 |             0 |     4 | bob          | 77de68daecd823 |  0.4
+ farmer     |         29 |   10 |             0 |     3 | bob          | 77de68daecd823 |  0.3
+ farmer     |         29 |   10 |             0 |     3 | bob          | 77de68daecd823 |  0.3
+ farmer     |         29 |   10 |             0 |     2 | bob          | 77de68daecd823 |  0.2
+ farmer     |         29 |   10 |             0 |     1 | bob          | 77de68daecd823 |  0.1
+ farmer     |         29 |   10 |             0 |     0 | bob          | 77de68daecd823 |    0
+(21 rows)
+--------------------------------------------
+
+
+For illustration purposes in this tutorial, all the newcomers 
+enter market orders to sell and so ratify contracts 
+with Bob:
+
+--------------------------------------------
+fairwinds=> select contract_number, issue_date, term, customer, 
+			supplier, work_place, skill_name 
+		from work where customer='bob' order by issue_date, supplier;
+
+ contract_number | issue_date | term | customer | supplier |   work_place   | skill_name 
+-----------------+------------+------+----------+----------+----------------+------------
+ ac3478d69a3c81  |          7 |    1 | bob      | bob      | 77de68daecd823 | farmer
+ 7b52009b64fd0a  |         25 |   10 | bob      | edwin    | 77de68daecd823 | farmer
+ bd307a3ec329e1  |         25 |   10 | bob      | fredrick | 77de68daecd823 | farmer
+ fa35e192121eab  |         25 |   10 | bob      | gina     | 77de68daecd823 | farmer
+ f1abd670358e03  |         25 |   10 | bob      | hendrik  | 77de68daecd823 | farmer
+ 1574bddb75c78a  |         25 |   10 | bob      | ingrid   | 77de68daecd823 | farmer
+ 0716d9708d321f  |         25 |   10 | bob      | james    | 77de68daecd823 | farmer
+ 9e6a55b6b4563e  |         25 |   10 | bob      | karen    | 77de68daecd823 | farmer
+ b3f0c7f6bb763a  |         25 |   10 | bob      | leonard  | 77de68daecd823 | farmer
+ 91032ad7bbcb6c  |         25 |   10 | bob      | michelle | 77de68daecd823 | farmer
+ 472b07b9fcf2c2  |         25 |   10 | bob      | norman   | 77de68daecd823 | farmer
+ 12c6fc06c99a46  |         25 |   10 | bob      | olivia   | 77de68daecd823 | farmer
+ d435a6cdd78630  |         25 |   10 | bob      | peter    | 77de68daecd823 | farmer
+ 4d134bc072212a  |         25 |   10 | bob      | quincy   | 77de68daecd823 | farmer
+ f6e1126cedebf2  |         25 |   10 | bob      | robert   | 77de68daecd823 | farmer
+ 887309d048beef  |         25 |   10 | bob      | samantha | 77de68daecd823 | farmer
+ bc33ea4e26e5e1  |         25 |   10 | bob      | thomas   | 77de68daecd823 | farmer
+ 0a57cb53ba59c4  |         25 |   10 | bob      | ursula   | 77de68daecd823 | farmer
+ 7719a1c782a1ba  |         25 |   10 | bob      | vincent  | 77de68daecd823 | farmer
+ 22d200f8670dbd  |         25 |   10 | bob      | wendy    | 77de68daecd823 | farmer
+ 632667547e7cd3  |         25 |   10 | bob      | xavier   | 77de68daecd823 | farmer
+ cb4e5208b4cd87  |         25 |   10 | bob      | zachary  | 77de68daecd823 | farmer
+(22 rows)
+--------------------------------------------
+
+
+Showing only the food_journal records for Bob on the next click
+reveals the enhanced production due to engaging a large team in 
+cultivation, as well as the distribution of equal production 
+shares to the workers:
+
+--------------------------------------------
+fairwinds=# select * from food_journal where click =26 and fairian_name='bob';
+
+ click | fairian_name |   debit   |  credit  | acknowledged |                        description                        
+-------+--------------+-----------+----------+--------------+-----------------------------------------------------------
+    26 | bob          | 22.075329 |          | f            | total production from land 77de68daecd823
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract 7b52009b64fd0a
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract bd307a3ec329e1
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract fa35e192121eab
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract f1abd670358e03
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract 1574bddb75c78a
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract 0716d9708d321f
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract 9e6a55b6b4563e
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract b3f0c7f6bb763a
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract 91032ad7bbcb6c
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract 472b07b9fcf2c2
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract 12c6fc06c99a46
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract d435a6cdd78630
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract 4d134bc072212a
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract f6e1126cedebf2
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract 887309d048beef
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract bc33ea4e26e5e1
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract 0a57cb53ba59c4
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract 7719a1c782a1ba
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract 22d200f8670dbd
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract 632667547e7cd3
+    26 | bob          |           | 1.003275 | f            | supplier production share paid on contract cb4e5208b4cd87
+    26 | bob          |           |        1 | f            | daily sustenance
+    26 | bob          |           | 0.000163 | f            | spoilage
+(24 rows)
+
+--------------------------------------------
+
+

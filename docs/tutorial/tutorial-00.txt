@@ -1,0 +1,63 @@
+== Fairwinds Game Tutorial 0 - Basic Requirements: Client Software
+
+Playing 'Fairwinds' requires that your computer estabilsh a connection to the
+game. The preferred way of connecting is with the free +psql+ client software
+application. This client is named, and operates the same, on Mac-, Windows- and
+Linux-based operating systems.
+
+=== Obtaining PSQL Client Software
+
+==== PSQL on Linux
+
+The +psql+ client is part of the +postgresql+ package. On Linux this is
+installed with 
+
+--------------------------------------------
+yum install postgresql
+--------------------------------------------
+
+==== PSQL on Windows
+
+On Windows systems, +postgresql+ is available through the 'Cygwin' software
+tools package. Visit the Cygwin web site https://www.cygwin.com/ to download
+and install 'Cygwin'. During the installation, be sure to select the
++postgresql+ package.
+
+After installing Cygwin, double-click the Cygwin icon. This will open a local
+terminal window, and at this point the instructions are the same as for running
++psql+ on Linux.
+
+=== PSQL Connection Parameters
+
+The syntax for running the +psql+ command and establishing a game connection is 
+
+--------------------------------------------
+psql fairwinds -h fairwinds.btober.net -U fairwinds
+--------------------------------------------
+
+where
+
+* the first +fairwinds+ specifies the game name
+* the +-h+ option specifes the Internet location where the game is hosted
+* the +-U+ option specifies the 'Fairian' name to connect as
+
+
+The +fairwinds+ user name illustrated with the +-U+ option above is a generic
+username that a prospective player may use to establish an initial connection
+without requiring a password. The pre-defined +fairwinds+ user account allows
+connecting to the game but allows very limited privileges, namely, creating 
+a user account. 
+
+If this is the first time you have connected to the game, then you should 
+use the +fairwinds+ user account; if you have gone through this process already 
+and created a 'Fairian' user account of your own, then you should specify that 
+instead.
+
+When you initially connect to the game, this is the interface you are presented
+with:
+
+--------------------------------------------
+fairwinds=>
+--------------------------------------------
+
+

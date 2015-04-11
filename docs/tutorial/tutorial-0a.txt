@@ -1,0 +1,156 @@
+== Fairwinds Game Tutorial A - Bootstrapping the Bond Market
+
+As described earlier, when 'Fairwinds' is initialized, there are no
+'Fairians', no land, no food, and no money.  As players enter the game,
+resources must be brought into existence by means of market activity
+that creates demand.  We have already seen boostrapping the land 
+market. In regards to cash, this happens on the bond
+market.
+
+This tutorial illustrates the bootstrapping process for the bond
+market.
+
+Utilizing the +psql+ client application, Bob connects to 'Fairwinds' and
+is presented with the command prompt:
+
+--------------------------------------------
+psql -h fairwinds.btober.net fairwinds bob
+fairwinds=>
+--------------------------------------------
+
+Bob borrows money by issuing ('i.e.', selling) a bond, that is, he makes a
+promise to repay a fixed amount at some future time. 'Fairian' bonds
+always have a face value of fc1000 (1000 'faircoin') and trade at a
+discount from this. That is, in 'Fairwinds', bonds are more similar to
+real-world Treasury Bills, having no coupon, than to Treasury Bonds
+('i.e.' real-world bonds pay periodic interest as well as derive value by 
+discount trading; 'Fairwinds' bonds employ the discount mechanisim 
+only). An effective interest rate is implied by the discount from face
+value and the term length to maturity.
+
+Bob first reminds himself of the bond_ask relation structure:
+
+--------------------------------------------
+fairwinds=> \dS bond_ask
+            View "privileged.bond_ask"
+    Column    |       Type       | Modifiers 
+--------------+------------------+-----------
+ expiration   | bigint           | 
+ term         | bigint           | 
+ price        | private.faircoin | 
+ fairian_name | name             | 
+--------------------------------------------
+
+and sees that it has four columns. He does not have to specify the
+fairian_name, as the game will fill in his name automatically. The
+price value is also optional: omitting the price implies a 
+'market order', similar to the real-world financial markets 
+where a market order means "I will match and trade at as good 
+an offer as any other offer." Which leaves only the expiration and 
+term values to specify. The former allows Bob to specify how many 
+clicks the offer will stand for and at which point, if it has not been
+executed, will be deleted. The latter is the minimum number of
+clicks he wants to have before re-payment of the bond is
+required.
+
+For the case of bootstrapping, none of the values at all are 
+required: the +default values+ shorthand suffices:
+
+--------------------------------------------
+fairwinds=> insert into bond_ask default values;
+INSERT 0 1
+--------------------------------------------
+
+The +default values+ short-hand effectively specifies a market order 
+selling a bond with a term of one click, but, as with bootstrapping 
+the land market, since there were no open orders on the opposite
+side, the order placed is not recorded in the order book. However,
+a bond buy order has been created by the governing market authority:
+
+--------------------------------------------
+fairwinds=> select * from bond_bid;
+
+ expiration | term | price | fairian_name 
+------------+------+-------+--------------
+          1 |    2 |  1000 | 
+(1 row)
+--------------------------------------------
+
+Note that the price for this buy order is not discounted, 'i.e.',
+bootstrapped bond buy orders are offered at zero effective 
+interest rate. Note also though, that it is a very short-term
+maturity. The implication here is that when no 
+other 'Fairians' are willing to lend money ('i.e.', to buy bonds),
+then the game will create money and lend it short term for free.
+This provides a degree of liquidity, making it possible for 
+new players to buy a land plot.
+
+Bob (re-)places his bond market ask order:
+
+--------------------------------------------
+fairwinds=> insert into bond_ask default values;
+INSERT 0 1
+--------------------------------------------
+
+and confirms that the bond has been issued:
+
+--------------------------------------------
+fairwinds=> select * from bond;    
+
+ serial_number  | issue_date | term | face_amount | bond_owner | bond_issuer 
+----------------+------------+------+-------------+------------+-------------
+ 1b6453892473a4 |          7 |    2 |        1000 |            | bob
+(1 row)
+
+--------------------------------------------
+
+
+Bob has borrowed fc1000 of cash created by the governing market authority.
+
+
+=== Deploying Bond Proceeds
+
+Now that Bob has cash, he can proceed to buy the land plot, so 
+he (re-)places his land market order to buy:
+
+--------------------------------------------
+fairwinds=>  insert into land_bid default values;
+INSERT 0 1
+--------------------------------------------
+
+And then confirms that he is now the owner of land plot \'77de68daecd823':
+
+--------------------------------------------
+fairwinds=> select * from land;
+
+ serial_number  | productivity | fairian_name 
+----------------+--------------+--------------
+ 356a192b7913b0 |     0.002896 | alice
+ 77de68daecd823 |              | bob
+(2 rows)
+--------------------------------------------
+
+
+Once Bob succeeds in buying the land plot, he proceeds similarly to as Alice
+did and creates a self-owned land labor contract and commences cultivation:
+
+--------------------------------------------
+fairwinds=> insert into work (work_place,skill_name) values ('77de68daecd823','farmer');
+INSERT 0 1
+--------------------------------------------
+
+and checks the status of existing labor contracts. As expected he sees
+his own, newly established labor contract as well as the earlier one
+involving Alice on her land:
+
+--------------------------------------------
+
+fairwinds=> select * from work;
+ contract_number | issue_date | term | customer | supplier |   work_place   | active | skill_name 
+-----------------+------------+------+----------+----------+----------------+--------+------------
+ da4b9237bacccd  |          3 |    1 | alice    | alice    | 356a192b7913b0 | t      | farmer
+ ac3478d69a3c81  |          7 |    1 | bob      | bob      | 77de68daecd823 | t      | farmer
+(2 rows)
+--------------------------------------------
+
+

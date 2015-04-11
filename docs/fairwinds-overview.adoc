@@ -1,0 +1,39 @@
+= Fairwinds Game Overview
+
+'Fairwinds' is a multi-player on-line game about strategy and math.
+
+The game involves trading, skills development, and business sense
+applied in finance, real estate, labor, commodity, and debt markets.
+
+Players leverage the similarities and the nuanced differences between
+these markets and master the interplay amongst them to create 
+wealth while striking a balance of cooperation and competition
+with other players to develop, acquire, and maintain resources.
+
+'Fairwinds' is targeted at computer nerds or those that 
+aspire to become one in that there is no graphical user interface: 
+'Fairwinds' is played at the command line.
+
+Player interaction with the game is by means of structured query language
+(SQL) statements used to place trade orders and list information
+about the game and other players activities.
+
+A set of limited-scope, sequenced tutorials provides a guided introduction 
+to the game and the skills needed to play. 
+
+Motivated aspirants utilize the 
+game as a learning platform to acquire skills and experience with the
+tools and techniques involved in play ... and thereby improve their
+competitiveness in the game as well as their facility with concepts that can
+be applied in there everyday and professional computer-focused lives.
+
+'Fairwinds' is also targeted to players interested in understanding 
+market concepts and competition. Players encounter multiple instances 
+of supply-verses-demand, resource scarcity, and diminishing returns and 
+observe how those factors interact over time. 
+
+Players develop a strategy of play: They can "play it safe" and progress along
+a predictable path, or they can jump in whole-heartedly and take risks ... 
+which may or may not result in commensurate rewards. 
+
+

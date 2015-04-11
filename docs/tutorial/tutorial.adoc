@@ -1,0 +1,23 @@
+= Fairwinds Tutorial
+:author:    Berend Tober <btober@computer.org>
+:copyright: 2015, Berend Tober
+:backend:   slidy
+:max-width: 45em
+:data-uri:
+:icons:
+
+include::tutorial-00.txt[]
+include::tutorial-01.txt[]
+include::tutorial-02.txt[]
+include::tutorial-03.txt[]
+include::tutorial-04.txt[]
+include::tutorial-05.txt[]
+include::tutorial-06.txt[]
+include::tutorial-07.txt[]
+include::tutorial-08.txt[]
+include::tutorial-09.txt[]
+include::tutorial-0a.txt[]
+include::tutorial-0b.txt[]
+include::tutorial-0c.txt[]
+include::tutorial-0d.txt[]
+include::tutorial-0e.txt[]

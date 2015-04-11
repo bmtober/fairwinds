@@ -1,0 +1,6 @@
+== Fairwinds Game Tutorial E - The Commodity Market
+
+The final market to illustration is the commodity market. The 
+commodity market is used to buy and sell food. To illustrate this 
+we have let the game time advance about 400 clicks so that the 
+players develope a food surplus. 
