@@ -1,9 +1,10 @@
-= Fairwinds Tutorial
 :author:    Berend Tober <btober@computer.org>
 :copyright: 2015, Berend Tober
 :backend:   slidy
 :max-width: 45em
 :toc:
+
+= Fairwinds Tutorial
 
 == Fairwinds Game Tutorial 0 - Basic Requirements: Client Software
 
