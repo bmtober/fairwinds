@@ -1,9 +1,5 @@
 ## Process this file with automake to produce Makefile.in
 
-# Process all tutorial files with:
-# for n in {a..d} {0..9};do make "tutorial-0$n.html";done
-# for n in *.adoc;do make "${n%adoc}html";done
-
 SUBDIRS = techtalk tutorial .
 
 SOURCES = $(wildcard *.adoc)
@@ -22,6 +18,7 @@ autodoc:
 
 clean-local:
 	-rm \
+		fairwinds-ad.html \
 		fairwinds-overview.html \
 		fairwinds-equations.html \
 		*.png
