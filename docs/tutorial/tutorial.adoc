@@ -519,7 +519,7 @@ and sees eight columns. The contract_number, issue_date, and active
 column values are determined automatically when a labor contract is
 created.  As mentioned above, the customer and supplier will both
 automatially be set to the land-owning 'Fairian'. The term will be
-automatically set to a value of $1$ (which is discussed further below). 
+automatically set to a value of one (which is discussed further below). 
 
 Only the work_place and skill_name need be specified for the self-owned
 land cultivation scenario.
@@ -580,7 +580,7 @@ there are a few important implications.
 The first important implication is that Alice develops proficiency at a
 skill, namely, by engaging in cultivation, she gets better at it.  A
 record of her developing skill proficiency is recorded in the skill_journal 
-view (note that the game has advanced by three clicks since the contract
+view (note that the game has advanced by four clicks since the contract
 issue_date):
 
 --------------------------------------------
@@ -1379,7 +1379,7 @@ INSERT 0 1
 
 and then confirms that her trade executed at the best price by 
 as seen in the the cash_journal, which shows the +fc45+ payment
-by Alice to David at click +22+ ratifying contract $'fe5dbbcea5ce7e'$:
+by Alice to David at click +22+ ratifying contract 'fe5dbbcea5ce7e':
 
 --------------------------------------------
 fairwinds=# select click, fairian_name, account, debit, credit, description 
