@@ -9,7 +9,7 @@
 
 == Fairwinds Game Tutorial 0 - Basic Requirements: Client Software
 
-Playing 'Fairwinds' requires that your computer estabilsh a connection to the
+Playing 'Fairwinds' requires that your computer establish a connection to the
 game. The preferred way of connecting is with the free +psql+ client software
 application. This client is named, and operates the same, on Mac-, Windows- and
 Linux-based operating systems.
@@ -1198,11 +1198,11 @@ a market sell order is added to the note_ask table
 and is automatically matched against any open 
 limit buy orders in the note_bid relation: the 
 highest bid amount trade executes and the others 
-are expired on the subsequent click. (If there
+are expired on the subsequent click. If there
 are no open bid orders for a specific note at
 issue time, then the note order is changed from 
 a market order to a limit order with price 
-zero.)
+zero.
 
 The factor of a note is equivalent to the owner of a bond, 
 and calling a note is something like redemption at maturity 
