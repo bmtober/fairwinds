@@ -81,7 +81,7 @@ fairwinds=>
 
 This is the game waiting for you to make a move, 'i.e.', to enter a
 command specifying what you want to accomplish. This tutorial will
-demonstrate basic commands for listing information about the game and
+demonstrate some basic commands for listing information about the game and
 creating a new 'Fairian' user account.
 
 Commands to list technical information about the environment generally
@@ -99,7 +99,8 @@ fairwinds=> \d
 (1 row)
 --------------------------------------------
 
-This table shows the fairian view defined in the 'public' schema. A schema
+This table shows the fairian view defined in the 'public' schema and
+owned by the special administrative user 'postgres'. A schema
 serves to limit what game elements are visible to, and the  privileges
 available on, those elements. 'public' in this context means that this 
 is visible to anyone connecting to the game even if they do
@@ -112,7 +113,7 @@ you will utilize structured query language (SQL) commands to actually
 play the game, and more pertinenty for our present interest, to
 create an account. 
 
-The first command you will learn is the +insert+ command, which, as the
+The first SQL command you will learn is the +insert+ command, which, as the
 name implies adds data to a relation. This is how you create a
 'Fairian', but to do so, you first need to know what data to add.
 
@@ -187,7 +188,7 @@ fairwinds=>
 
 
 When connected as a valid player, you have a significantly expanded view
-into the game showing the relations used to participate in the finance
+into the game showing the privileged relations used to participate in the finance
 (+bond+), real estate (+land+), commodity (+food+), labor (+work+), and 
 debt (+note+) markets:
 
@@ -271,7 +272,7 @@ seconds, and three values related to the game version. The value of the
 click column is usually what you will be most interested in so as to
 know how soon scheduled events in the game will occur, such as the
 expiration of trade orders or redemption of bonds, for example.  By
-specifying the column you want in place of the asterik in a +select+
+specifying the columns you want rather than the asterik in a +select+
 statement you limit the output to only the information you are
 interested in:
 
@@ -393,9 +394,9 @@ only the expiration and productivity values to specify. The former
 allows Alice to specify how many clicks the offer will stand for and at
 which point, if it has not been executed, will be deleted. The latter is
 the minimum land productivity value she will accept. Productivity is a
-measure of land quality, and, as the name implies, is a measure between
-zero and one of how much food the land can produce when put under
-cultivation -- so more productive land is more valuable than less
+measure of land quality, and, as the name implies, is a value between
+zero and one indicating how much food the land can produce when 
+cultivated -- so more productive land is more valuable than less
 productive land. In this case Alice specifies a productivity value of
 zero in order to invoke bootstrapping:
 
@@ -433,7 +434,7 @@ which shows that a new, zero-productivity, un-owned land plot has been
 created and offered for sale. 'Bootstrapped' land orders to sell have no
 expiration date ... land, once surveyed and entered into the land
 records is never destroyed or deleted from the game, so this land_ask
-order will persist until a 'Fairain' buys the land.
+order will persist until a 'Fairian' buys the land.
 
 The serial_number, which serves as a unique identifier for the plot, is
 set randomly by the game for each new plot of land. 
@@ -571,7 +572,7 @@ fairwinds=> select * from work;
 
 --------------------------------------------
 			
-A contract_number has been assigned to serve as unique identifier and the 
+A contract_number has been assigned to serve as unique identifier, and the 
 contract is annotated as active. 
 
 == Fairwinds Game Tutorial 5 - Skills Development and the Skill Journal
@@ -629,7 +630,7 @@ fairwinds=> select sum(debit) from skill_journal where fairian_name = 'alice';
 When the contract is terminated, her proficiency will atrophy unless she
 engages as a supplier on a new contract.
 
-Proficiency atrophies at a constant percentage rate (which also exhibits
+Proficiency atrophies at a constant percentage rate (which thus also exhibits
 diminishing returns behavior in that the amount by which proficiency
 decreases each click continually itself diminishes).
 
@@ -938,7 +939,7 @@ As described earlier, when 'Fairwinds' is initialized, there are no
 'Fairians', no land, no food, and no money.  As players enter the game,
 resources must be brought into existence by means of market activity
 that creates demand.  We have already seen boostrapping the land 
-market. In regards to cash, this happens on the bond
+market. Bootstrapping money happens on the bond
 market.
 
 This tutorial illustrates the bootstrapping process for the bond
@@ -1161,8 +1162,8 @@ the debtor and transferred to the factor.
 Demand notes are traded somewhat 
 similarly to bonds in that they 
 are purchased at a discount from "face value". 
-Face value in this case is the corresponding 
-shortfall amount.
+Face value in this case is the corresponding
+bond redemption shortfall amount.
 
 Note however that there is no secondary market 
 for notes. They are sold by the governing market 
@@ -1188,8 +1189,8 @@ The serial_number serves as a unique identifier and is
 automatically assigned when the note is created.
 
 The issue_date is automatically set for a future 
-click. This allows for an opportunity of other players 
-to discover the bidding opporunity and consider how
+click. This allows for other players 
+to discover the bidding opportunity and consider how
 much, if at all, they want to bid on the debt. 
 
 When game time advances to the issue_date click, 
@@ -1205,7 +1206,7 @@ zero.)
 
 The factor of a note is equivalent to the owner of a bond, 
 and calling a note is something like redemption at maturity 
-of a bond. At demand note redemption, cash is transferred 
+of a bond. Upon demand note redemption, cash is transferred 
 from the debtor to the factor, provided the debtor has 
 cash when the note is called.
 
@@ -1242,7 +1243,7 @@ As in past examples, it is not necessary to specify the
 fairian_name, as that will be automatically filled in. The 
 serial_number is essential and must be specified since 
 a note bid is made for specific notes individually. 
-The expiration if not specified defaults to one, but 
+The expiration, if not specified, defaults to one, but 
 generally should be long enough to last 
 until the future note issue date.
 
@@ -1394,7 +1395,7 @@ fairwinds=# select click, fairian_name, account, debit, credit, description
 (3 rows)
 --------------------------------------------
 
-and that that new labor contract between her and David 
+and that this new labor contract between her and David 
 appears in the work view:
 
 --------------------------------------------
@@ -1683,7 +1684,7 @@ fairwinds=# select * from food_journal where click =26 and fairian_name='bob';
 The final market to illustration is the commodity market. The 
 commodity market is used to buy and sell food. To illustrate this 
 we have let the game time advance about 400 clicks so that the 
-players develope a food surplus. 
+players develop a food surplus. 
 
 '--- To Be Continued ---'
 
