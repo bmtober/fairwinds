@@ -1,23 +1,31 @@
 = pg_playtime: The Fairwinds Game!
 
-'Fairwinds' is a multi-player on-line game that involves real-time, competitive
-trading on five simulated markets by using the psql client to enter basic SQL
-commands.
+'Fairwinds' is a multi-player on-line game that involves real-time,
+competitive trading on five simulated markets by using the psql client
+to enter basic SQL commands.
 
-This talk will present an overview of the application and discuss some design
-and architecture issues underlying its development. 
+This talk will present an overview of the application and discuss some
+design and architecture issues underlying its development. 
 
-We will devote the final half of the meeting to actually playing the game, so
-bring your computer with network connectivity and the psql client software
-ready to connect to a data base server.
+We will devote the final half of the meeting to actually playing the
+game, so bring your computer with network connectivity and the psql
+client software ready to connect to a data base server.
 
-You will want to read the "Fairwinds Overview" and "Fairwinds Tutorial" in
-advance as well as possibly enjoy the "Fairwinds Equations" reference page
-available at https://github.com/bmtober/fairwinds. These documents will 
-prepare you to be a competitive player. 
+Our generous corporate sponsor 'Motley Fool, Inc.' will provide a simple
+LAN infrastructure, so bring a network patch cable to possibly plug into
+a switch for connectivity. The conference room wireless LAN will be
+available for external internet browsing separately.
+
+You will want to read the "Fairwinds Overview" and "Fairwinds Tutorial"
+in advance as well as possibly enjoy the "Fairwinds Equations" (although
+github is not delivering that latter document properly formatted ...
+so to actually understand it you probably need to compile it locally
+with http://asciidoc.org/[AsciiDoc]) reference page available at
+https://github.com/bmtober/fairwinds[Fairwinds on Github]. These
+documents will prepare you to be a competitive player. 
 
 Speaker: Berend Tober has been a PostgreSQL user for over 15 years. His
-experience includes both private industry and federal government roles in
-systems modeling, network administration, software development and data base
-management.
+experience includes both private industry and federal government roles
+in systems modeling, network administration, software development and
+data base management.
 
