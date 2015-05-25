@@ -1,6 +1,11 @@
 = Fairwinds Game - Important Equations
-
+:author:    Berend Tober <btober@computer.org>
+:copyright: 2015, Berend Tober
 :asciimath:
+:max-width: 45em
+:data-uri:
+:icons:
+
 
 Your strategy and how your implement it depends on understanding the
 implications of your moves, and understanding that requires
