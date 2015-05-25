@@ -289,7 +289,7 @@ click_interval | 20
 --------------------------------------------
 
 The example above also demonstrates utilizing the "expanded view"
-feature of the +psql+ client software. the +\x+ command toggles expanded
+feature of the +psql+ client software: The +\x+ command toggles expanded
 view on and off. 'Off' produces output in the traditional tabular (rows
 and columns) output. 'On' is useful for results that have a single
 or small number of rows, as it pivots the columnar arrangment and lists
@@ -488,7 +488,7 @@ Labor contracts are recorded in the +work+ relation. Normally, a labor
 contract is made between two 'Fairians': a customer (the land-owning
 buyer of a labor contract seeking to employ others) and a 
 supplier (the seller of a labor contract seeking to earn 
-'faircoin' by working for another 'Fairian').
+'Faircoin' by working for another 'Fairian').
 
 That more typical, competitive/cooperative arrangement is the topic of a
 later tutorial.
@@ -613,7 +613,7 @@ when the game starts.
 
 Her proficiency will continue to improve so long as she is the supplier
 to an active labor contract, but the improvement exhibits 'diminishing
-returns' as the value approaches unity and will never exceed one. 
+returns' as the value approaches unity and will never exceed 100%. 
 
 Alice can use the sum() aggregation function to add up the changes to
 her proficiency and list the net balance:
@@ -955,7 +955,7 @@ fairwinds=>
 
 Bob borrows money by issuing ('i.e.', selling) a bond, that is, he makes a
 promise to repay a fixed amount at some future time. 'Fairian' bonds
-always have a face value of fc1000 (1000 'faircoin') and trade at a
+always have a face value of fc1000 (1000 'Faircoin') and trade at a
 discount from this. That is, in 'Fairwinds', bonds are more similar to
 real-world Treasury Bills, having no coupon, than to Treasury Bonds
 ('i.e.' real-world bonds pay periodic interest as well as derive value by 
@@ -1091,7 +1091,7 @@ fairwinds=> select * from work;
 
 == Fairwinds Game Tutorial B - The Cash Journal
 
-The cash_journal records transactions involving faircoin. For 
+The cash_journal records transactions involving Faircoin. For 
 example all executed buy and sell transactions, bond issues 
 and redemptions, etc. 
 
@@ -1137,7 +1137,7 @@ funds to fully repay the loan.
 
 Note that, from the lenders perspective Bob's cash shortfall is irrelevant:
 Bonds are guaranteed investments as far as the lender is concerned. The 
-governing market authority creates enough faircoin to fully repay the
+governing market authority creates enough Faircoin to fully repay the
 lender at bond maturity.
 
 But Bob does not necessarily get let off the hook for the shortfall.
@@ -1248,7 +1248,7 @@ generally should be long enough to last
 until the future note issue date.
 
 Since Alice knows she is the only bidder, she 
-"low-balls" by making a bid for zero faircoin
+"low-balls" by making a bid for zero Faircoin
 and confirms her entry by listing the bids:
 
 --------------------------------------------
@@ -1310,7 +1310,7 @@ This table shows the transactions seen earlier and additionally
 that at click 19, the note was sold to the highest bidder (Alice),
 and then at click 20 Alice called the note. Annotated in the 
 description column is the detail indicating the resulting 
-action: zero faircoin was transferred from Bob to Alice
+action: zero Faircoin was transferred from Bob to Alice
 since Bob had no cash available at the time of call. Other 
 possible results are partial payment or full payment.
 
@@ -1692,7 +1692,7 @@ players cultivating land develop a food surplus.
 
  fairian_name |  balance  
 --------------+-----------
- alice        |  38.22213
+ alice        | 38.222130
  bob          | 48.070724
  cathy        | 19.109904
  david        | 19.110119
