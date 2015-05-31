@@ -1,10 +1,11 @@
 = Fairwinds Tutorial
 :author:    Berend Tober <btober@computer.org>
 :copyright: 2015, Berend Tober
-:backend:   slidy
+:backend:   html
 :max-width: 45em
 :data-uri:
 :icons:
+:toc:
 
 
 == Fairwinds Game Tutorial 0 - Basic Requirements: Client Software
