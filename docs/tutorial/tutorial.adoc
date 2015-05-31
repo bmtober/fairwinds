@@ -36,6 +36,31 @@ After installing Cygwin, double-click the Cygwin icon. This will open a local
 terminal window, and at this point the instructions are the same as for running
 +psql+ on Linux.
 
+=== PSQL Configuration
+
+The 'Fairwinds' game communicates certain error conditions by means of
+interally raising execptions and emitting an associated, explanatory
+error message. In the default configuration, +psql+ emits additional
+contextual information which, while helpful to an administrative
+operator, may obscure the essential error message for a typical player.
+
+The verbosity of these outputs can be reduced with a configuration
+setting. If you are already running the +psql+ client, then you should
+run the following command at the +psql+ prompt:
+
+--------------------------------------------
+\set VERBOSITY TERSE
+--------------------------------------------
+
+Alternatively, you can easily create or modify the +psql+ client
+resource configuration file by copy-and-pasting the following command
+at the shell command prom
+
+--------------------------------------------
+echo "\set VERBOSITY TERSE" >> ~/.psqlrc
+--------------------------------------------
+
+
 === PSQL Connection Parameters
 
 The syntax for running the +psql+ command and establishing a game connection is 
