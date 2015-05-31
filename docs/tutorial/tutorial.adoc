@@ -54,7 +54,7 @@ run the following command at the +psql+ prompt:
 
 Alternatively, you can easily create or modify the +psql+ client
 resource configuration file by copy-and-pasting the following command
-at the shell command prom
+at the shell command prompt:
 
 --------------------------------------------
 echo "\set VERBOSITY TERSE" >> ~/.psqlrc
@@ -79,8 +79,8 @@ where
 The +fairwinds+ user name illustrated with the +-U+ option above is a generic
 username that a prospective player may use to establish an initial connection
 without requiring a password. The pre-defined +fairwinds+ user account allows
-connecting to the game but allows very limited privileges, namely, creating 
-a user account. 
+connecting to the game but allows very limited privileges, namely, it
+provides the privilege for creating a user account. 
 
 If this is the first time you have connected to the game, then you should 
 use the +fairwinds+ user account; if you have gone through this process already 
