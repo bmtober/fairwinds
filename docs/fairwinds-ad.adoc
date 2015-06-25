@@ -1,4 +1,6 @@
 = pg_playtime: The Fairwinds Game!
+:author:    Berend Tober <btober@computer.org>
+:copyright: 2015, Berend Tober
 
 'Fairwinds' is a multi-player on-line game that involves real-time,
 competitive trading on five simulated markets by using the psql client

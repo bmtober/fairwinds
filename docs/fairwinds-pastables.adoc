@@ -1,0 +1,77 @@
+== Fairwinds SQL Pasteables
+:author:    Berend Tober <btober@computer.org>
+:copyright: 2015, Berend Tober
+-----------------------------------------------------------------------
+psql fairwinds -h fairwinds.btober.net -U fairwinds
+
+\set VERBOSITY TERSE
+\pset pager off
+
+insert into fairian (fairian_name, passwd, email_address) values ('', '', '');
+insert into bond_ask default values;
+insert into bond_ask (expiration,term,price) values (,,);
+insert into bond_bid (expiration,term,price) values (,,);
+insert into food_ask (expiration, quantity, price) values (,,);
+insert into food_ask (quantity) values ();
+insert into food_bid (expiration, quantity, price) values (,,);
+insert into food_bid (quantity) values ();
+insert into land_bid (expiration,productivity) values (,);
+insert into land_bid default values;
+insert into note_bid (serial_number, expiration, price) values ('',,);
+insert into work (work_place,skill_name) values ('','farmer');
+insert into work_ask (skill_name,expiration,term,price) values ('farmer',,,);
+insert into work_bid (work_place, skill_name) values ('','farmer');
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('','farmer',,,);
+
+select * from bond;
+select * from bond_bid;
+select * from bond_ask;
+select * from connection;
+select * from fairian;
+select * from food_ask;
+select * from food_bid;
+select * from land;
+select * from land_ask;
+select * from land_bid;
+select * from note;
+select * from note_ask;
+select * from note_bid;
+select * from work;
+select * from work_ask;
+select * from work_bid;
+select *, price/term as rate from work_ask order by rate;
+select *, price/term as rate from work_bid order by rate desc;
+select click, click_interval from fairwinds;
+
+select click, fairian_name, account, debit, credit, description from cash_journal where fairian_name = current_user order by click desc limit 24;
+select click, fairian_name, debit, credit, description from food_journal where fairian_name = current_user order by click desc limit 24;
+select click, fairian_name, debit, credit, description from health_journal where fairian_name = current_user order by click desc limit 24;
+select click, fairian_name, serial_number, debit, credit, description from land_journal where fairian_name = current_user order by click desc limit 24;
+select click, fairian_name, skill_name, debit, credit, description from skill_journal where fairian_name = current_user order by click desc limit 24;
+
+select fairian_name from fairian order by 1;
+
+update note set called = true where serial_number = '';
+update work set active = 'false' where contract_number = '';
+
+update cash_journal set acknowledged = true where fairian_name = current_user;
+update food_journal set acknowledged = true where fairian_name = current_user;
+update health_journal set acknowledged = true where fairian_name = current_user;
+update skill_journal set acknowledged = true where fairian_name = current_user;
+update land_journal set acknowledged = true where fairian_name = current_user;
+
+with running_total as (
+   select fairian_name, click, debit, credit, sum(debit)
+     over w as d, sum(credit)
+     over w as c
+     from health_journal
+   window w as (
+  partition by fairian_name
+    order by click
+      )
+   )
+   select fairian_name, click, debit, credit, d-c as net
+     from running_total
+    order by fairian_name, click;
+
+-----------------------------------------------------------------------
