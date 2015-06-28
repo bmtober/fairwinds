@@ -1869,3 +1869,156 @@ and no other seller offered food at a lower unit cost that he
 ended up paying to Gina.
 
 
+== Fairwinds Game Tutorial F - Extinguishing Debt
+
+Notice from the standings that Bob has a fc374 demand note written
+against him as well as a negative fc70 net cash balance:
+
+
+--------------------------------------------
+                                   Fairwinds Tournament Standings
+ fairian_name | health_balance | wealth | cash_balance | bond_balance | note_balance | food_balance 
+--------------+----------------+--------+--------------+--------------+--------------+--------------
+    ...       |                |        |              |              |              |
+ bob          |       0.999995 |   -444 |       -70.00 |              |      -374.00 |       48.232
+    ...       |                |        |              |              |              |
+--------------------------------------------
+ 
+In a non-competitive market, Bob may have the 
+opportunity to extinquish that debt by first issuing a bond in 
+order to raise money, and then make a bid to buy the outstanding
+note. (The reason Bob needs to issue a bond is because having 
+a negative net cash balance means that he will not be permitted 
+to place any buy orders.)
+
+Bob raises cash by bootstrapping the bond market and borrowing:
+
+--------------------------------------------
+fairwinds=> insert into bond_ask default values;
+fairwinds=> insert into bond_ask default values;
+-------------------------------------------
+
+
+This leaves him in the same place in the standings overall, 
+but the details of his wealth are altered as:
+
+-------------------------------------------
+                                   Fairwinds Tournament Standings
+ fairian_name | health_balance | wealth | cash_balance | bond_balance | note_balance | food_balance 
+--------------+----------------+--------+--------------+--------------+--------------+--------------
+    ...       |                |        |              |              |              |
+ bob          |       0.999995 |   -444 |       930.00 |     -1000.00 |      -374.00 |       48.395
+    ...       |                |        |              |              |              |
+-------------------------------------------
+
+That is, his net wealth remains unchanged, but he temporarily has cash on hand and 
+so can place an order to buy the demand note upon which he is listed as 
+the debtor:
+
+
+-------------------------------------------
+fairwinds=> insert into note_bid (serial_number) values ('91032ad7bbcb6c');
+INSERT 0 1
+-------------------------------------------
+
+
+which results in Bob becoming listed as factor as well as the debtor
+on bond `91032ad7bbcb6c`:
+
+-------------------------------------------
+                          Notes
+ serial_number  | issue_date | amount | factor | debtor  
+----------------+------------+--------+--------+---------
+ 0ade7c2cf97f75 |         33 |     45 |        | alice
+ f1f836cb4ea6ef |        411 |      5 |        | zachary
+ 91032ad7bbcb6c |         36 |    374 | bob    | bob
+-------------------------------------------
+
+
+
+Bob then waits for time to advance beyond the bond maturity. When the bond 
+is redeemed, his fc70 cash short-fall results in a new bond scheduled for 
+issuance at click 413:
+
+-------------------------------------------
+                          Notes
+ serial_number  | issue_date | amount | factor | debtor  
+----------------+------------+--------+--------+---------
+ 0ade7c2cf97f75 |         33 |     45 |        | alice
+ f1f836cb4ea6ef |        411 |      5 |        | zachary
+ 91032ad7bbcb6c |         36 |    374 | bob    | bob
+ fc074d501302eb |        413 |     70 |        | bob
+-------------------------------------------
+
+
+
+None-the-less, it is apparent from the standings that his position is 
+improved because his net wealth has increased from -fc440 to -fc70:
+
+-------------------------------------------
+                                   Fairwinds Tournament Standings
+ fairian_name | health_balance | wealth | cash_balance | bond_balance | note_balance | food_balance 
+--------------+----------------+--------+--------------+--------------+--------------+--------------
+    ...       |                |        |              |              |              |
+ bob          |       0.999995 |    -70 |         0.00 |              |       -70.00 |       48.558
+    ...       |                |        |              |              |              |
+-------------------------------------------
+
+
+And then ten clicks later he can bid to by that note, too:
+
+-------------------------------------------
+fairwinds=> insert into note_bid (serial_number) values ('fc074d501302eb');
+INSERT 0 1
+-------------------------------------------
+
+-------------------------------------------
+                          Notes
+ serial_number  | issue_date | amount | factor | debtor  
+----------------+------------+--------+--------+---------
+ 0ade7c2cf97f75 |         33 |     45 |        | alice
+ f1f836cb4ea6ef |        411 |      5 |        | zachary
+ 91032ad7bbcb6c |         36 |    374 | bob    | bob
+ fc074d501302eb |        413 |     70 | bob    | bob
+(4 rows)
+-------------------------------------------
+
+
+Bob's success at buying his own debt for zero cost results in completely 
+extinguishing his debt:
+
+-------------------------------------------
+                                   Fairwinds Tournament Standings
+ fairian_name | health_balance | wealth | cash_balance | bond_balance | note_balance | food_balance 
+--------------+----------------+--------+--------------+--------------+--------------+--------------
+    ...       |                |        |              |              |              |
+ bob          |       0.999995 |      0 |         0.00 |              |         0.00 |       50.189
+    ...       |                |        |              |              |              |
+-------------------------------------------
+
+
+
+Lastly, while Bob has zero cash balance, he can call the notes he 
+owns to remove them if he wants:
+
+-------------------------------------------
+update note set called=true where debtor='bob';
+-------------------------------------------
+
+
+-------------------------------------------
+                          Notes
+ serial_number  | issue_date | amount | factor | debtor  
+----------------+------------+--------+--------+---------
+ f1f836cb4ea6ef |        411 |      5 |        | zachary
+ 0ade7c2cf97f75 |         33 |     45 |        | alice
+(2 rows)
+-------------------------------------------
+
+Take care to recall, however, as mentioned at the outset, this 
+strategy likely only works this well 
+if other 'Fairians' are not paying attention. In a competitive 
+market, others would be watching for profitable opportunities 
+and likely make bids competing with those shown above for 
+illustration, thus altering the outcome.
+
