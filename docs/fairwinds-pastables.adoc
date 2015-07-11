@@ -44,6 +44,7 @@ select *, price/term as rate from work_bid order by rate desc;
 select click, click_interval from fairwinds;
 
 select click, fairian_name, account, debit, credit, description from cash_journal where fairian_name = current_user order by click desc limit 24;
+select sum(debit)- sum(credit) as net_cash from cash_journal where fairian_name = current_user;
 select click, fairian_name, debit, credit, description from food_journal where fairian_name = current_user order by click desc limit 24;
 select click, fairian_name, debit, credit, description from health_journal where fairian_name = current_user order by click desc limit 24;
 select click, fairian_name, serial_number, debit, credit, description from land_journal where fairian_name = current_user order by click desc limit 24;

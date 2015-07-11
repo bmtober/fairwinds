@@ -784,7 +784,7 @@ and Alice's proficiency and health improve, this net surplus will
 grow. As it grows, the amount of food spoilage will accordingly
 increase until the net surplus growth reaches an equilibrium point.
 Exactly how much food can be maximally retained and how quickly
-that maximum is achieved will be depended upon the various game
+that maximum is achieved will be dependent upon the various game
 parameters randomly determined at game start up.
 
 == Fairwinds Game Tutorial 8 - Sustenance and the Health Journal
@@ -1265,8 +1265,7 @@ A demand note can be called only once, after which
 it is expired and no longer listed in the note view
 nor accessible to the factor or other players.
 
-Bob cannot bid on the note for which he is the 
-debtor, but Alice proceeds to place a buy order. 
+Alice proceeds to place a buy order for the note. 
 (This particular case is not very lucrative, but 
 it serves to illustrate the process.)
 
@@ -1936,8 +1935,8 @@ which results in Bob becoming listed as factor as well as the debtor on bond
 
 
 Bob then waits for time to advance beyond the bond maturity. When the bond is
-redeemed, his fc70 cash short-fall results in a new bond, bond
-`fc074d501302eb`, scheduled for issuance ten clicks from the present, 'i.e.',
+redeemed, his fc70 cash short-fall results in a new bond ('i.e.', bond
+`fc074d501302eb`) scheduled for issuance ten clicks from the present, 'i.e.',
  at click 413:
 
 --------------------------------------------
