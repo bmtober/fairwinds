@@ -51,7 +51,7 @@ setting. If you are already running the +psql+ client, then you should
 run the following command at the +psql+ prompt:
 
 --------------------------------------------
-\set VERBOSITY TERSE
+\set VERBOSITY terse
 --------------------------------------------
 
 Alternatively, you can easily create or modify the +psql+ client
@@ -59,7 +59,7 @@ resource configuration file by copy-and-pasting the following command
 at the shell command prompt:
 
 --------------------------------------------
-echo "\set VERBOSITY TERSE" >> ~/.psqlrc
+echo "\set VERBOSITY terse" >> ~/.psqlrc
 --------------------------------------------
 
 
