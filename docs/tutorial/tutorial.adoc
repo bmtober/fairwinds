@@ -4,6 +4,7 @@
 ///////////////////////////
 :backend:   slidy
 ///////////////////////////
+:toc:
 :max-width: 45em
 :data-uri:
 :icons:
@@ -214,10 +215,12 @@ fairwinds=>
 --------------------------------------------
 
 
-When connected as a valid player, you have a significantly expanded view
-into the game showing the privileged relations used to participate in the finance
-(+bond+), real estate (+land+), commodity (+food+), labor (+work+), and 
-debt (+note+) markets:
+=== Privileged Relations
+
+When connected as a valid player, you have a significantly expanded view into
+the game showing the privileged relations used to participate in the finance
+(+bond+), real estate (+land+), commodity (+food+), labor (+work+), and debt
+(+note+) markets:
 
 --------------------------------------------
 fairwinds=# \d
@@ -257,6 +260,8 @@ record history of cash transactions, food production and consumption,
 changes to 'Fairian' health status, and proficiency at various
 +skill+ categories.
 
+=== The Connection Relation
+
 The +connection+ relation lists the currently-active players. A SQL
 +select+ statement is used to list the data stored in a relation, so to
 show a list of currently-active players you could run:
@@ -276,6 +281,8 @@ really have to know the structure of the relation to get a listing of
 the data it contains. This listing shows that +alice+ is the only player
 connected to the game.
 
+=== The Fairian Relation
+
 The fairian relation holds the player accounts. A similar SQL
 statement is used to produce that list:
 
@@ -291,6 +298,8 @@ fairwinds=> select * from fairian;
 
 which shows (no surpize, since this is a tutorial) that +alice+ is the
 sole 'Fairian' account currently registered in the game.
+
+=== The Fairwinds Relation
 
 The fairwinds relation holds a single row that stores the current time
 ('i.e.' the current click), a time stamp of when the game began and when
@@ -310,7 +319,7 @@ Expanded display is on.
 fairwinds=> select click, click_interval from fairwinds;
 
 -[ RECORD 1 ]--+--
-click          | 2
+click          | 4
 click_interval | 20
 
 --------------------------------------------
@@ -321,6 +330,8 @@ view on and off. 'Off' produces output in the traditional tabular (rows
 and columns) output. 'On' is useful for results that have a single
 or small number of rows, as it pivots the columnar arrangment and lists
 each row in a separate group.
+
+=== Instruments of Trade
 
 The other relations are briefly described below, but these and others
 will get greater attention in subsequent tutorials:
@@ -364,7 +375,7 @@ food, and no money. As players enter the game, resources must be brought
 into existence by means of market activity that creates demand. The
 market response that creates the land and money needed for the game to
 progress is called "bootstrapping", 'i.e.', the game is figuratively
-"lifted by the bootstaps" to create wealth out of nothing.
+"lifted by the bootstraps" to create wealth out of nothing.
 
 This tutorial illustrates that bootstrapping protocol for the land market
 and the role you play in making it happen.
@@ -603,11 +614,10 @@ listing the work view:
 --------------------------------------------
 fairwinds=> select * from work;
 
- contract_number | issue_date | term | customer | supplier |   work_place   | active | skill_name
+ contract_number | issue_date | term | customer | supplier |   work_place   | active | skill_name 
 -----------------+------------+------+----------+----------+----------------+--------+------------
- da4b9237bacccd  |          3 |    1 | alice    | alice    | 356a192b7913b0 | t      | farmer
+ da4b9237bacccd  |         11 |    1 | alice    | alice    | 356a192b7913b0 | t      | farmer
 (1 row)
-
 --------------------------------------------
 			
 A contract_number has been assigned to serve as unique identifier, and the 
@@ -630,11 +640,12 @@ fairwinds=> select click, skill_name, debit, credit, description
 
  click | skill_name |  debit   | credit |                    description                     
 -------+------------+----------+--------+----------------------------------------------------
-     4 | farmer     | 0.017317 |        | skill improvement based on contract da4b9237bacccd
-     5 | farmer     | 0.017017 |        | skill improvement based on contract da4b9237bacccd
-     6 | farmer     | 0.016722 |        | skill improvement based on contract da4b9237bacccd
-     7 | farmer     | 0.016433 |        | skill improvement based on contract da4b9237bacccd
-(4 rows)
+    12 | farmer     | 0.017317 |        | skill improvement based on contract da4b9237bacccd
+    13 | farmer     | 0.017017 |        | skill improvement based on contract da4b9237bacccd
+    14 | farmer     | 0.016722 |        | skill improvement based on contract da4b9237bacccd
+    15 | farmer     | 0.016433 |        | skill improvement based on contract da4b9237bacccd
+    16 | farmer     | 0.016148 |        | skill improvement based on contract da4b9237bacccd
+(5 rows)
 
 --------------------------------------------
 
@@ -660,7 +671,7 @@ her proficiency and list the net balance:
 fairwinds=> select sum(debit) from skill_journal where fairian_name = 'alice';
    sum
 ---------+
-0.067489
+ 0.099505
 (1 row)
 
 --------------------------------------------
@@ -688,15 +699,17 @@ fairwinds=> select click, serial_number, debit, credit, description
 
  click | serial_number  |  debit   | credit |              description               
 -------+----------------+----------+--------+----------------------------------------
-     4 | 356a192b7913b0 | 0.000725 |        | land improvement based on cultivation 
-     5 | 356a192b7913b0 | 0.000724 |        | land improvement based on cultivation 
-     6 | 356a192b7913b0 | 0.000724 |        | land improvement based on cultivation 
-     7 | 356a192b7913b0 | 0.000723 |        | land improvement based on cultivation 
-(4 rows)
+    12 | 356a192b7913b0 | 0.000725 |        | land improvement based on cultivation 
+    13 | 356a192b7913b0 | 0.000724 |        | land improvement based on cultivation 
+    14 | 356a192b7913b0 | 0.000724 |        | land improvement based on cultivation 
+    15 | 356a192b7913b0 | 0.000723 |        | land improvement based on cultivation 
+    16 | 356a192b7913b0 | 0.000723 |        | land improvement based on cultivation 
+    17 | 356a192b7913b0 | 0.000722 |        | land improvement based on cultivation 
+(6 rows)
 --------------------------------------------
 
-The rows resulting from this query show that during each of clicks 4
-through 7, the productivity improved by a small amount. The behavior of
+The rows resulting from this query show that during each of clicks 12
+through 17, the productivity improved by a small amount. The behavior of
 land productivity is very similar to the way proficiency changes as a
 'Fairian' engages in activity: when land is cultivated, the productivity
 improves, and when left fallow, the productivity diminishes. And in both
@@ -722,20 +735,26 @@ fairwinds=> select click, debit, credit, description
 
  click |  debit   | credit |                description                
 -------+----------+--------+-------------------------------------------
-     4 |        1 |        | total production from land 356a192b7913b0
-     4 |          |      1 | daily sustenance
-     5 |  1.00001 |        | total production from land 356a192b7913b0
-     5 |          |      1 | daily sustenance
-     6 | 1.000042 |        | total production from land 356a192b7913b0
-     6 |          |      1 | daily sustenance
-     7 | 1.000094 |        | total production from land 356a192b7913b0
-     7 |          |      1 | daily sustenance
-     7 |          |  1e-06 | spoilage
-(9 rows)
+    12 |        1 |        | total production from land 356a192b7913b0
+    12 |          |      1 | daily sustenance
+    13 | 1.000007 |        | total production from land 356a192b7913b0
+    13 |          |      1 | daily sustenance
+    14 | 1.000028 |        | total production from land 356a192b7913b0
+    14 |          |      1 | daily sustenance
+    15 | 1.000066 |        | total production from land 356a192b7913b0
+    15 |          |      1 | daily sustenance
+    15 |          |  1e-06 | spoilage
+    16 | 1.000121 |        | total production from land 356a192b7913b0
+    16 |          |      1 | daily sustenance
+    16 |          |  1e-06 | spoilage
+    17 | 1.000194 |        | total production from land 356a192b7913b0
+    17 |          |      1 | daily sustenance
+    17 |          |  3e-06 | spoilage
+(15 rows)
 --------------------------------------------
 
-The rows resulting from this query show that during each of clicks 4
-through 7 Alice recieved the total food production (by virtue of her
+The rows resulting from this query show that during each click 
+Alice recieved the total food production (by virtue of her
 owning the land) associated with the particular contract.  Note the
 trend of increasing total food production. This increase is a due to a
 combination of Alice's improving proficiency and the increasing land
@@ -769,9 +788,9 @@ fairwinds==> select sum(debit) as debit_total,
                    sum(debit)-sum(credit) as balance 
 		   from food_journal where fairian_name = 'alice';
 
- debit_total | credit_total |       balance       
--------------+--------------+---------------------
-    4.000146 |     4.000001 | 0.00014499999999984
+ debit_total | credit_total |       balance        
+-------------+--------------+----------------------
+    6.000416 |     6.000005 | 0.000410999999998829
 (1 row)
 --------------------------------------------
 
@@ -789,17 +808,29 @@ parameters randomly determined at game start up.
 
 == Fairwinds Game Tutorial 8 - Sustenance and the Health Journal
 
-When a new 'Fairian' joins the game, they have no money, no land, and no
-food.  The one thing a new player is endowed with is perfect health.
-Maintaining health requires sustenance (food): during each click that a
-'Fairian' has enough food to meet the sustenance requirement of one food
-unit per click, health improves. Otherwise, health deteriorates.
+When a new 'Fairian' joins the game, they have no money, no land, and no food.
+A newly-created 'Fairian' has health status that depends upon when the player
+enters the game: Prior to the game start time, new 'Fairians' are endowed with
+perfect health; after the game has started, the initial 'Fairian' health status
+for newcomers is zero.  The consequences of the latter circumstance are
+discussed in a subsequent tutorial; this tutorial treats the former
+circumstance.
 
-In both cases, the change over time exhibits diminishing returns
-behavior in that as improving health approaches 100%, the per click
-improvement decreases so as to never exceed unity. Conversely,
-diminishing health is never less than zero so as health
-decreases, the per-click amount of atrophy itself decreases.
+=== Maintaining Health
+
+Maintaining health requires sustenance (food): during each click that a
+'Fairian' has a food surplus over the amount to meet the sustenance requirement
+of one food unit per click, health improves; during each click that a 'Fairian'
+has less than one sustenance unit, health deteriorates. Otherwise, health
+status remains unchanged.
+
+=== Heath Status Changes
+
+In both the first two cases, the change over time exhibits diminishing returns
+behavior in that as improving health approaches 100%, the per click improvement
+decreases so as to never exceed unity. Conversely, diminishing health is never
+less than zero so as health decreases, the per-click amount of atrophy itself
+decreases.
  
 The changes to 'Fairian' health are recorded in the health_journal.
 
@@ -814,26 +845,33 @@ fairwinds=> select click,debit,credit,description
      2 |          | 0.059635 | health deterioration based on insufficient sustenance balance 0
      3 |          | 0.056079 | health deterioration based on insufficient sustenance balance 0
      4 |          | 0.052735 | health deterioration based on insufficient sustenance balance 0
-     5 | 0.010046 |          | health improvement based on sustenance balance 1.000010
-     6 | 0.009446 |          | health improvement based on sustenance balance 1.000052
-     7 | 0.008883 |          | health improvement based on sustenance balance 1.000146
-(7 rows)
+     5 |          |  0.04959 | health deterioration based on insufficient sustenance balance 0
+     6 |          | 0.046633 | health deterioration based on insufficient sustenance balance 0
+     7 |          | 0.043852 | health deterioration based on insufficient sustenance balance 0
+     8 |          | 0.041236 | health deterioration based on insufficient sustenance balance 0
+     9 |          | 0.038777 | health deterioration based on insufficient sustenance balance 0
+    10 |          | 0.036465 | health deterioration based on insufficient sustenance balance 0
+    11 |          |  0.03429 | health deterioration based on insufficient sustenance balance 0
+    13 |  0.02739 |          | health improvement based on sustenance balance 1.000007
+    14 | 0.025757 |          | health improvement based on sustenance balance 1.000035
+    15 |  0.02422 |          | health improvement based on sustenance balance 1.000101
+    16 | 0.022776 |          | health improvement based on sustenance balance 1.000221
+    17 | 0.021418 |          | health improvement based on sustenance balance 1.000414
+(16 rows)
 --------------------------------------------
 
-These seven rows show that:
+These seventeen rows show that:
 
 * At click 1, when Alice entered the game, she was endowed with perfect health (100%).
-* Through click four, Alice's health decreased by a small percentage each click since she had no food.
-* At click 5, Alice's health began to increase once she began producing food through cultivation.
+* Through click eleven, Alice's health decreased by a small percentage each click since she had no food.
+* At click 13, Alice's health began to increase once she began producing food through cultivation.
 
-The transition to improving health after click 4 corresponds to when
-Alice began her engagement in cultivation and thereby satisfied the
-periodic sustenance requirement. Note further that the per click health
-decrease from click 1 through 4 itself decreases, that is, her health
-decreases by a continually smaller amount. Conversely, during clicks 5,
-6, and 7, her health improves by decreasing amounts. And
-lastly note in the description column on clicks 5, 6, and 7
-the trend of gradually increasing food surplus is annotated.
+The transition to improving health corresponds to when Alice began her
+engagement in cultivation and thereby satisfied the periodic sustenance
+requirement. Note further that the per-click health decrease itself
+decreases, that is, her health decreases by a continually smaller amount.
+Conversely, during the improving health, health improves by decreasing
+amounts. And lastly note in the description column annotates these effects.
 
 With the following more complex, 'running total' query, Alice can review
 her net health change over time:
@@ -849,31 +887,71 @@ fairwinds=> with running_total as
 	) select fairian_name, click, debit, credit, d-c as net 
             from running_total order by fairian_name, click;
 			
- fairian_name | click |   debit  |  credit  |   net
+ fairian_name | click |  debit   |  credit  |   net    
 --------------+-------+----------+----------+----------
  alice        |     1 |        1 |          |         
  alice        |     2 |          | 0.059635 | 0.940365
  alice        |     3 |          | 0.056079 | 0.884286
  alice        |     4 |          | 0.052735 | 0.831551
- alice        |     5 | 0.010046 |          | 0.841597
- alice        |     6 | 0.009446 |          | 0.851043
- alice        |     7 | 0.008883 |          | 0.859926
-(7 rows)
+ alice        |     5 |          |  0.04959 | 0.781961
+ alice        |     6 |          | 0.046633 | 0.735328
+ alice        |     7 |          | 0.043852 | 0.691476
+ alice        |     8 |          | 0.041236 |  0.65024
+ alice        |     9 |          | 0.038777 | 0.611463
+ alice        |    10 |          | 0.036465 | 0.574998
+ alice        |    11 |          |  0.03429 | 0.540708
+ alice        |    13 |  0.02739 |          | 0.568098
+ alice        |    14 | 0.025757 |          | 0.593855
+ alice        |    15 |  0.02422 |          | 0.618075
+ alice        |    16 | 0.022776 |          | 0.640851
+ alice        |    17 | 0.021418 |          | 0.662269
+(16 rows)
 --------------------------------------------
 
 The net column shows the running total of the difference between the
-additions (debit) and reductions (credit) columns, thus for each row,
-while the debit and credit columns show changes to health, the
-net column indicates her actual health at that click in time:
-it decreases through click 4 and then transitions to
-improvement subsequently.
+additions (debit) and reductions (credit) columns, thus for each row, while
+the debit and credit columns show changes to health, the net column indicates
+her actual health at that click in time: it decreases through click 4 and
+then transitions to improvement subsequently.
 
 The rate of health improvement and deterioration are small percentage
 constants fixed when the game is initialized.
 
 Note that a 'Fairian'''s' net health value influences their ability to
-perform skilled tasks, 'e.g.', a 'Fairian'''s' 'effectiveness' is
-adversely affected by poor health and decreases their food production.
+perform skilled tasks, 'e.g.', a 'Fairian'''s' 'effectiveness' is adversely
+affected by poor health and decreases their food production.
+
+=== Stationary Zero Health Status
+
+The third case, 'i.e.', when a 'Fairian' enters a click with exactly one food
+unit, results in no change to health status. In the particular circumstance
+of zero health and being a sole cultivator of a land plot, health status
+remains at zero. 
+
+=== Emerging from Stationary Zero Health Status
+
+There are three ways to emerge from stationary zero health, and they all
+involve, as a necessary condition, a food surplus.
+
+
+[horizontal] 
+Buy Food:: Maybe the most straightforward means of emerging from
+stationarity is to buy food. This works, of course, only if other 'Fairians'
+have generated a food surplus and are willing to sell some.
+
+Sell Labor:: Another means is to hire on as a supplier on the labor market.
+Provided that the work site is being cultivated by at least one other 'Fairain'
+with non-zero effectiveness, you will share in the fruits of the combined team
+effectiveness and get a share of the excess production.
+
+Buy Labor:: Similar to hiring out as a supplier as above, you can alternatively
+hire another 'Fairain' to jointly cultivate a land plot you own. Provided they
+have non-zero effectiveness, you will similarly share in the fruits of the
+combined team effectiveness.
+
+
+
+
 
 == Fairwinds Game Tutorial 9 - We Have Company
 
@@ -900,10 +978,11 @@ see the email address of other registered players, only his own:
 
 --------------------------------------------
 fairwinds=> select * from fairian;
+
  fairian_name | play_level |  email_address  |        created_date        
 --------------+------------+-----------------+----------------------------
- bob          | privileged | bob@example.com | 2015-01-24 06:39:49.301221
- alice        | privileged |                 | 2015-01-23 20:55:48.862115
+ alice        | privileged |                 | 2015-07-19 19:59:28.266137
+ bob          | privileged | bob@example.com | 2015-07-19 19:59:28.266137
 (2 rows)
 --------------------------------------------
 
@@ -914,8 +993,8 @@ connection view:
 fairwinds=> select * from connection ;
  fairian_name |          login_time           
 --------------+-------------------------------
- alice        | 2015-01-23 20:55:48.862115
- bob          | 2015-01-24 06:39:49.301221
+ alice        | 2015-01-19 20:55:48.862115
+ bob          | 2015-01-20 06:39:49.301221
 (2 rows)
 --------------------------------------------
 
@@ -950,7 +1029,7 @@ fairwinds=> select * from land;
 
  serial_number  | productivity | fairian_name 
 ----------------+--------------+--------------
- 356a192b7913b0 |     0.002896 | alice
+ 356a192b7913b0 |     0.004341 | alice
  77de68daecd823 |            0 | 
 (2 rows)
 --------------------------------------------
@@ -1045,7 +1124,7 @@ fairwinds=> select * from bond_bid;
 
  expiration | term | price | fairian_name 
 ------------+------+-------+--------------
-          1 |    2 |  1000 | 
+         36 |    2 |  1000 | 
 (1 row)
 --------------------------------------------
 
@@ -1078,7 +1157,7 @@ fairwinds=> select * from bond;
 
  serial_number  | issue_date | term | face_amount | bond_owner | bond_issuer 
 ----------------+------------+------+-------------+------------+-------------
- 1b6453892473a4 |          7 |    2 |        1000 |            | bob
+ 1b6453892473a4 |         17 |    2 |        1000 |            | bob
 (1 row)
 
 --------------------------------------------
@@ -1104,8 +1183,8 @@ fairwinds=> select * from land;
 
  serial_number  | productivity | fairian_name 
 ----------------+--------------+--------------
- 356a192b7913b0 |     0.002896 | alice
- 77de68daecd823 |              | bob
+ 356a192b7913b0 |     0.004341 | alice
+ 77de68daecd823 |            0 | bob
 (2 rows)
 --------------------------------------------
 
@@ -1125,10 +1204,11 @@ involving Alice on her land:
 --------------------------------------------
 
 fairwinds=> select * from work;
+
  contract_number | issue_date | term | customer | supplier |   work_place   | active | skill_name 
 -----------------+------------+------+----------+----------+----------------+--------+------------
- da4b9237bacccd  |          3 |    1 | alice    | alice    | 356a192b7913b0 | t      | farmer
- ac3478d69a3c81  |          7 |    1 | bob      | bob      | 77de68daecd823 | t      | farmer
+ da4b9237bacccd  |         11 |    1 | alice    | alice    | 356a192b7913b0 | t      | farmer
+ ac3478d69a3c81  |         17 |    1 | bob      | bob      | 77de68daecd823 | t      | farmer
 (2 rows)
 --------------------------------------------
 
@@ -1158,31 +1238,30 @@ fairwinds=> select click, fairian_name, account, debit, credit, description
 
  click | fairian_name | account | debit |   credit   |         description          
 -------+--------------+---------+-------+------------+------------------------------
-     2 | alice        | land    |       |          0 | Bought land 356a192b7913b0
-     7 | bob          | bond    |  1000 |            | Issued bond 1b6453892473a4
-     7 | bob          | land    |       |   0.001028 | Bought land 77de68daecd823
-     7 | bob          | cost    |       |          1 | Trade order transaction fee
-     9 | bob          | bond    |       | 998.998972 | Redeemed bond 1b6453892473a4
+     8 | alice        | land    |       |          0 | Bought land 356a192b7913b0
+    17 | bob          | bond    |  1000 |            | Issued bond 1b6453892473a4
+    17 | bob          | land    |       |   0.001028 | Bought land 77de68daecd823
+    17 | bob          | cost    |       |          1 | Trade order transaction fee
+    19 | bob          | bond    |       | 998.998972 | Redeemed bond 1b6453892473a4
 (5 rows)
 
 --------------------------------------------
 
-This listing shows the zero-cost land purchase by Alice at click 2. Then
-several transactions by Bob are recorded. First at click 7 is the 
-distribution to Bob of the proceeds of him issuing a bond (which is his 
-first transaction during click 7), the land purchase is listed next, 
-followed by the transaction fee incurred because he executed more than 
-one transaction during click 7.
+This listing shows the zero-cost land purchase by Alice at click 8. Then
+several transactions by Bob are recorded. First at click 17 is the
+distribution to Bob of the proceeds of him issuing a bond (which is his first
+transaction during the click), the land purchase is listed next, followed
+by the transaction fee incurred because he executed more than one transaction
+during the click.
 
-The bond matured at click 9. 
-Since Bob spent some of the money on land and 
-additionally incurred a transaction fee, he did not have sufficient 
-funds to fully repay the loan.
+Lastly the bond matured. Since Bob spent some of the money on land and
+additionally incurred a transaction fee, he did not have sufficient funds to
+fully repay the loan.
 
 Note that, from the lenders perspective Bob's cash shortfall is irrelevant:
-Bonds are guaranteed investments as far as the lender is concerned. The 
-governing market authority creates enough Faircoin to fully repay the
-lender at bond maturity.
+Bonds are guaranteed investments as far as the lender is concerned. The
+governing market authority creates enough Faircoin to fully repay the lender
+at bond maturity.
 
 But Bob does not necessarily get let off the hook for the shortfall.
 
@@ -1191,83 +1270,66 @@ But Bob does not necessarily get let off the hook for the shortfall.
 
 == Fairwinds Game Tutorial C - The Debt Market
 
-In the previous tutorial, Bob was short of cash 
-to repay a bond he issued. When this happens, a demand 
-note is issued listing Bob as a debtor for the amount 
-of the shortfall. Demand notes are a mechanism for 
-factoring ('i.e.', re-selling) debt. The factor ('i.e.', 
-the owner) of 
-a note incurs the right to call the debt at any 
-time. Any cash the debtor has at the time of call,
-up to the note face amount, is relinquished by 
-the debtor and transferred to the factor.
+In the previous tutorial, Bob was short of cash to repay a bond he issued.
+When this happens, a demand note is issued listing Bob as a debtor for the
+amount of the shortfall. Demand notes are a mechanism for factoring ('i.e.',
+re-selling) debt. The factor ('i.e.', the owner) of a note incurs the
+right to call the debt at any time. Any cash the debtor has at the time of
+call, up to the note face amount, is relinquished by the debtor and
+transferred to the factor.
 
-Demand notes are traded somewhat 
-similarly to bonds in that they 
-are purchased at a discount from "face value". 
-Face value in this case is the corresponding
-bond redemption shortfall amount.
+Demand notes are traded somewhat similarly to bonds in that they are
+purchased at a discount from "face value".  Face value in this case is the
+corresponding bond redemption shortfall amount.
 
-Note however that there is no secondary market 
-for notes. They are sold by the governing market 
-authority once, and the buyer has no mechanism to 
-resell (in contrast to as is the case, for example, with the 
-real estate or commodity markets for land or food).
+Note however that there is no secondary market for notes. They are sold by
+the governing market authority once, and the buyer has no mechanism to resell
+(in contrast to as is the case, for example, with the real estate or
+commodity markets for land or food).
 
-For Bob's case the shortfall is the sum of the +fc1+ 
-transaction fee and the cost of the purchased land plot. 
-When the bond matured, a note was created in the note 
-relation, which can be listed with a simple query:
+For Bob's case the shortfall is the sum of the +fc1+ transaction fee and the
+cost of the purchased land plot.  When the bond matured, a note was created
+in the note relation, which can be listed with a simple query:
 
 --------------------------------------------
 fairwinds=> select * from note;
 
- serial_number  | issue_date |      amount      | factor | debtor | called
+ serial_number  | issue_date |      amount      | factor | debtor | called 
 ----------------+------------+------------------+--------+--------+--------
- c1dfd96eea8cc2 |         19 | 1.00102800000002 |        | bob    | f
+ c1dfd96eea8cc2 |         29 | 1.00102800000002 |        | bob    | f
 (1 row)
 --------------------------------------------
 
-The serial_number serves as a unique identifier and is 
-automatically assigned when the note is created.
+The serial_number serves as a unique identifier and is automatically assigned
+when the note is created.
 
-The issue_date is automatically set for a future 
-click. This allows for other players 
-to discover the bidding opportunity and consider how
-much, if at all, they want to bid on the debt. 
+The issue_date is automatically set for a future click. This allows for other
+players to discover the bidding opportunity and consider how much, if at all,
+they want to bid on the debt. 
 
-When game time advances to the issue_date click, 
-a market sell order is added to the note_ask table 
-and is automatically matched against any open 
-limit buy orders in the note_bid relation for that 
-specific note serial number: the 
-highest bid amount trade executes and the others 
-are expired on the subsequent click. If there
-are no open bid orders for a specific note at
-issue time, then the note order is changed from 
-a market order to a limit order with price 
-zero.
+When game time advances to the issue_date click, a market sell order is added
+to the note_ask table and is automatically matched against any open limit buy
+orders in the note_bid relation for that specific note serial number: the
+highest bid amount trade executes and the others are expired on the
+subsequent click. If there are no open bid orders for a specific note at
+issue time, then the note order is changed from a market order to a limit
+order with price zero.
 
-The factor of a note is equivalent to the owner of a bond, 
-and calling a note is something like redemption at maturity 
-of a bond. Upon demand note redemption, cash is transferred 
-from the debtor to the factor, provided the debtor has 
-cash when the note is called.
+The factor of a note is equivalent to the owner of a bond, and calling a note
+is something like redemption at maturity of a bond. Upon demand note
+redemption, cash is transferred from the debtor to the factor, provided the
+debtor has cash when the note is called.
 
-Demand notes are redeemed by calling them, 'i.e.',
-by updating the called attribute to equal true.
-Calling a note is literally a demand for payment.
-Cash, up to the lesser of the debtors current net cash
-or the note amount, is transferred from the debtor 
-to the factor. 
+Demand notes are redeemed by calling them, 'i.e.', by updating the called
+attribute to equal true.  Calling a note is literally a demand for payment.
+Cash, up to the lesser of the debtors current net cash or the note amount, is
+transferred from the debtor to the factor. 
 
-A demand note can be called only once, after which 
-it is expired and no longer listed in the note view
-nor accessible to the factor or other players.
+A demand note can be called only once, after which it is expired and no
+longer listed in the note view nor accessible to the factor or other players.
 
-Alice proceeds to place a buy order for the note. 
-(This particular case is not very lucrative, but 
-it serves to illustrate the process.)
+Alice proceeds to place a buy order for the note.  (This particular case is
+not very lucrative, but it serves to illustrate the process.)
 
 First she lists the note_bid structure 
 
@@ -1282,17 +1344,14 @@ fairwinds=# \d note_bid
  price         | faircoin              |
 --------------------------------------------
 
-As in past examples, it is not necessary to specify the 
-fairian_name, as that will be automatically filled in. The 
-serial_number is essential and must be specified since 
-a note bid is made for specific notes individually. 
-The expiration, if not specified, defaults to one, but 
-generally should be long enough to last 
-until the future note issue date.
+As in past examples, it is not necessary to specify the fairian_name, as that
+will be automatically filled in. The serial_number is essential and must be
+specified since a note bid is made for specific notes individually.  The
+expiration, if not specified, defaults to one, but generally should be long
+enough to last until the future note issue date.
 
-Since Alice knows she is the only bidder, she 
-"low-balls" by making a bid for zero Faircoin
-and confirms her entry by listing the bids:
+Since Alice knows she is the only bidder, she "low-balls" by making a bid for
+zero Faircoin and confirms her entry by listing the bids:
 
 --------------------------------------------
 fairwinds=> insert into note_bid (serial_number, expiration, price) values ('c1dfd96eea8cc2', 10, 0);
@@ -1302,7 +1361,7 @@ fairwinds=> select * from note_bid;
 
  fairian_name | serial_number  | expiration | price
 --------------+----------------+------------+-------
- alice        | c1dfd96eea8cc2 |         19 |     0
+ alice        | c1dfd96eea8cc2 |         29 |     0
 (1 row)
 --------------------------------------------
 
@@ -1313,49 +1372,47 @@ bid "wins" and she becomes the note owner:
 --------------------------------------------
 fairwinds=> select * from note;
 
- serial_number  | issue_date |      amount      | factor | debtor | called
+ serial_number  | issue_date |      amount      | factor | debtor | called 
 ----------------+------------+------------------+--------+--------+--------
- c1dfd96eea8cc2 |         19 | 1.00102800000002 | alice  | bob    | f
+ c1dfd96eea8cc2 |         29 | 1.00102800000002 |        | bob    | f
 (1 row)
 --------------------------------------------
 
 
-Although it makes little sense for Alice to do so now, since 
-Bob has no cash, for purposes of illustration we show how 
-Alice would call the note:
+Although it makes little sense for Alice to do so now, since Bob has no cash,
+for purposes of illustration we show how Alice would call the note:
 
 --------------------------------------------
 update note set called = true where serial_number = 'c1dfd96eea8cc2';
 --------------------------------------------
 
-The effect of the demand is evident in the cash_journal view 
-that we saw in an earlier tutorial:
+The effect of the demand is evident in the cash_journal view that we saw in
+an earlier tutorial:
 
 
 --------------------------------------------
 fairwinds=> select * from cash_journal;
 
- click | fairian_name | account | debit |   credit   | acknowledged |                  description
+ click | fairian_name | account | debit |   credit   | acknowledged |                  description                  
 -------+--------------+---------+-------+------------+--------------+-----------------------------------------------
-     2 | alice        | land    |       |          0 | f            | Bought land 356a192b7913b0
-     7 | bob          | bond    |  1000 |            | f            | Issued bond 1b6453892473a4
-     7 | bob          | cost    |       |          1 | f            | Trade order transaction fee
-     7 | bob          | land    |       |   0.001028 | f            | Bought land 77de68daecd823
-     9 | bob          | bond    |       | 998.998972 | f            | Redeemed bond 1b6453892473a4
-    19 | alice        | note    |       |          0 | f            | Bought note c1dfd96eea8cc2
-    20 | bob          | note    |       |          0 | f            | Collection c1dfd96eea8cc2: Debtor is indigent
-    20 | alice        | note    |     0 |            | f            | Collection c1dfd96eea8cc2: Debtor is indigent
+     8 | alice        | land    |       |          0 | f            | Bought land 356a192b7913b0
+    17 | bob          | bond    |  1000 |            | f            | Issued bond 1b6453892473a4
+    17 | bob          | cost    |       |          1 | f            | Trade order transaction fee
+    17 | bob          | land    |       |   0.001028 | f            | Bought land 77de68daecd823
+    19 | bob          | bond    |       | 998.998972 | f            | Redeemed bond 1b6453892473a4
+    30 | alice        | note    |       |          0 | f            | Bought note c1dfd96eea8cc2
+    30 | bob          | note    |       |          0 | f            | Collection c1dfd96eea8cc2: Debtor is indigent
+    30 | alice        | note    |     0 |            | f            | Collection c1dfd96eea8cc2: Debtor is indigent
 (8 rows)
 --------------------------------------------
 
 
-This table shows the transactions seen earlier and additionally 
-that at click 19, the note was sold to the highest bidder (Alice),
-and then at click 20 Alice called the note. Annotated in the 
-description column is the detail indicating the resulting 
-action: zero Faircoin was transferred from Bob to Alice
-since Bob had no cash available at the time of call. Other 
-possible results are partial payment or full payment.
+This table shows the transactions seen earlier and additionally that at click
+19, the note was sold to the highest bidder (Alice), and then at click 20
+Alice called the note. Annotated in the description column is the detail
+indicating the resulting action: zero Faircoin was transferred from Bob to
+Alice since Bob had no cash available at the time of call. Other possible
+results are partial payment or full payment.
 
 == Fairwinds Game Tutorial D - Hiring Labor
 
@@ -1386,32 +1443,29 @@ the orders are placed, they appear in the work_ask view as
 --------------------------------------------
 fairwinds=> select *, price/term as rate from work_ask;
 
- skill_name | expiration | term | effectiveness | price | fairian_name | rate
-------------+------------+------+---------------+-------+--------------+---------
- farmer     |         25 |   19 |             0 |    45 | david        | 2.3684
- farmer     |         25 |   20 |             0 |    50 | cathy        | 2.5
+ skill_name | expiration | term | effectiveness | price | fairian_name |       rate       
+------------+------------+------+---------------+-------+--------------+------------------
+ farmer     |         35 |   20 |             0 |    50 | cathy        |              2.5
+ farmer     |         35 |   19 |             0 |    45 | david        | 2.36842105263158
 (2 rows)
 
 --------------------------------------------
 
-Since Cathy and David are new players their proficiency, and 
-hence their effectiveness, at the 
-farming skill is zero, since neither has worked in that capacity
-yet.
+Since Cathy and David are new players their proficiency, and hence their
+effectiveness, at the farming skill is zero, since neither has worked in that
+capacity yet.
 
-Alice is on the lookout to hire a laborer because 
-she wants to build a food surplus and so takes 
-notice of these labor contract sell offers.
+Alice is on the lookout to hire a laborer because she wants to build a food
+surplus and so takes notice of these labor contract sell offers.
 
-Alice invokes the bond bootstrapping process seen in an
-earlier tutorial in order to raise capital in support 
-of her planned bid to buy a labor contract.
+Alice invokes the bond bootstrapping process seen in an earlier tutorial in
+order to raise capital in support of her planned bid to buy a labor contract.
 
 --------------------------------------------
 fairwinds=> select * from bond;    
  serial_number  | issue_date | term | face_amount | bond_owner | bond_issuer 
 ----------------+------------+------+-------------+------------+-------------
- 902ba3cda18838 |         21 |    2 |        1000 |            | alice
+ 902ba3cda18838 |         31 |    2 |        1000 |            | alice
 (1 row)
 --------------------------------------------
 
@@ -1424,8 +1478,8 @@ INSERT 0 1
 
 and then confirms that her trade executed at the best price 
 as seen in the the cash_journal, which shows the +fc45+ payment
-by Alice to David at click +22+ ratifying contract 'fe5dbbcea5ce7e',
-Also appearing, at click 23, is redemption of the short-term bond 
+by Alice to David at click +32+ ratifying contract 'fe5dbbcea5ce7e',
+Also appearing, at click +33+, is redemption of the short-term bond 
 that had been earlier issued by Alice to raise the cash needed
 to place the labor contract bid:
 
@@ -1433,17 +1487,20 @@ to place the labor contract bid:
 fairwinds=# select click, fairian_name, account, debit, credit, description 
 		from cash_journal where click>20;
 
- click | fairian_name | account | debit | credit |           description            
--------+--------------+---------+-------+--------+----------------------------------
-    21 | alice        | bond    |  1000 |        | Issued bond 902ba3cda18838
-    22 | david        | work    |    45 |        | Ratified contract fe5dbbcea5ce7e
-    22 | alice        | work    |       |     45 | Ratified contract fe5dbbcea5ce7e
-    23 | alice        | bond    |       |    955 | Redeemed bond 902ba3cda18838
-(4 rows)
+ click | fairian_name | account | debit | credit |                  description                  
+-------+--------------+---------+-------+--------+-----------------------------------------------
+    30 | alice        | note    |       |      0 | Bought note c1dfd96eea8cc2
+    30 | bob          | note    |       |      0 | Collection c1dfd96eea8cc2: Debtor is indigent
+    30 | alice        | note    |     0 |        | Collection c1dfd96eea8cc2: Debtor is indigent
+    31 | alice        | bond    |  1000 |        | Issued bond 902ba3cda18838
+    32 | david        | work    |    45 |        | Ratified contract fe5dbbcea5ce7e
+    32 | alice        | work    |       |     45 | Ratified contract fe5dbbcea5ce7e
+    33 | alice        | bond    |       |    955 | Redeemed bond 902ba3cda18838
+(7 rows)
 --------------------------------------------
 
 This new labor contract between her and David issued at click 
-22 appears in the work view:
+32 appears in the work view:
 
 --------------------------------------------
 fairwinds=> select contract_number, issue_date, term, customer, 
@@ -1451,14 +1508,14 @@ fairwinds=> select contract_number, issue_date, term, customer,
 
  contract_number | issue_date | term | customer | supplier |   work_place   | skill_name 
 -----------------+------------+------+----------+----------+----------------+------------
- da4b9237bacccd  |          3 |    1 | alice    | alice    | 356a192b7913b0 | farmer
- ac3478d69a3c81  |          7 |    1 | bob      | bob      | 77de68daecd823 | farmer
- fe5dbbcea5ce7e  |         22 |   19 | alice    | david    | 356a192b7913b0 | farmer
+ da4b9237bacccd  |         11 |    1 | alice    | alice    | 356a192b7913b0 | farmer
+ fe5dbbcea5ce7e  |         32 |   10 | alice    | david    | 356a192b7913b0 | farmer
+ ac3478d69a3c81  |         17 |    1 | bob      | bob      | 77de68daecd823 | farmer
 (3 rows)
 --------------------------------------------
 
-Note that the term of this new contract is +19+. The game assigns the 
-most generous term to the labor buyer in the case of a market order.
+Note that the term of this new contract is +10+. The game assigns the average
+of the bid and ask terms to the labor buyer in the case of a market order.
 
 The effect on food production of hired help after some time has 
 elapsed is illustrated below. The most recent food_journal 
@@ -1467,26 +1524,34 @@ entries for Alice appear as follows:
 --------------------------------------------
 fairwinds=# select click, debit, credit, description 
 		from food_journal 
-		where fairian_name = 'alice' and click>20;
+		where fairian_name = 'alice';
 
- click |  debit   |  credit  |                         description                         
--------+----------+----------+-------------------------------------------------------------
-    21 | 1.002948 |          | total production from land 356a192b7913b0
-    21 |          |        1 | daily sustenance
-    21 |          | 0.000115 | spoilage
-    22 | 1.003290 |          | total production from land 356a192b7913b0
-    22 |          |        1 | daily sustenance
-    22 |          | 0.000135 | spoilage
-    23 | 2.007296 |          | total production from land 356a192b7913b0
-    23 |          | 1.002432 | supplier production share paid from contract fe5dbbcea5ce7e
-    23 |          |        1 | daily sustenance
-    23 |          | 0.000166 | spoilage
-(10 rows)
+ click |  debit   |  credit  |                        description                        
+-------+----------+----------+-----------------------------------------------------------
+   ... | ...      | ...      | ...
+    31 | 1.003277 |          | total production from land 356a192b7913b0
+    31 |          |        1 | daily sustenance
+    31 |          | 0.000136 | spoilage
+    32 | 1.003638 |          | total production from land 356a192b7913b0
+    32 |          |        1 | daily sustenance
+    32 |          | 0.000158 | spoilage
+    33 | 2.008032 |          | total production from land 356a192b7913b0
+    33 |          | 1.002677 | supplier production share paid on contract fe5dbbcea5ce7e
+    33 |          |        1 | daily sustenance
+    33 |          | 0.000191 | spoilage
+    34 | 2.008845 |          | total production from land 356a192b7913b0
+    34 |          | 1.002948 | supplier production share paid on contract fe5dbbcea5ce7e
+    34 |          |        1 | daily sustenance
+    34 |          | 0.000228 | spoilage
+    35 | 2.009735 |          | total production from land 356a192b7913b0
+    35 |          | 1.003245 | supplier production share paid on contract fe5dbbcea5ce7e
+    35 |          |        1 | daily sustenance
+    35 |          | 0.000268 | spoilage
 --------------------------------------------
 
 
-During each of clicks 21 and 22, the slowly increasing excess production 
-is evident due to Alice's self-owned cultivation. At click 23 the 
+During each of clicks 31 and 32, the slowly increasing excess production 
+is evident due to Alice's self-owned cultivation. At click 33 the 
 effect of hiring David is apparent in two ways. First, the total
 production doubles, since now two Fairians are working the land plot; 
 second, Alice makes a distribution of a share of the production 
@@ -1502,10 +1567,16 @@ fairwinds=# select click, debit, credit, description
 
  click |  debit   | credit  |                           description                           
 -------+----------+---------+-----------------------------------------------------------------
-    23 | 1.002432 |         | supplier production share received from contract fe5dbbcea5ce7e
-    23 |          |       1 | daily sustenance
-    23 |          | 1.6e-05 | spoilage
-(3 rows)
+    33 | 1.002677 |         | supplier production share received from contract fe5dbbcea5ce7e
+    33 |          |       1 | daily sustenance
+    33 |          | 1.7e-05 | spoilage
+    34 | 1.002948 |         | supplier production share received from contract fe5dbbcea5ce7e
+    34 |          |       1 | daily sustenance
+    34 |          | 3.6e-05 | spoilage
+    35 | 1.003245 |         | supplier production share received from contract fe5dbbcea5ce7e
+    35 |          |       1 | daily sustenance
+    35 |          | 5.6e-05 | spoilage
+(9 rows)
 --------------------------------------------
 
 Alice thinks this is working out pretty well, so she places
@@ -1519,10 +1590,10 @@ fairwinds=> select contract_number, issue_date, term, customer,
 
  contract_number | issue_date | term | customer | supplier |   work_place   | skill_name 
 -----------------+------------+------+----------+----------+----------------+------------
- da4b9237bacccd  |          3 |    1 | alice    | alice    | 356a192b7913b0 | farmer
- ac3478d69a3c81  |          7 |    1 | bob      | bob      | 77de68daecd823 | farmer
- fe5dbbcea5ce7e  |         22 |   19 | alice    | david    | 356a192b7913b0 | farmer
- b1d5781111d84f  |         23 |   20 | alice    | cathy    | 356a192b7913b0 | farmer
+ da4b9237bacccd  |         11 |    1 | alice    | alice    | 356a192b7913b0 | farmer
+ fe5dbbcea5ce7e  |         32 |   10 | alice    | david    | 356a192b7913b0 | farmer
+ b1d5781111d84f  |         35 |   11 | alice    | cathy    | 356a192b7913b0 | farmer
+ ac3478d69a3c81  |         17 |    1 | bob      | bob      | 77de68daecd823 | farmer
 (4 rows)
 --------------------------------------------
 
@@ -1534,15 +1605,19 @@ both Cathy and David:
 --------------------------------------------
 fairwinds=> select click, debit, credit, description
                  from food_journal
-                 where fairian_name = 'alice' and click>20;
- click |  debit   |  credit  |                         description                         
--------+----------+----------+-------------------------------------------------------------
-    24 | 3.012545 |          | total production from land 356a192b7913b0
-    24 |          | 1.003136 | supplier production share paid from contract fe5dbbcea5ce7e
-    24 |          | 1.003136 | supplier production share paid from contract b1d5781111d84f
-    24 |          |        1 | daily sustenance
-    24 |          | 0.000205 | spoilage
-(5 rows)
+                 where fairian_name = 'alice' and click>34;
+                 
+ click |  debit   |  credit  |                        description                        
+-------+----------+----------+-----------------------------------------------------------
+    35 | 2.009735 |          | total production from land 356a192b7913b0
+    35 |          | 1.003245 | supplier production share paid on contract fe5dbbcea5ce7e
+    35 |          |        1 | daily sustenance
+    35 |          | 0.000268 | spoilage
+    36 |  3.01605 |          | total production from land 356a192b7913b0
+    36 |          | 1.004013 | supplier production share paid on contract b1d5781111d84f
+    36 |          | 1.004013 | supplier production share paid on contract fe5dbbcea5ce7e
+    36 |          |        1 | daily sustenance
+    36 |          | 0.000317 | spoilage
 --------------------------------------------
 
 
@@ -1585,7 +1660,7 @@ fairwinds=> select fairian_name from fairian order by 1;
 
 and wants to emulate and expand upon Alice's success with hiring.
 
-After bootstapping the bond market, Bob has cash and places many  
+After bootstrapping the bond market, Bob has cash and places many  
 labor market bid orders, hoping to entice the newcomers to work
 cultivating his land plot. He offers a graded variety of labor 
 rates, hoping to entice earlier adopters to commit:
@@ -1624,27 +1699,27 @@ fairwinds=> select *, price/term as rate from work_bid order by rate desc;
 
  skill_name | expiration | term | effectiveness | price | fairian_name |   work_place   | rate 
 ------------+------------+------+---------------+-------+--------------+----------------+------
- farmer     |         29 |   10 |             0 |    25 | bob          | 77de68daecd823 |  2.5
- farmer     |         29 |   10 |             0 |    22 | bob          | 77de68daecd823 |  2.2
- farmer     |         29 |   10 |             0 |    20 | bob          | 77de68daecd823 |  2.0
- farmer     |         29 |   10 |             0 |    18 | bob          | 77de68daecd823 |  1.8
- farmer     |         29 |   10 |             0 |    16 | bob          | 77de68daecd823 |  1.6
- farmer     |         29 |   10 |             0 |    15 | bob          | 77de68daecd823 |  1.5
- farmer     |         29 |   10 |             0 |    14 | bob          | 77de68daecd823 |  1.4
- farmer     |         29 |   10 |             0 |    13 | bob          | 77de68daecd823 |  1.3
- farmer     |         29 |   10 |             0 |    12 | bob          | 77de68daecd823 |  1.2
- farmer     |         29 |   10 |             0 |    10 | bob          | 77de68daecd823 |  1.0
- farmer     |         29 |   10 |             0 |     9 | bob          | 77de68daecd823 |  0.9
- farmer     |         29 |   10 |             0 |     8 | bob          | 77de68daecd823 |  0.8
- farmer     |         29 |   10 |             0 |     7 | bob          | 77de68daecd823 |  0.7
- farmer     |         29 |   10 |             0 |     6 | bob          | 77de68daecd823 |  0.6
- farmer     |         29 |   10 |             0 |     5 | bob          | 77de68daecd823 |  0.5
- farmer     |         29 |   10 |             0 |     4 | bob          | 77de68daecd823 |  0.4
- farmer     |         29 |   10 |             0 |     3 | bob          | 77de68daecd823 |  0.3
- farmer     |         29 |   10 |             0 |     3 | bob          | 77de68daecd823 |  0.3
- farmer     |         29 |   10 |             0 |     2 | bob          | 77de68daecd823 |  0.2
- farmer     |         29 |   10 |             0 |     1 | bob          | 77de68daecd823 |  0.1
- farmer     |         29 |   10 |             0 |     0 | bob          | 77de68daecd823 |  0.0
+ farmer     |         66 |   10 |             0 |    25 | bob          | 77de68daecd823 | 2.5
+ farmer     |         66 |   10 |             0 |    22 | bob          | 77de68daecd823 | 2.2
+ farmer     |         66 |   10 |             0 |    20 | bob          | 77de68daecd823 | 2
+ farmer     |         66 |   10 |             0 |    18 | bob          | 77de68daecd823 | 1.8
+ farmer     |         66 |   10 |             0 |    16 | bob          | 77de68daecd823 | 1.6
+ farmer     |         66 |   10 |             0 |    15 | bob          | 77de68daecd823 | 1.5
+ farmer     |         66 |   10 |             0 |    14 | bob          | 77de68daecd823 | 1.4
+ farmer     |         66 |   10 |             0 |    13 | bob          | 77de68daecd823 | 1.3
+ farmer     |         66 |   10 |             0 |    12 | bob          | 77de68daecd823 | 1.2
+ farmer     |         66 |   10 |             0 |    10 | bob          | 77de68daecd823 | 1
+ farmer     |         66 |   10 |             0 |     9 | bob          | 77de68daecd823 | 0.9
+ farmer     |         66 |   10 |             0 |     8 | bob          | 77de68daecd823 | 0.8
+ farmer     |         66 |   10 |             0 |     7 | bob          | 77de68daecd823 | 0.7
+ farmer     |         66 |   10 |             0 |     6 | bob          | 77de68daecd823 | 0.6
+ farmer     |         66 |   10 |             0 |     5 | bob          | 77de68daecd823 | 0.5
+ farmer     |         66 |   10 |             0 |     4 | bob          | 77de68daecd823 | 0.4
+ farmer     |         66 |   10 |             0 |     3 | bob          | 77de68daecd823 | 0.3
+ farmer     |         66 |   10 |             0 |     3 | bob          | 77de68daecd823 | 0.3
+ farmer     |         66 |   10 |             0 |     2 | bob          | 77de68daecd823 | 0.2
+ farmer     |         66 |   10 |             0 |     1 | bob          | 77de68daecd823 | 0.1
+ farmer     |         66 |   10 |             0 |     0 | bob          | 77de68daecd823 | 0
 (21 rows)
 --------------------------------------------
 
@@ -1660,110 +1735,153 @@ fairwinds=> select contract_number, issue_date, term, customer,
 
  contract_number | issue_date | term | customer | supplier |   work_place   | skill_name 
 -----------------+------------+------+----------+----------+----------------+------------
- ac3478d69a3c81  |          7 |    1 | bob      | bob      | 77de68daecd823 | farmer
- 7b52009b64fd0a  |         25 |   10 | bob      | edwin    | 77de68daecd823 | farmer
- bd307a3ec329e1  |         25 |   10 | bob      | fredrick | 77de68daecd823 | farmer
- fa35e192121eab  |         25 |   10 | bob      | gina     | 77de68daecd823 | farmer
- f1abd670358e03  |         25 |   10 | bob      | hendrik  | 77de68daecd823 | farmer
- 1574bddb75c78a  |         25 |   10 | bob      | ingrid   | 77de68daecd823 | farmer
- 0716d9708d321f  |         25 |   10 | bob      | james    | 77de68daecd823 | farmer
- 9e6a55b6b4563e  |         25 |   10 | bob      | karen    | 77de68daecd823 | farmer
- b3f0c7f6bb763a  |         25 |   10 | bob      | leonard  | 77de68daecd823 | farmer
- 91032ad7bbcb6c  |         25 |   10 | bob      | michelle | 77de68daecd823 | farmer
- 472b07b9fcf2c2  |         25 |   10 | bob      | norman   | 77de68daecd823 | farmer
- 12c6fc06c99a46  |         25 |   10 | bob      | olivia   | 77de68daecd823 | farmer
- d435a6cdd78630  |         25 |   10 | bob      | peter    | 77de68daecd823 | farmer
- 4d134bc072212a  |         25 |   10 | bob      | quincy   | 77de68daecd823 | farmer
- f6e1126cedebf2  |         25 |   10 | bob      | robert   | 77de68daecd823 | farmer
- 887309d048beef  |         25 |   10 | bob      | samantha | 77de68daecd823 | farmer
- bc33ea4e26e5e1  |         25 |   10 | bob      | thomas   | 77de68daecd823 | farmer
- 0a57cb53ba59c4  |         25 |   10 | bob      | ursula   | 77de68daecd823 | farmer
- 7719a1c782a1ba  |         25 |   10 | bob      | vincent  | 77de68daecd823 | farmer
- 22d200f8670dbd  |         25 |   10 | bob      | wendy    | 77de68daecd823 | farmer
- 632667547e7cd3  |         25 |   10 | bob      | xavier   | 77de68daecd823 | farmer
+ ac3478d69a3c81  |         17 |    1 | bob      | bob      | 77de68daecd823 | farmer
+ 7b52009b64fd0a  |         37 |   15 | bob      | edwin    | 77de68daecd823 | farmer
+ bd307a3ec329e1  |         37 |   15 | bob      | fredrick | 77de68daecd823 | farmer
+ fa35e192121eab  |         37 |   15 | bob      | gina     | 77de68daecd823 | farmer
+ f1abd670358e03  |         37 |   15 | bob      | hendrik  | 77de68daecd823 | farmer
+ 1574bddb75c78a  |         37 |   15 | bob      | ingrid   | 77de68daecd823 | farmer
+ 0716d9708d321f  |         37 |   15 | bob      | james    | 77de68daecd823 | farmer
+ 9e6a55b6b4563e  |         37 |   15 | bob      | karen    | 77de68daecd823 | farmer
+ b3f0c7f6bb763a  |         37 |   15 | bob      | leonard  | 77de68daecd823 | farmer
+ 472b07b9fcf2c2  |         38 |   15 | bob      | michelle | 77de68daecd823 | farmer
+ 12c6fc06c99a46  |         38 |   15 | bob      | norman   | 77de68daecd823 | farmer
+ d435a6cdd78630  |         38 |   15 | bob      | olivia   | 77de68daecd823 | farmer
+ 4d134bc072212a  |         38 |   15 | bob      | peter    | 77de68daecd823 | farmer
+ f6e1126cedebf2  |         38 |   15 | bob      | quincy   | 77de68daecd823 | farmer
+ 887309d048beef  |         38 |   15 | bob      | robert   | 77de68daecd823 | farmer
+ bc33ea4e26e5e1  |         38 |   15 | bob      | samantha | 77de68daecd823 | farmer
+ 0a57cb53ba59c4  |         39 |   15 | bob      | thomas   | 77de68daecd823 | farmer
+ 7719a1c782a1ba  |         39 |   15 | bob      | ursula   | 77de68daecd823 | farmer
+ 22d200f8670dbd  |         39 |   15 | bob      | vincent  | 77de68daecd823 | farmer
+ 632667547e7cd3  |         39 |   15 | bob      | wendy    | 77de68daecd823 | farmer
+ cb4e5208b4cd87  |         39 |   15 | bob      | xavier   | 77de68daecd823 | farmer
 (21 rows)
 --------------------------------------------
 
 
-Showing only the food_journal records for Bob on the next click
-reveals the enhanced production due to engaging a large team in 
-cultivation, as well as the distribution of equal production 
-shares to the workers:
+Showing only food_journal records for Bob for one click reveals the
+minimal production due all suppliers having zero effectiveness.
+Despite that bob has contracted a sizeable team in cultivation,
+there is no excess production: everyone receives exactly one
+food unit.
 
 --------------------------------------------
-fairwinds=# select * from food_journal where click >= 26 and fairian_name='bob';
+fairwinds=# select * from food_journal where click = 26 and fairian_name='bob';
 
- click | fairian_name |   debit   |  credit  | acknowledged |                        description                        
--------+--------------+-----------+----------+--------------+-----------------------------------------------------------
-    26 | bob          | 21.071905 |          | f            | total production from land 77de68daecd823
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract 7b52009b64fd0a
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract bd307a3ec329e1
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract fa35e192121eab
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract f1abd670358e03
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract 1574bddb75c78a
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract 0716d9708d321f
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract 9e6a55b6b4563e
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract b3f0c7f6bb763a
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract 91032ad7bbcb6c
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract 472b07b9fcf2c2
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract 12c6fc06c99a46
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract d435a6cdd78630
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract 4d134bc072212a
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract f6e1126cedebf2
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract 887309d048beef
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract bc33ea4e26e5e1
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract 0a57cb53ba59c4
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract 7719a1c782a1ba
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract 22d200f8670dbd
-    26 | bob          |           | 1.003268 | f            | supplier production share paid on contract 632667547e7cd3
-    26 | bob          |           |        1 | f            | daily sustenance
-    26 | bob          |           | 0.000163 | f            | spoilage
-(23 rows)
+ click | fairian_name | debit | credit | acknowledged |                        description                        
+-------+--------------+-------+--------+--------------+-----------------------------------------------------------
+    39 | bob          |    16 |        | f            | total production from land 77de68daecd823
+    39 | bob          |       |      1 | f            | supplier production share paid on contract 1574bddb75c78a
+    39 | bob          |       |      1 | f            | supplier production share paid on contract 7b52009b64fd0a
+    39 | bob          |       |      1 | f            | supplier production share paid on contract 472b07b9fcf2c2
+    39 | bob          |       |      1 | f            | supplier production share paid on contract bc33ea4e26e5e1
+    39 | bob          |       |      1 | f            | supplier production share paid on contract bd307a3ec329e1
+    39 | bob          |       |      1 | f            | supplier production share paid on contract 12c6fc06c99a46
+    39 | bob          |       |      1 | f            | supplier production share paid on contract 0716d9708d321f
+    39 | bob          |       |      1 | f            | supplier production share paid on contract f6e1126cedebf2
+    39 | bob          |       |      1 | f            | supplier production share paid on contract 887309d048beef
+    39 | bob          |       |      1 | f            | supplier production share paid on contract 4d134bc072212a
+    39 | bob          |       |      1 | f            | supplier production share paid on contract f1abd670358e03
+    39 | bob          |       |      1 | f            | supplier production share paid on contract d435a6cdd78630
+    39 | bob          |       |      1 | f            | supplier production share paid on contract b3f0c7f6bb763a
+    39 | bob          |       |      1 | f            | supplier production share paid on contract fa35e192121eab
+    39 | bob          |       |      1 | f            | supplier production share paid on contract 9e6a55b6b4563e
+    39 | bob          |       |      1 | f            | daily sustenance
 --------------------------------------------
 
 
 == Fairwinds Game Tutorial E - The Commodity Market
 
 The final market to illustrate is the commodity market, which  
-is used to buy and sell food. To demonstrate this 
-we have let the game time advance about 400 clicks so that the 
+is used to buy and sell food. 
+To demonstrate this 
+we will let the game time advance about 400 clicks so that the 
 players cultivating land develop a food surplus. 
 
+However, at the close of the previous tutorial, Bob had hired a team 
+of workers to cultivate his land plot, but they were generating 
+no food surplus because all suppliers had zero effectiveness.
+
+An action by Cathy makes it possible to emerge from that 
+zero-production stationary point. Cathy notices that Bob 
+was aggressively hiring, so she abandons her contract with
+Alice and puts herself on the labor market, offering a 
+for a fee of +fc20+:
+
+Cathy:
+
+--------------------------------------------
+update work set active=false where contract_number = 'b1d5781111d84f';
+insert into work_ask (skill_name,expiration,price) values ('farmer', 20, 20);
+--------------------------------------------
+
+--------------------------------------------
+                                 Labor Contract Asks
+ skill_name | expiration | term | effectiveness | price | rate | fairian_name | side 
+------------+------------+------+---------------+-------+------+--------------+------
+ farmer     |        200 |    1 |       0.92045 |    20 |   20 | cathy        | ask
+(1 row)
+--------------------------------------------
+
+Even though Cathy offerred a committment of only a single click, effectively
+asking for a comparitively high rate of +fc20+ per click, Bob decides it 
+is worth it to improve his combined team productivity so as to start 
+generating a food surplus.
+Bob bootstraps the bond market, borrowing money, and places a market order
+to buy the labor contract, which executies the open limit order precedingly
+placed by Cathy. A labor contract is created between Bob and Cathy:
+
+
+--------------------------------------------
+                                     Labor Contracts
+   work_place   | skill_name | contract_number | issue_date | term | customer | supplier 
+----------------+------------+-----------------+------------+------+----------+----------
+ ...            | ...        | ...             | ...        | ...  | ...      | ...  
+ 77de68daecd823 | farmer     | f1f836cb4ea6ef  |        180 |    1 | bob      | cathy
+ ...            | ...        | ...             | ...        | ...  | ...      | ...  
+--------------------------------------------
+
+Thus with a food surplus now being generated by Bob's team, after the game
+has advanced several hundred clicks, all 'Fairians' engaged in cultivation 
+have developed a food surplus:
 
 --------------------------------------------
      food_balance
 
+       Food Balance
  fairian_name |  balance  
 --------------+-----------
- alice        | 38.222130
- bob          | 48.070724
- cathy        | 19.109904
- david        | 19.110119
- edwin        | 24.034517
- fredrick     | 24.034517
- gina         | 24.034517
- hendrik      | 24.034517
- ingrid       | 24.034517
- james        | 24.034517
- karen        | 24.034517
- leonard      | 24.034517
- michelle     | 24.034517
- norman       | 24.034517
- olivia       | 24.034517
- peter        | 24.034517
- quincy       | 24.034517
- robert       | 24.034517
- samantha     | 24.034517
- thomas       | 24.034517
- ursula       | 24.034517
- vincent      | 24.034517
- wendy        | 24.034517
- xavier       | 24.034517
+ alice        | 34.553808
+ bob          | 45.455726
+ cathy        | 23.884388
+ david        | 17.275817
+ edwin        |  22.72787
+ fredrick     |  22.72787
+ gina         |  22.72787
+ hendrik      |  22.72787
+ ingrid       |  22.72787
+ james        |  22.72787
+ karen        |  22.72787
+ leonard      |  22.72787
+ michelle     |  22.72787
+ norman       |  22.72787
+ olivia       |  22.72787
+ peter        |  22.72787
+ quincy       |  22.72787
+ robert       |  22.72787
+ samantha     |  22.72787
+ thomas       |  22.72787
+ ursula       |  22.72787
+ vincent      |  22.72787
+ wendy        |  22.72787
+ xavier       |  22.72787
 (24 rows)
 --------------------------------------------
 
-James, Ingrid, and Gina place limit offers to sell a portion of 
-their respective food surplus at various prices, resulting 
+James, Ingrid, and Gina decide to sell a portion of 
+their respective food surplus at various prices by placing
+limit orders, resulting 
 in different per-food-unit asking prices.
 
 
@@ -1791,9 +1909,9 @@ fairwinds=> select * from food_ask;
 
  fairian_name | expiration | quantity | price |    unit_price     
 --------------+------------+----------+-------+-------------------
- james        |        441 |       11 |    15 | 1.36363636363636
- ingrid       |        441 |       10 |    15 | 1.50
- gina         |        441 |        9 |     5 | 0.555555555555556
+ james        |        465 |       11 |    15 |  1.36363636363636
+ ingrid       |        465 |       10 |    15 |               1.5
+ gina         |        465 |        9 |     5 | 0.555555555555556
 (3 rows)
 --------------------------------------------
 
@@ -1816,8 +1934,8 @@ fairwinds=> select * from food_ask;
 
  fairian_name | expiration | quantity | price |    unit_price    
 --------------+------------+----------+-------+------------------
- james        |        441 |       11 |    15 | 1.36363636363636
- ingrid       |        441 |       10 |    15 |              1.5
+ james        |        465 |       11 |    15 | 1.36363636363636
+ ingrid       |        465 |       10 |    15 |              1.5
 (2 rows)
 --------------------------------------------
 
@@ -1828,11 +1946,11 @@ cash_journal:
 fairwinds=> select click, fairian_name, account, debit, credit, description 
 			from cash_journal where click >= 400;
 
- click | fairian_name | account | debit | credit |        description         
--------+--------------+---------+-------+--------+----------------------------
-   400 | zachary      | bond    |  1000 |        | Issued bond b6692ea5df920c
-   401 | gina         | food    |     5 |        | Sold food quantity 7
-   401 | zachary      | food    |       |      5 | Bought food quantity 7
+ click | fairian_name | account | debit | credit |          description          
+-------+--------------+---------+-------+--------+-------------------------------
+   411 | zachary      | bond    |  1000 |        | Issued bond fc074d501302eb
+   412 | gina         | food    |     5 |        | Sold food quantity 7 units.
+   412 | zachary      | food    |       |      5 | Bought food quantity 7 units.
 (3 rows)
 --------------------------------------------
 
@@ -1870,8 +1988,7 @@ ended up paying to Gina.
 
 == Fairwinds Game Tutorial F - Extinguishing Debt
 
-Notice from the standings that Bob has a fc374 demand note written against him
-as well as a negative fc70 net cash balance:
+Notice from the standings that Bob has negative net wealth 
 
 
 --------------------------------------------
@@ -1879,125 +1996,84 @@ as well as a negative fc70 net cash balance:
  fairian_name | health_balance | wealth | cash_balance | bond_balance | note_balance | food_balance 
 --------------+----------------+--------+--------------+--------------+--------------+--------------
     ...       |                |        |              |              |              |
- bob          |       0.999995 |   -444 |       -70.00 |              |      -374.00 |       48.232
+ bob          |         1.0000 |   -465 |         0.00 |              |      -465.00 |       45.819    
     ...       |                |        |              |              |              |
 --------------------------------------------
  
+which is a consequence of the two demand notes written against him as a debtor
+from prior activity, as seen in the note table:
+
+
+--------------------------------------------
+                          Notes
+ serial_number  | issue_date | amount  | factor | debtor  
+----------------+------------+---------+--------+---------
+    ...         |            |         |        |
+ 91032ad7bbcb6c |         48 | 374.000 |        | bob
+ 972a67c4819272 |        215 |  91.000 |        | bob
+    ...         |            |         |        |
+--------------------------------------------
+
 In a non-competitive market, Bob may have the opportunity to extinquish that
 debt by first issuing a bond in order to raise money, and then make a bid to
 buy the outstanding note. (The reason Bob needs to issue a bond is because
 having a negative net cash balance means that he will not be permitted to
 place any buy orders.)
 
-Bob raises cash by bootstrapping the bond market and borrowing:
-
---------------------------------------------
-fairwinds=> insert into bond_ask default values;
-fairwinds=> insert into bond_ask default values;
---------------------------------------------
-
-
+Bob raises cash by bootstrapping the bond market and borrowing.
 This leaves him in the same place in the standings overall, 
 but the details of his wealth are altered by borrowing Faircoin:
+He has cash on hand.
 
 --------------------------------------------
                                    Fairwinds Tournament Standings
  fairian_name | health_balance | wealth | cash_balance | bond_balance | note_balance | food_balance 
 --------------+----------------+--------+--------------+--------------+--------------+--------------
     ...       |                |        |              |              |              |
- bob          |       0.999995 |   -444 |       930.00 |     -1000.00 |      -374.00 |       48.395
+ bob          |         1.0000 |   -465 |      1000.00 |     -1000.00 |      -465.00 |       45.819
     ...       |                |        |              |              |              |
 --------------------------------------------
 
-That is, his net wealth remains unchanged at negative fc444, but he temporarily
-has cash on hand and so can place an order to buy the demand note upon which he
+That is, his net wealth remains unchanged at negative fc465, but he temporarily
+has cash on hand and so can place an order to buy the demand notes upon which he
 is listed as the debtor:
 
 
 --------------------------------------------
-fairwinds=> insert into note_bid (serial_number) values ('91032ad7bbcb6c');
+fairwinds=> insert into note_bid (serial_number, expiration, price) values ('91032ad7bbcb6c', 15,  0);
+fairwinds=> insert into note_bid (serial_number, expiration, price) values ('972a67c4819272', 15,  0);
 INSERT 0 1
 --------------------------------------------
 
 
-which results in Bob becoming listed as factor as well as the debtor on bond
-`91032ad7bbcb6c`:
+which results in Bob becoming listed as factor as well as the debtor on both bonds:
+
 
 --------------------------------------------
                           Notes
- serial_number  | issue_date | amount | factor | debtor  
-----------------+------------+--------+--------+---------
- 0ade7c2cf97f75 |         33 |     45 |        | alice
- f1f836cb4ea6ef |        411 |      5 |        | zachary
- 91032ad7bbcb6c |         36 |    374 | bob    | bob
---------------------------------------------
-
-
-
-Bob then waits for time to advance beyond the bond maturity. When the bond is
-redeemed, his fc70 cash short-fall results in a new bond ('i.e.', bond
-`fc074d501302eb`) scheduled for issuance ten clicks from the present, 'i.e.',
- at click 413:
-
---------------------------------------------
-                          Notes
- serial_number  | issue_date | amount | factor | debtor  
-----------------+------------+--------+--------+---------
- 0ade7c2cf97f75 |         33 |     45 |        | alice
- f1f836cb4ea6ef |        411 |      5 |        | zachary
- 91032ad7bbcb6c |         36 |    374 | bob    | bob
- fc074d501302eb |        413 |     70 |        | bob
---------------------------------------------
-
-
-
-None-the-less, it is apparent from the standings that his position is improved
-because his net wealth has increased to -fc70 from -fc444 because his taking
-ownership of note `91032ad7bbcb6c` offsets the debt. That is, he has the rights
-call to his own debt, making for a wash with respect to the fc374 note.
-
---------------------------------------------
-                                   Fairwinds Tournament Standings
- fairian_name | health_balance | wealth | cash_balance | bond_balance | note_balance | food_balance 
---------------+----------------+--------+--------------+--------------+--------------+--------------
-    ...       |                |        |              |              |              |
- bob          |       0.999995 |    -70 |         0.00 |              |       -70.00 |       48.558
-    ...       |                |        |              |              |              |
---------------------------------------------
-
-
-Bob can bid to buy the new fc70 note, too:
-
---------------------------------------------
-fairwinds=> insert into note_bid (serial_number, price) values ('fc074d501302eb', 0);
-INSERT 0 1
---------------------------------------------
-
-And then ten clicks later his bid executes when the bond is actually issued:
-
---------------------------------------------
-                          Notes
- serial_number  | issue_date | amount | factor | debtor  
-----------------+------------+--------+--------+---------
- 0ade7c2cf97f75 |         33 |     45 |        | alice
- f1f836cb4ea6ef |        411 |      5 |        | zachary
- 91032ad7bbcb6c |         36 |    374 | bob    | bob
- fc074d501302eb |        413 |     70 | bob    | bob
+ serial_number  | issue_date | amount  | factor | debtor  
+----------------+------------+---------+--------+---------
+ 0ade7c2cf97f75 |         43 |  45.000 |        | alice
+ 91032ad7bbcb6c |         48 | 374.000 | bob    | bob
+ 972a67c4819272 |        215 |  91.000 | bob    | bob
+ cb7a1d775e800f |        423 |   5.000 |        | zachary
 (4 rows)
 --------------------------------------------
 
-
-Bob's success at buying his own debt for zero cost results in completely
-extinguishing his debt:
+And it is apparent from the standings that his position is improved
+because his net wealth has increased to fc0 from -fc465 because his taking
+ownership of the notes offsets the debt. That is, he has the rights
+call to his own debt, making for a wash with respect debts.
 
 --------------------------------------------
                                    Fairwinds Tournament Standings
  fairian_name | health_balance | wealth | cash_balance | bond_balance | note_balance | food_balance 
 --------------+----------------+--------+--------------+--------------+--------------+--------------
     ...       |                |        |              |              |              |
- bob          |       0.999995 |      0 |         0.00 |              |         0.00 |       50.189
+ bob          |         1.0000 |      0 |         0.00 |              |         0.00 |       46.182
     ...       |                |        |              |              |              |
 --------------------------------------------
+
 
 
 
@@ -2005,17 +2081,18 @@ Lastly, Bob can call the notes he owns to
 remove them if he wants:
 
 --------------------------------------------
-update note set called=true where debtor='bob';
+update note set called=true where factor='bob';
 --------------------------------------------
 
+so that he has completely extinguished his debt:
 
 --------------------------------------------
                           Notes
- serial_number  | issue_date | amount | factor | debtor  
-----------------+------------+--------+--------+---------
- f1f836cb4ea6ef |        411 |      5 |        | zachary
- 0ade7c2cf97f75 |         33 |     45 |        | alice
-(2 rows)
+ serial_number  | issue_date | amount  | factor | debtor  
+----------------+------------+---------+--------+---------
+ 0ade7c2cf97f75 |         43 |  45.000 |        | alice
+ cb7a1d775e800f |        423 |   5.000 |        | zachary
+(4 rows)
 --------------------------------------------
 
 Take care to recall, however, as mentioned at the outset, this strategy likely
