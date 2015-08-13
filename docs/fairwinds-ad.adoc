@@ -3,28 +3,26 @@
 :copyright: 2015, Berend Tober
 
 'Fairwinds' is a multi-player on-line game that involves real-time,
-competitive trading on five simulated markets by using the psql client
-to enter basic SQL commands.
+competitive trading on five simulated markets by using the Postgresql 
+psql client to enter basic SQL commands.
 
 This talk will present an overview of the application and discuss some
 design and architecture issues underlying its development. 
 
 We will devote the final half of the meeting to actually playing the
-game, so bring your computer with network connectivity and the psql
-client software ready to connect to a data base server.
+game, so bring your computer with wireless network connectivity and 
+the psql client software ready to connect to a data base server.
 
-Our generous corporate sponsor 'Motley Fool, Inc.' will provide a simple
-LAN infrastructure, so bring a network patch cable to possibly plug into
-a switch for connectivity. The conference room wireless LAN will be
-available for external internet browsing separately.
-
-You will want to read the "Fairwinds Overview" and "Fairwinds Tutorial"
-in advance as well as possibly enjoy the "Fairwinds Equations" (although
-github is not delivering that latter document properly formatted ...
-so to actually understand it you probably need to compile it locally
-with http://asciidoc.org/[AsciiDoc]) reference page available at
+You will want to read the "Fairwinds Overview", "Fairwinds Tutorial"
+and "Fairwinds SQL Pasteables" reference pages in advance available at
 https://github.com/bmtober/fairwinds[Fairwinds on Github]. These
-documents will prepare you to be a competitive player. 
+documents explain how to connect to a Postgresql data base, basic use
+of the psql client software, and will prepare you to be a competitive 
+player. 
+
+Note that the presentation is not simply a repeat of the tutorial. 
+The talk will fill in and expand upon what you learn from the 
+tutorial, so advance review is highly encouraged. 
 
 Speaker: Berend Tober has been a PostgreSQL user for over 15 years. His
 experience includes both private industry and federal government roles

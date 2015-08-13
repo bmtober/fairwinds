@@ -290,14 +290,18 @@ statement is used to produce that list:
 --------------------------------------------
 fairwinds=> select * from fairian;
 
- fairian_name | play_level  |   email_address   |        created_date        
---------------+-------------+-------------------+----------------------------
- alice        | privileged  | alice@example.com | 2014-11-11 11:45:10.962067
+ fairian_name |   email_address   |        created_date        | click_order_count | click_select_count 
+--------------+------------+-------------------+----------------------------+-------------------+--------------------
+ alice        | alice@example.com | 2015-08-02 09:28:09.926956 |                 0 |                  0
 (1 row)
+
 --------------------------------------------
 
 which shows (no surpize, since this is a tutorial) that +alice+ is the
-sole 'Fairian' account currently registered in the game.
+sole 'Fairian' account currently registered in the game. It also shows
+two columns used to keep track of the number of orders and the number 
+of select queries placed during the current click. These latter two 
+values are used for assessing fees.
 
 === The Fairwinds Relation
 
@@ -979,10 +983,10 @@ see the email address of other registered players, only his own:
 --------------------------------------------
 fairwinds=> select * from fairian;
 
- fairian_name | play_level |  email_address  |        created_date        
---------------+------------+-----------------+----------------------------
- alice        | privileged |                 | 2015-07-19 19:59:28.266137
- bob          | privileged | bob@example.com | 2015-07-19 19:59:28.266137
+ fairian_name | play_level |  email_address  |        created_date        | click_order_count | click_select_count 
+--------------+------------+-----------------+----------------------------+-------------------+--------------------
+ alice        | privileged |                 | 2015-08-02 09:28:09.926956 |                 0 |                  1
+ bob          | privileged | bob@example.com | 2015-08-02 09:28:09.926956 |                 0 |                  0
 (2 rows)
 --------------------------------------------
 
@@ -993,8 +997,8 @@ connection view:
 fairwinds=> select * from connection ;
  fairian_name |          login_time           
 --------------+-------------------------------
- alice        | 2015-01-19 20:55:48.862115
- bob          | 2015-01-20 06:39:49.301221
+ alice        | 2015-08-02 20:55:48.862115
+ bob          | 2015-08-03 06:39:49.301221
 (2 rows)
 --------------------------------------------
 
@@ -1588,12 +1592,13 @@ shows up as:
 fairwinds=> select contract_number, issue_date, term, customer,
                         supplier, work_place, skill_name from work;
 
+                                     Labor Contracts
  contract_number | issue_date | term | customer | supplier |   work_place   | skill_name 
 -----------------+------------+------+----------+----------+----------------+------------
  da4b9237bacccd  |         11 |    1 | alice    | alice    | 356a192b7913b0 | farmer
+ ac3478d69a3c81  |         17 |    1 | bob      | bob      | 77de68daecd823 | farmer
  fe5dbbcea5ce7e  |         32 |   10 | alice    | david    | 356a192b7913b0 | farmer
  b1d5781111d84f  |         35 |   11 | alice    | cathy    | 356a192b7913b0 | farmer
- ac3478d69a3c81  |         17 |    1 | bob      | bob      | 77de68daecd823 | farmer
 (4 rows)
 --------------------------------------------
 
@@ -1959,9 +1964,10 @@ And we can see the effect of the food purchase in the food_journal:
 --------------------------------------------
 fairwinds=> select * from food_journal where  fairian_name = 'zachary';
 
- click | fairian_name | debit | credit | acknowledged |  description  
--------+--------------+-------+--------+--------------+---------------
-   401 | zachary      |     7 |        | f            | Bought food 5
+                           Food Journal - Zachary
+ click | fairian_name | debit | credit | acknowledged |     description     
+-------+--------------+-------+--------+--------------+---------------------
+   412 | zachary      |     7 |        | f            | Bought food for fc5
 (1 row)
 --------------------------------------------
 
@@ -1993,11 +1999,12 @@ Notice from the standings that Bob has negative net wealth
 
 --------------------------------------------
                                    Fairwinds Tournament Standings
- fairian_name | health_balance | wealth | cash_balance | bond_balance | note_balance | food_balance 
---------------+----------------+--------+--------------+--------------+--------------+--------------
-    ...       |                |        |              |              |              |
- bob          |         1.0000 |   -465 |         0.00 |              |      -465.00 |       45.819    
-    ...       |                |        |              |              |              |
+ fairian_name | health_balance | food_balance | wealth  | cash_balance | bond_balance | note_balance 
+--------------+----------------+--------------+---------+--------------+--------------+--------------
+  ...         |    ...         |    ...       |  ...    |      ...     |              |    ...    
+ bob          |         1.0000 |       45.819 | -465.00 |         0.00 |              |      -465.00
+  ...         |    ...         |    ...       |  ...    |      ...     |              |    ...    
+
 --------------------------------------------
  
 which is a consequence of the two demand notes written against him as a debtor
@@ -2027,11 +2034,12 @@ He has cash on hand.
 
 --------------------------------------------
                                    Fairwinds Tournament Standings
- fairian_name | health_balance | wealth | cash_balance | bond_balance | note_balance | food_balance 
---------------+----------------+--------+--------------+--------------+--------------+--------------
-    ...       |                |        |              |              |              |
- bob          |         1.0000 |   -465 |      1000.00 |     -1000.00 |      -465.00 |       45.819
-    ...       |                |        |              |              |              |
+ fairian_name | health_balance | food_balance | wealth  | cash_balance | bond_balance | note_balance 
+--------------+----------------+--------------+---------+--------------+--------------+--------------
+  ...         |       ...      |      ...     |   ...   |     ...      |     ...      |     ...
+ bob          |         1.0000 |       45.819 | -465.00 |      1000.00 |     -1000.00 |      -465.00
+  ...         |       ...      |      ...     |   ...   |     ...      |     ...      |     ...
+
 --------------------------------------------
 
 That is, his net wealth remains unchanged at negative fc465, but he temporarily
@@ -2067,11 +2075,12 @@ call to his own debt, making for a wash with respect debts.
 
 --------------------------------------------
                                    Fairwinds Tournament Standings
- fairian_name | health_balance | wealth | cash_balance | bond_balance | note_balance | food_balance 
---------------+----------------+--------+--------------+--------------+--------------+--------------
-    ...       |                |        |              |              |              |
- bob          |         1.0000 |      0 |         0.00 |              |         0.00 |       46.182
-    ...       |                |        |              |              |              |
+ fairian_name | health_balance | food_balance | wealth  | cash_balance | bond_balance | note_balance 
+--------------+----------------+--------------+---------+--------------+--------------+--------------
+  ...         |       ...      |      ...     |   ...   |     ...      |     ...      |     ...
+ bob          |         1.0000 |       46.182 |    0.00 |         0.00 |              |       0.00
+  ...         |       ...      |      ...     |   ...   |     ...      |     ...      |     ...
+
 --------------------------------------------
 
 
@@ -2081,7 +2090,7 @@ Lastly, Bob can call the notes he owns to
 remove them if he wants:
 
 --------------------------------------------
-update note set called=true where factor='bob';
+update note set called=true where debtor='bob';
 --------------------------------------------
 
 so that he has completely extinguished his debt:
@@ -2101,3 +2110,39 @@ market, others would be watching for profitable opportunities and likely make
 bids competing with those shown above for illustration, thus altering the
 outcome. 'Caveat emptor'.
 
+== Fairwinds Game Tutorial 10 - Economic Friction
+
+Fairwinds imposes three different fees for market activity intended to
+discourage player behavior that could make the game less interesting for
+other players.
+
+=== Excessive Trade Fee
+
+As discussed earlier, Fairwinds maintains a count of how many trade orders each
+Fairian enters. The counter is reset to zero at the beginning of each click,
+and during a click the first trade is free. Subsequent trades during a
+click are assessed a fee which increases arithmetically with each trade
+order, so the second trade costs one Faircoin, the third trade order
+costs two Faircoins, the fourth costs three Faircoins, etc.
+
+
+=== Excessive Query Fee
+
+Fairains can learn information about the state of the markets by refreshing
+their web browser view of the standings report, which is updated at least once
+per click. Fairians can also execute SELECT queries directly to obtain more
+current information. Fairwinds keeps a count of each of these queries and
+similar to the Excessive Trade Fee, this counter is reset to zero at the start
+of each click.  The first sixteen queries are free, and then an arithmetically
+increasing fee is assessed so that the seventeenth query costs one Faircoin, the
+eighteenth costs two Faircoin, etc.
+
+
+=== Usury Fee
+
+Fairians can act as lenders by placing bond bid orders on the finance market.
+The fee for each bond bid order is one-half the discount amount. The fee is
+assessed when the bond bid order is placed and is non-refundable regardless of
+whether or not the order executes before expiring. This fee is intented to
+discourage usurious interest rates and instead encourage prospective lenders to
+offer enticing loan terms.
