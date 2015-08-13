@@ -15,7 +15,7 @@ the psql client software ready to connect to a data base server.
 
 You will want to read the "Fairwinds Overview", "Fairwinds Tutorial"
 and "Fairwinds SQL Pasteables" reference pages in advance available at
-https://github.com/bmtober/fairwinds[Fairwinds on Github]. These
+https://github.com/bmtober/fairwinds. These
 documents explain how to connect to a Postgresql data base, basic use
 of the psql client software, and will prepare you to be a competitive 
 player. 

@@ -69,13 +69,13 @@ echo "\set VERBOSITY terse" >> ~/.psqlrc
 The syntax for running the +psql+ command and establishing a game connection is 
 
 --------------------------------------------
-psql fairwinds -h fairwinds.btober.net -U fairwinds
+psql fairwinds -h hostname -U fairwinds
 --------------------------------------------
 
 where
 
 * the first +fairwinds+ specifies the game name
-* the +-h+ option specifes the Internet location where the game is hosted
+* the +-h+ option specifes the hostname or IP address where the game is hosted
 * the +-U+ option specifies the 'Fairian' name to connect as
 
 
@@ -169,15 +169,11 @@ Here is an example of the insert command to create a 'Fairian' named
 --------------------------------------------
 fairwinds=> insert into fairian (fairian_name, passwd, email_address) 
         values ('alice', '*******', 'alice@example.com');
-INSERT 0 1
 --------------------------------------------
 
 The passwd column value is shown as asteriks for illustration only. In
 actuality you would specify a password. An email address is important so
 that you can receive news and announcements about the game.
-
-The +INSERT 0 1+ response indicates successful addition of your account
-information.
 
 At this point you can re-connect to the game as your new 'Fairian' with
 the +\c+ command:
@@ -395,7 +391,7 @@ Utilizing the psql client application, Alice connects to 'Fairwinds' and
 is presented with the command prompt:
 
 --------------------------------------------
-psql -h fairwinds.btober.net fairwinds alice
+psql -h hostname fairwinds alice
 fairwinds=>
 --------------------------------------------
 
@@ -944,12 +940,12 @@ stationarity is to buy food. This works, of course, only if other 'Fairians'
 have generated a food surplus and are willing to sell some.
 
 Sell Labor:: Another means is to hire on as a supplier on the labor market.
-Provided that the work site is being cultivated by at least one other 'Fairain'
+Provided that the work site is being cultivated by at least one other 'Fairian'
 with non-zero effectiveness, you will share in the fruits of the combined team
 effectiveness and get a share of the excess production.
 
 Buy Labor:: Similar to hiring out as a supplier as above, you can alternatively
-hire another 'Fairain' to jointly cultivate a land plot you own. Provided they
+hire another 'Fairian' to jointly cultivate a land plot you own. Provided they
 have non-zero effectiveness, you will similarly share in the fruits of the
 combined team effectiveness.
 
@@ -1014,7 +1010,7 @@ INSERT 0 1
 Note Bob has employed the +default values+ shorthand, effectively
 specifying an expiration of one and productivity of zero.
 
-As Alice experienced previously, Bob's market order was not stored 
+As Alice experienced previously, Bob's market buy order was not stored 
 because there were no open land sell orders:
 
 --------------------------------------------
@@ -1059,7 +1055,7 @@ price, so Bob needs cash.
 As described earlier, when 'Fairwinds' is initialized, there are no
 'Fairians', no land, no food, and no money.  As players enter the game,
 resources must be brought into existence by means of market activity
-that creates demand.  We have already seen boostrapping the land 
+that creates demand.  We have already seen bootstrapping the land 
 market. Bootstrapping money happens on the bond
 market.
 
@@ -1070,7 +1066,7 @@ Utilizing the +psql+ client application, Bob connects to 'Fairwinds' and
 is presented with the command prompt:
 
 --------------------------------------------
-psql -h fairwinds.btober.net fairwinds bob
+psql -h hostname fairwinds bob
 fairwinds=>
 --------------------------------------------
 
@@ -1114,7 +1110,7 @@ required: the +default values+ shorthand suffices:
 
 --------------------------------------------
 fairwinds=> insert into bond_ask default values;
-INSERT 0 1
+
 --------------------------------------------
 
 The +default values+ short-hand effectively specifies a market order 
@@ -1145,7 +1141,7 @@ As with the land bootstrapping protocol, the 'Fairian' who
 triggers demand invoking the bootstrapping protocol has 
 no special right to the proceeds. The bootstrapped bond 
 bid order will be matched against the best of any 'Fairians'
-bond issue sell order.
+open bond issue sell order.
 
 Bob (re-)places his bond market ask order:
 
@@ -1267,7 +1263,7 @@ Bonds are guaranteed investments as far as the lender is concerned. The
 governing market authority creates enough Faircoin to fully repay the lender
 at bond maturity.
 
-But Bob does not necessarily get let off the hook for the shortfall.
+But Bob does not necessarily get let off the hook for the cash shortfall.
 
 
 
@@ -1370,7 +1366,7 @@ fairwinds=> select * from note_bid;
 --------------------------------------------
 
 
-Ten clicks later, at click 19 when the note is actually sold, Alice's 
+Ten clicks later, at click 29 when the note is actually sold, Alice's 
 bid "wins" and she becomes the note owner:
 
 --------------------------------------------
@@ -1412,8 +1408,8 @@ fairwinds=> select * from cash_journal;
 
 
 This table shows the transactions seen earlier and additionally that at click
-19, the note was sold to the highest bidder (Alice), and then at click 20
-Alice called the note. Annotated in the description column is the detail
+30, the note was sold to the highest bidder (Alice), and then Alice called 
+the note. Annotated in the description column is the detail
 indicating the resulting action: zero Faircoin was transferred from Bob to
 Alice since Bob had no cash available at the time of call. Other possible
 results are partial payment or full payment.
@@ -1834,7 +1830,7 @@ asking for a comparitively high rate of +fc20+ per click, Bob decides it
 is worth it to improve his combined team productivity so as to start 
 generating a food surplus.
 Bob bootstraps the bond market, borrowing money, and places a market order
-to buy the labor contract, which executies the open limit order precedingly
+to buy the labor contract, which executes the open limit order precedingly
 placed by Cathy. A labor contract is created between Bob and Cathy:
 
 
@@ -2054,17 +2050,17 @@ INSERT 0 1
 --------------------------------------------
 
 
-which results in Bob becoming listed as factor as well as the debtor on both bonds:
+which results in Bob becoming listed as factor as well as the debtor on both notes:
 
 
 --------------------------------------------
                           Notes
  serial_number  | issue_date | amount  | factor | debtor  
 ----------------+------------+---------+--------+---------
- 0ade7c2cf97f75 |         43 |  45.000 |        | alice
+      ...       |     ...    |   ...   |  ...   |  ...
  91032ad7bbcb6c |         48 | 374.000 | bob    | bob
  972a67c4819272 |        215 |  91.000 | bob    | bob
- cb7a1d775e800f |        423 |   5.000 |        | zachary
+      ...       |     ...    |   ...   |  ...   |  ...
 (4 rows)
 --------------------------------------------
 
