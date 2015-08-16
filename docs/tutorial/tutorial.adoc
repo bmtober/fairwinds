@@ -216,36 +216,37 @@ fairwinds=>
 When connected as a valid player, you have a significantly expanded view into
 the game showing the privileged relations used to participate in the finance
 (+bond+), real estate (+land+), commodity (+food+), labor (+work+), and debt
-(+note+) markets:
+(+note+) markets. Adding a "+" to the "\d" command includes additional
+descriptive infomation to the listing:
 
 --------------------------------------------
-fairwinds=# \d
-               List of relations
-   Schema   |      Name      | Type |  Owner   
-------------+----------------+------+----------
- privileged | bond           | view | postgres
- privileged | bond_ask       | view | postgres
- privileged | bond_bid       | view | postgres
- privileged | cash_journal   | view | postgres
- privileged | connection     | view | postgres
- privileged | fairian        | view | postgres
- privileged | fairwinds      | view | postgres
- privileged | food_ask       | view | postgres
- privileged | food_bid       | view | postgres
- privileged | food_journal   | view | postgres
- privileged | health_journal | view | postgres
- privileged | land           | view | postgres
- privileged | land_ask       | view | postgres
- privileged | land_bid       | view | postgres
- privileged | land_journal   | view | postgres
- privileged | note           | view | postgres
- privileged | note_ask       | view | postgres
- privileged | note_bid       | view | postgres
- privileged | skill          | view | postgres
- privileged | skill_journal  | view | postgres
- privileged | work           | view | postgres
- privileged | work_ask       | view | postgres
- privileged | work_bid       | view | postgres
+fairwinds=# \d+
+                                                       List of relations
+   Schema   |      Name      | Type |  Owner   |  Size   |                             Description                             
+------------+----------------+------+----------+---------+---------------------------------------------------------------------
+ privileged | bond           | view | postgres | 0 bytes | List of issued and non-matured bonds.
+ privileged | bond_ask       | view | postgres | 0 bytes | Finance market sell orders.
+ privileged | bond_bid       | view | postgres | 0 bytes | Finance market buy orders.
+ privileged | cash_journal   | view | postgres | 0 bytes | Record of cash transactions.
+ privileged | connection     | view | postgres | 0 bytes | List of logged in players.
+ privileged | fairian        | view | postgres | 0 bytes | List of player accounts.
+ privileged | fairwinds      | view | postgres | 0 bytes | Fairwinds time parameters.
+ privileged | food_ask       | view | postgres | 0 bytes | Commodity market sell orders.
+ privileged | food_bid       | view | postgres | 0 bytes | Commodity market buy orders.
+ privileged | food_journal   | view | postgres | 0 bytes | History of commodity market transfers.
+ privileged | health_journal | view | postgres | 0 bytes | Record of changes in health status.
+ privileged | land           | view | postgres | 0 bytes | List of land plots.
+ privileged | land_ask       | view | postgres | 0 bytes | Real estate market sell orders.
+ privileged | land_bid       | view | postgres | 0 bytes | Real estate market buy orders.
+ privileged | land_journal   | view | postgres | 0 bytes | Record of changes to land ownership and productivity.
+ privileged | note           | view | postgres | 0 bytes | List of demand notes which have yet to be called.
+ privileged | note_ask       | view | postgres | 0 bytes | Debt market sell orders.
+ privileged | note_bid       | view | postgres | 0 bytes | Debt market buy orders.
+ privileged | skill          | view | postgres | 0 bytes | List of skilled labor categories and the associated rate of change.
+ privileged | skill_journal  | view | postgres | 0 bytes | History of skill proficiency changes.
+ privileged | work           | view | postgres | 0 bytes | List of active labor contracts.
+ privileged | work_ask       | view | postgres | 0 bytes | Labor market sell orders.
+ privileged | work_bid       | view | postgres | 0 bytes | Labor market buy orders.
 (23 rows)
 --------------------------------------------
 
@@ -253,8 +254,8 @@ fairwinds=# \d
 Generally speaking, you use the 'bid' and 'ask' relations to issue buy
 and sell orders, respectively, on the markets. The 'journal' relations
 record history of cash transactions, food production and consumption,
-changes to 'Fairian' health status, and proficiency at various
-+skill+ categories.
+changes to 'Fairian' health status, land plot productivity and ownership, 
+and skill proficiency.
 
 === The Connection Relation
 
@@ -364,7 +365,7 @@ list of labor contracts. Labor contracts specify that one 'Fairian' will work
 for another for at least a specified amount of time.  Entries in the +work+
 relation are created when buyers, offering to hire, and sellers, offering to
 work, offer mutually compatible terms (with respect to time, skill,
-proficieny, and payment).
+effectiveness, and payment).
 
 
 
@@ -2108,7 +2109,7 @@ outcome. 'Caveat emptor'.
 
 == Fairwinds Game Tutorial 10 - Economic Friction
 
-Fairwinds imposes three different fees for market activity intended to
+Fairwinds imposes four different fees for market activity intended to
 discourage player behavior that could make the game less interesting for
 other players.
 
@@ -2142,3 +2143,10 @@ assessed when the bond bid order is placed and is non-refundable regardless of
 whether or not the order executes before expiring. This fee is intented to
 discourage usurious interest rates and instead encourage prospective lenders to
 offer enticing loan terms.
+
+=== Real Estate Transfer Fee
+
+When a land plot is sold, a fee is charged equal to the difference between
+the asking price and the current virgin land price for new land plots. As
+with the usury fee, this fee is charged when the land ask limit order is 
+placed and is not refundable even if the order never executes.
