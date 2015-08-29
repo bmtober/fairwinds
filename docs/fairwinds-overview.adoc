@@ -27,10 +27,11 @@ tools and techniques involved in play ... and thereby improve their
 competitiveness in the game as well as their facility with concepts that can
 be applied in there everyday and professional computer-focused lives.
 
-'Fairwinds' is also targeted to players interested in understanding 
-market concepts and competition. Players encounter multiple instances 
-of supply-verses-demand, resource scarcity, and diminishing returns and 
-observe how those factors interact over time. 
+'Fairwinds' is also targeted to players interested in understanding
+market concepts and competition. Players encounter instances of
+supply-verses-demand, resource scarcity, time-value-of-money, economies
+of scale, and diminishing returns and can observe how those factors
+interact over time. 
 
 Players develop a strategy of play: They can "play it safe" and progress along
 a predictable path, or they can jump in whole-heartedly and take risks ... 
