@@ -10,7 +10,58 @@
 :icons:
 
 
-== Fairwinds Game Tutorial 0 - Basic Requirements: Client Software
+== Fairwinds Game Tutorial 0 - What is Fairwinds
+
+* Multi-Player On-Line Game Simulating Five Double-Auction Markets
+
+* Played Using Structured Query Language (SQL)
+
+* Command-Line Interface (psql)
+
+The objective is to improve your standings relative to other 
+players. A sample of the standings report is shown in the table 
+below. 
+
+
+--------------------------------------------
+                       Fairwinds Tournament Standings
+ fairian_name | health |  wealth  |  cash   | food  | bonds | land  | notes 
++-------------+--------+----------+---------+-------+-------+-------+------+
+ edwin        | 0.9815 |       12 |  12.000 | 0.000 | 0.000 | 0.000 |     0
+ fredrick     | 0.9815 |       10 |  10.000 | 0.000 | 0.000 | 0.000 |     0
+ gina         | 0.9815 |        9 |   9.000 | 0.000 | 0.000 | 0.000 |     0
+ hendrik      | 0.9815 |        8 |   8.000 | 0.000 | 0.000 | 0.000 |     0
+ ingrid       | 0.9815 |        7 |   7.000 | 0.000 | 0.000 | 0.000 |     0
+ james        | 0.9815 |        6 |   6.000 | 0.000 | 0.000 | 0.000 |     0
+ karen        | 0.9815 |        5 |   5.000 | 0.000 | 0.000 | 0.000 |     0
+ leonard      | 0.9815 |        4 |   4.000 | 0.000 | 0.000 | 0.000 |     0
+ david        | 0.9668 |       45 |  45.000 | 0.000 | 0.000 | 0.000 |     0
+ norman       | 0.9626 |        3 |   3.000 | 0.000 | 0.000 | 0.000 |     0
+ michelle     | 0.9626 |        3 |   3.000 | 0.000 | 0.000 | 0.000 |     0
+ olivia       | 0.9626 |        2 |   2.000 | 0.000 | 0.000 | 0.000 |     0
+ peter        | 0.9626 |        1 |   1.000 | 0.000 | 0.000 | 0.000 |     0
+ quincy       | 0.9626 |        0 |   0.000 | 0.000 | 0.000 | 0.000 |     0
+ vincent      | 0.9237 |        0 |   0.000 | 0.000 | 0.000 | 0.000 |     0
+ samantha     | 0.9237 |        0 |   0.000 | 0.000 | 0.000 | 0.000 |     0
+ thomas       | 0.9237 |        0 |   0.000 | 0.000 | 0.000 | 0.000 |     0
+ wendy        | 0.9237 |        0 |   0.000 | 0.000 | 0.000 | 0.000 |     0
+ robert       | 0.9237 |        0 |   0.000 | 0.000 | 0.000 | 0.000 |     0
+ xavier       | 0.9237 |        0 |   0.000 | 0.000 | 0.000 | 0.000 |     0
+ ursula       | 0.9237 |        0 |   0.000 | 0.000 | 0.000 | 0.000 |     0
+ cathy        | 0.9145 |       50 |  50.000 | 0.000 | 0.000 | 0.000 |     0
+--------------------------------------------
+
+
+The first column lists the Fairian name. Players are ranked according to 
+health and wealth, as appear in the second and third columns. The remaining 
+columns show the breakdown of the individual components that are summed 
+to compute the total wealth.
+
+There is a lot going behind this ranking, and the following tutorials 
+will help understand the nuances to competing in Fairwinds
+
+
+== Fairwinds Game Tutorial 1 - Basic Requirements: Client Software
 
 Playing 'Fairwinds' requires that your computer establish a connection to the
 game. The preferred way of connecting is with the free +psql+ client software
@@ -98,7 +149,7 @@ fairwinds=>
 --------------------------------------------
 
 
-== Fairwinds Game Tutorial 1 - Creating a user account
+== Fairwinds Game Tutorial 2 - Creating a user account
 
 When you initially connect to the game, this is the interface you are
 presented with:
@@ -186,7 +237,7 @@ the +\c+ command:
 or you can terminate your connection with the +\q+ command.
 
 
-== Fairwinds Game Tutorial 2 - Connecting to the Game
+== Fairwinds Game Tutorial 3 - Connecting to the Game
 
 This tutorial explains how to connect to the game and run some
 privileged informative commands to gather information about the state of
@@ -369,7 +420,7 @@ effectiveness, and payment).
 
 
 
-== Fairwinds Game Tutorial 3 - Bootstrapping the Land Market
+== Fairwinds Game Tutorial 4 - Bootstrapping the Land Market
 
 When 'Fairwinds' is initialized, there are no 'Fairians', no land, no
 food, and no money. As players enter the game, resources must be brought
@@ -522,7 +573,7 @@ pseudo-randomly.
 Now that Alice is a land owner, she can cultivate the land to produce
 food.
 
-== Fairwinds Game Tutorial 4 - Cultivating Self-Owned Land
+== Fairwinds Game Tutorial 5 - Cultivating Self-Owned Land
 
 'Fairians' require sustenance ('i.e.', food) as the game advances.
 Provisioning sufficient sustenance has implications that will be
@@ -624,7 +675,7 @@ fairwinds=> select * from work;
 A contract_number has been assigned to serve as unique identifier, and the 
 contract is annotated as active. 
 
-== Fairwinds Game Tutorial 5 - Skills Development and the Skill Journal
+== Fairwinds Game Tutorial 6 - Skills Development and the Skill Journal
 
 Once Alice has engaged herself in cultivation of her own plot of land,
 there are a few important implications.
@@ -684,7 +735,7 @@ Proficiency atrophies at a constant percentage rate (which thus also exhibits
 diminishing returns behavior in that the amount by which proficiency
 decreases each click continually itself diminishes).
 
-== Fairwinds Game Tutorial 6 - Cultivation and the Land Journal
+== Fairwinds Game Tutorial 7 - Cultivation and the Land Journal
 
 The second consequence of Alice engaging in cultivation of her own land
 plot is that the land productivity improves.
@@ -721,7 +772,7 @@ Proficiency and productivity together influence the total food
 production yield.
 
 
-== Fairwinds Game Tutorial 7 - Cultivation and the Food Journal
+== Fairwinds Game Tutorial 8 - Cultivation and the Food Journal
 
 Another important consequence of Alice engaging in cultivation of her
 own plot of land is that this activity results in food production.
@@ -807,7 +858,7 @@ Exactly how much food can be maximally retained and how quickly
 that maximum is achieved will be dependent upon the various game
 parameters randomly determined at game start up.
 
-== Fairwinds Game Tutorial 8 - Sustenance and the Health Journal
+== Fairwinds Game Tutorial 9 - Sustenance and the Health Journal
 
 When a new 'Fairian' joins the game, they have no money, no land, and no food.
 A newly-created 'Fairian' has health status that depends upon when the player
@@ -954,7 +1005,7 @@ combined team effectiveness.
 
 
 
-== Fairwinds Game Tutorial 9 - We Have Company
+== Fairwinds Game Tutorial A - We Have Company
 
 At this point we introduce a second player, Bob. Bob goes through
 similar initial steps as Alice:
@@ -1051,7 +1102,7 @@ This second land plot, rather than being given away free, has a non-zero
 price, so Bob needs cash.
 
 
-== Fairwinds Game Tutorial A - Bootstrapping the Bond Market
+== Fairwinds Game Tutorial B - Bootstrapping the Bond Market
 
 As described earlier, when 'Fairwinds' is initialized, there are no
 'Fairians', no land, no food, and no money.  As players enter the game,
@@ -1214,7 +1265,7 @@ fairwinds=> select * from work;
 --------------------------------------------
 
 
-== Fairwinds Game Tutorial B - The Cash Journal
+== Fairwinds Game Tutorial C - The Cash Journal
 
 The cash_journal records transactions involving Faircoin. For 
 example, all executed buy and sell transactions, bond issues 
@@ -1269,7 +1320,7 @@ But Bob does not necessarily get let off the hook for the cash shortfall.
 
 
 
-== Fairwinds Game Tutorial C - The Debt Market
+== Fairwinds Game Tutorial D - The Debt Market
 
 In the previous tutorial, Bob was short of cash to repay a bond he issued.
 When this happens, a demand note is issued listing Bob as a debtor for the
@@ -1413,7 +1464,7 @@ indicating the resulting action: zero Faircoin was transferred from Bob to
 Alice since Bob had no cash available at the time of call. Other possible
 results are partial payment or full payment.
 
-== Fairwinds Game Tutorial D - Hiring Labor
+== Fairwinds Game Tutorial E - Hiring Labor
 
 In the earlier examples with Alice and Bob, they each
 bought a land plot and became cultivating land owners, 
@@ -1791,7 +1842,7 @@ fairwinds=# select * from food_journal where click = 26 and fairian_name='bob';
 --------------------------------------------
 
 
-== Fairwinds Game Tutorial E - The Commodity Market
+== Fairwinds Game Tutorial F - The Commodity Market
 
 The final market to illustrate is the commodity market, which  
 is used to buy and sell food. 
@@ -1986,7 +2037,7 @@ and no other seller offered food at a lower unit cost that he
 ended up paying to Gina.
 
 
-== Fairwinds Game Tutorial F - Extinguishing Debt
+== Fairwinds Game Tutorial 10 - Extinguishing Debt
 
 Notice from the standings that Bob has negative net wealth 
 
@@ -2104,7 +2155,7 @@ market, others would be watching for profitable opportunities and likely make
 bids competing with those shown above for illustration, thus altering the
 outcome. 'Caveat emptor'.
 
-== Fairwinds Game Tutorial 10 - Economic Friction
+== Fairwinds Game Tutorial 11 - Economic Friction
 
 Fairwinds imposes four different fees for market activity intended to
 discourage player behavior that could make the game less interesting for

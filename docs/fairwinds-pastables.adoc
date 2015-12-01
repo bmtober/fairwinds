@@ -15,7 +15,8 @@ insert into food_ask (expiration, quantity, price) values (,,);
 insert into food_ask (quantity) values ();
 insert into food_bid (expiration, quantity, price) values (,,);
 insert into food_bid (quantity) values ();
-insert into land_bid (expiration,productivity) values (,);
+insert into land_ask (serial_number, expiration, price) values ('',,);
+insert into land_bid (expiration, productivity, price) values (,,);
 insert into land_bid default values;
 insert into note_bid (serial_number, expiration, price) values ('',,);
 insert into work (work_place,skill_name) values ('','farmer');
@@ -53,7 +54,11 @@ select click, fairian_name, skill_name, debit, credit, description from skill_jo
 select fairian_name from fairian order by 1;
 
 update note set called = true where serial_number = '';
-update work set active = 'false' where contract_number = '';
+update note set called = true where factor = current_user;
+
+update work set active = false where contract_number = '';
+update work set active = false where customer = current_user;
+update work set active = false where supplier= current_user;
 
 update cash_journal set acknowledged = true where fairian_name = current_user;
 update food_journal set acknowledged = true where fairian_name = current_user;
