@@ -1,0 +1,15 @@
+= Fairwinds Tutorial
+:author:    Berend Tober <btober@computer.org>
+:copyright: 2015, Berend Tober
+///////////////////////////
+:backend:   slidy
+///////////////////////////
+:toc:
+:max-width: 45em
+:data-uri:
+:icons:
+
+
+== Fairwinds Game Interactive Menu Tutorial
+
+* Check back later for tutorial updates! *

@@ -10,7 +10,7 @@
 :icons:
 
 
-== Fairwinds Game Tutorial 0 - What is Fairwinds
+== Fairwinds Game SQL Tutorial 0 - What is Fairwinds
 
 * Multi-Player On-Line Game Simulating Five Double-Auction Markets
 
