@@ -2,27 +2,27 @@
 :author:    Berend Tober <btober@computer.org>
 :copyright: 2015, Berend Tober
 
-'Fairwinds' is a multi-player on-line game that involves real-time,
-competitive trading on five simulated markets by using the Postgresql 
-psql client to enter basic SQL commands.
+'Fairwinds' is a multi-player on-line, command-line interface game that
+involves real-time, competitive trading on five simulated markets.
+Players interact with the game by using either the Postgresql psql 
+client to enter basic SQL commands or an interactive menu system.
 
 This talk will present an overview of the application and discuss some
 design and architecture issues underlying its development. 
 
 We will devote the final half of the meeting to actually playing the
-game, so bring your computer with wireless network connectivity and 
-the psql client software ready to connect to a data base server.
+game, so bring your computer with wireless network connectivity and the
+psql client software ready to connect to a data base server.
 
-You will want to read the "Fairwinds Overview", "Fairwinds Tutorial"
-and "Fairwinds SQL Pasteables" reference pages in advance available at
-https://github.com/bmtober/fairwinds. These
-documents explain how to connect to a Postgresql data base, basic use
-of the psql client software, and will prepare you to be a competitive 
-player. 
+You will want to read the "Fairwinds Overview", "Fairwinds Tutorial" and
+"Fairwinds SQL Pasteables" reference pages in advance available at
+https://github.com/bmtober/fairwinds. These documents explain how to
+connect to a Postgresql data base, basic use of the psql client
+software, and will prepare you to be a competitive player. 
 
-Note that the presentation is not simply a repeat of the tutorial. 
-The talk will fill in and expand upon what you learn from the 
-tutorial, so advance review is highly encouraged. 
+Note that the presentation is not simply a repeat of the tutorial.  The
+talk will fill in and expand upon what you learn from the tutorial, so
+advance review is highly encouraged. 
 
 Speaker: Berend Tober has been a PostgreSQL user for over 15 years. His
 experience includes both private industry and federal government roles
