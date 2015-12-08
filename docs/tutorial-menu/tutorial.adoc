@@ -1,4 +1,4 @@
-= Fairwinds Tutorial
+= Fairwinds Interactive Menu Tutorial
 :author:    Berend Tober <btober@computer.org>
 :copyright: 2015, Berend Tober
 ///////////////////////////
@@ -8,8 +8,8 @@
 :max-width: 45em
 :data-uri:
 :icons:
+:date: 08-Dec-2015
 
+== TBD
 
-== Fairwinds Game Interactive Menu Tutorial
-
-* Check back later for tutorial updates! *
+Check back later for updates to this tutorial.

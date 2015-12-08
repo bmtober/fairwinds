@@ -1,4 +1,4 @@
-= Fairwinds Tutorial
+= Fairwinds SQL Tutorial
 :author:    Berend Tober <btober@computer.org>
 :copyright: 2015, Berend Tober
 ///////////////////////////
@@ -8,9 +8,8 @@
 :max-width: 45em
 :data-uri:
 :icons:
-
-
-== Fairwinds Game SQL Tutorial 0 - What is Fairwinds
+:date: 08-Dec-2015
+== Fairwinds Game Tutorial 0 - What is Fairwinds
 
 * Multi-Player On-Line Game Simulating Five Double-Auction Markets
 
