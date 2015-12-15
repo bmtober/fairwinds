@@ -8,7 +8,7 @@
 :max-width: 45em
 :data-uri:
 :icons:
-:date: 08-Dec-2015
+:date: 15-Dec-2015
 
 == Fairwinds Game Tutorial 0 - What is Fairwinds
 
@@ -18,47 +18,54 @@
 
 * Command-Line Interface (psql)
 
-The objective is to improve your standings relative to other 
-players. A sample of the standings report is shown in the table 
-below. 
+The objective is to improve your standings relative to other
+players. A sample of the standings report is shown in the
+table below.
 
 
 --------------------------------------------
                        Fairwinds Tournament Standings
- fairian_name | health |  wealth  |  cash   | food  | bonds | land  | notes 
-+-------------+--------+----------+---------+-------+-------+-------+------+
- edwin        | 0.9815 |       12 |  12.000 | 0.000 | 0.000 | 0.000 |     0
- fredrick     | 0.9815 |       10 |  10.000 | 0.000 | 0.000 | 0.000 |     0
- gina         | 0.9815 |        9 |   9.000 | 0.000 | 0.000 | 0.000 |     0
- hendrik      | 0.9815 |        8 |   8.000 | 0.000 | 0.000 | 0.000 |     0
- ingrid       | 0.9815 |        7 |   7.000 | 0.000 | 0.000 | 0.000 |     0
- james        | 0.9815 |        6 |   6.000 | 0.000 | 0.000 | 0.000 |     0
- karen        | 0.9815 |        5 |   5.000 | 0.000 | 0.000 | 0.000 |     0
- leonard      | 0.9815 |        4 |   4.000 | 0.000 | 0.000 | 0.000 |     0
- david        | 0.9668 |       45 |  45.000 | 0.000 | 0.000 | 0.000 |     0
- norman       | 0.9626 |        3 |   3.000 | 0.000 | 0.000 | 0.000 |     0
- michelle     | 0.9626 |        3 |   3.000 | 0.000 | 0.000 | 0.000 |     0
- olivia       | 0.9626 |        2 |   2.000 | 0.000 | 0.000 | 0.000 |     0
- peter        | 0.9626 |        1 |   1.000 | 0.000 | 0.000 | 0.000 |     0
- quincy       | 0.9626 |        0 |   0.000 | 0.000 | 0.000 | 0.000 |     0
- vincent      | 0.9237 |        0 |   0.000 | 0.000 | 0.000 | 0.000 |     0
- samantha     | 0.9237 |        0 |   0.000 | 0.000 | 0.000 | 0.000 |     0
- thomas       | 0.9237 |        0 |   0.000 | 0.000 | 0.000 | 0.000 |     0
- wendy        | 0.9237 |        0 |   0.000 | 0.000 | 0.000 | 0.000 |     0
- robert       | 0.9237 |        0 |   0.000 | 0.000 | 0.000 | 0.000 |     0
- xavier       | 0.9237 |        0 |   0.000 | 0.000 | 0.000 | 0.000 |     0
- ursula       | 0.9237 |        0 |   0.000 | 0.000 | 0.000 | 0.000 |     0
- cathy        | 0.9145 |       50 |  50.000 | 0.000 | 0.000 | 0.000 |     0
+ fairian_name | health | wealth  |  cash   |  food  | bonds | land  | notes 
+--------------+--------+---------+---------+--------+-------+-------+-------
+ bob          | 0.9942 |   5.042 |   0.000 | 34.508 | 0.000 | 0.534 |   -30
+ david        | 0.9923 |  57.580 |  45.000 | 12.580 | 0.000 | 0.000 |     0
+ cathy        | 0.9895 |  86.089 |  69.000 | 17.089 | 0.000 | 0.000 |     0
+ edwin        | 0.9884 |  29.253 |  12.000 | 17.253 | 0.000 | 0.000 |     0
+ fredrick     | 0.9884 |  27.253 |  10.000 | 17.253 | 0.000 | 0.000 |     0
+ gina         | 0.9884 |  26.411 |  14.000 | 12.411 | 0.000 | 0.000 |     0
+ hendrik      | 0.9884 |  25.253 |   8.000 | 17.253 | 0.000 | 0.000 |     0
+ ingrid       | 0.9884 |  24.253 |   7.000 | 17.253 | 0.000 | 0.000 |     0
+ james        | 0.9884 |  23.253 |   6.000 | 17.253 | 0.000 | 0.000 |     0
+ karen        | 0.9884 |  22.253 |   5.000 | 17.253 | 0.000 | 0.000 |     0
+ leonard      | 0.9884 |  21.253 |   4.000 | 17.253 | 0.000 | 0.000 |     0
+ norman       | 0.9874 |  20.253 |   3.000 | 17.253 | 0.000 | 0.000 |     0
+ michelle     | 0.9874 |  20.253 |   3.000 | 17.253 | 0.000 | 0.000 |     0
+ olivia       | 0.9874 |  19.253 |   2.000 | 17.253 | 0.000 | 0.000 |     0
+ peter        | 0.9874 |  18.253 |   1.000 | 17.253 | 0.000 | 0.000 |     0
 --------------------------------------------
 
 
-The first column lists the Fairian name. Players are ranked according to 
-health and wealth, as appear in the second and third columns. The remaining 
-columns show the breakdown of the individual components that are summed 
-to compute the total wealth.
+The first column lists the Fairian name. Players are ranked
+according to health and wealth, as appear in the second and
+third columns. The remaining columns show the breakdown of
+the individual components that are summed to compute the total
+wealth represented in the third column.
 
-There is a lot going behind this ranking, and the following tutorials 
-will help understand the nuances to competing in Fairwinds
+There is a lot going behind this ranking table. And while the
+following tutorials will help with understanding, a couple
+things to note are that no matter what level of total wealth,
+health always dominates as a ranking criteria, so even though
+Cathy, who ranks the highest wealth, is third behind Bob and
+David since the latter two have higher health percentage values.
+As will be demonstrated subsequently, achieving and maintaining
+perfect 100% health is expected to be realizable by multiple 
+players and so as the game progresses most likely wealth will 
+be the discriminating ranking factor.
+
+Even with that, though, it pays to be cognizant of the balance
+between the separate wealth components, as the worth of food
+and land will vary according to fluctuating market values for
+those assets.
 
 
 == Fairwinds Game Tutorial 1 - Basic Requirements: Client Software
@@ -1443,16 +1450,16 @@ an earlier tutorial:
 --------------------------------------------
 fairwinds=> select * from cash_journal;
 
- click | fairian_name | account | debit |   credit   | acknowledged |                  description                  
+ click | fairian_name | account | debit |   credit   |                  description                  
 -------+--------------+---------+-------+------------+--------------+-----------------------------------------------
-     8 | alice        | land    |       |          0 | f            | Bought land 356a192b7913b0
-    17 | bob          | bond    |  1000 |            | f            | Issued bond 1b6453892473a4
-    17 | bob          | cost    |       |          1 | f            | Trade order transaction fee
-    17 | bob          | land    |       |   0.001028 | f            | Bought land 77de68daecd823
-    19 | bob          | bond    |       | 998.998972 | f            | Redeemed bond 1b6453892473a4
-    30 | alice        | note    |       |          0 | f            | Bought note c1dfd96eea8cc2
-    30 | bob          | note    |       |          0 | f            | Collection c1dfd96eea8cc2: Debtor is indigent
-    30 | alice        | note    |     0 |            | f            | Collection c1dfd96eea8cc2: Debtor is indigent
+     8 | alice        | land    |       |          0 | Bought land 356a192b7913b0
+    17 | bob          | bond    |  1000 |            | Issued bond 1b6453892473a4
+    17 | bob          | cost    |       |          1 | Trade order transaction fee
+    17 | bob          | land    |       |   0.001028 | Bought land 77de68daecd823
+    19 | bob          | bond    |       | 998.998972 | Redeemed bond 1b6453892473a4
+    30 | alice        | note    |       |          0 | Bought note c1dfd96eea8cc2
+    30 | bob          | note    |       |          0 | Collection c1dfd96eea8cc2: Debtor is indigent
+    30 | alice        | note    |     0 |            | Collection c1dfd96eea8cc2: Debtor is indigent
 (8 rows)
 --------------------------------------------
 
@@ -1820,25 +1827,25 @@ food unit.
 --------------------------------------------
 fairwinds=# select * from food_journal where click = 26 and fairian_name='bob';
 
- click | fairian_name | debit | credit | acknowledged |                        description                        
--------+--------------+-------+--------+--------------+-----------------------------------------------------------
-    39 | bob          |    16 |        | f            | total production from land 77de68daecd823
-    39 | bob          |       |      1 | f            | supplier production share paid on contract 1574bddb75c78a
-    39 | bob          |       |      1 | f            | supplier production share paid on contract 7b52009b64fd0a
-    39 | bob          |       |      1 | f            | supplier production share paid on contract 472b07b9fcf2c2
-    39 | bob          |       |      1 | f            | supplier production share paid on contract bc33ea4e26e5e1
-    39 | bob          |       |      1 | f            | supplier production share paid on contract bd307a3ec329e1
-    39 | bob          |       |      1 | f            | supplier production share paid on contract 12c6fc06c99a46
-    39 | bob          |       |      1 | f            | supplier production share paid on contract 0716d9708d321f
-    39 | bob          |       |      1 | f            | supplier production share paid on contract f6e1126cedebf2
-    39 | bob          |       |      1 | f            | supplier production share paid on contract 887309d048beef
-    39 | bob          |       |      1 | f            | supplier production share paid on contract 4d134bc072212a
-    39 | bob          |       |      1 | f            | supplier production share paid on contract f1abd670358e03
-    39 | bob          |       |      1 | f            | supplier production share paid on contract d435a6cdd78630
-    39 | bob          |       |      1 | f            | supplier production share paid on contract b3f0c7f6bb763a
-    39 | bob          |       |      1 | f            | supplier production share paid on contract fa35e192121eab
-    39 | bob          |       |      1 | f            | supplier production share paid on contract 9e6a55b6b4563e
-    39 | bob          |       |      1 | f            | daily sustenance
+ click | fairian_name | debit | credit |                        description                        
+-------+--------------+-------+--------+-----------------------------------------------------------
+    39 | bob          |    16 |        | total production from land 77de68daecd823
+    39 | bob          |       |      1 | supplier production share paid on contract 1574bddb75c78a
+    39 | bob          |       |      1 | supplier production share paid on contract 7b52009b64fd0a
+    39 | bob          |       |      1 | supplier production share paid on contract 472b07b9fcf2c2
+    39 | bob          |       |      1 | supplier production share paid on contract bc33ea4e26e5e1
+    39 | bob          |       |      1 | supplier production share paid on contract bd307a3ec329e1
+    39 | bob          |       |      1 | supplier production share paid on contract 12c6fc06c99a46
+    39 | bob          |       |      1 | supplier production share paid on contract 0716d9708d321f
+    39 | bob          |       |      1 | supplier production share paid on contract f6e1126cedebf2
+    39 | bob          |       |      1 | supplier production share paid on contract 887309d048beef
+    39 | bob          |       |      1 | supplier production share paid on contract 4d134bc072212a
+    39 | bob          |       |      1 | supplier production share paid on contract f1abd670358e03
+    39 | bob          |       |      1 | supplier production share paid on contract d435a6cdd78630
+    39 | bob          |       |      1 | supplier production share paid on contract b3f0c7f6bb763a
+    39 | bob          |       |      1 | supplier production share paid on contract fa35e192121eab
+    39 | bob          |       |      1 | supplier production share paid on contract 9e6a55b6b4563e
+    39 | bob          |       |      1 | daily sustenance
 --------------------------------------------
 
 
@@ -2010,9 +2017,9 @@ And we can see the effect of the food purchase in the food_journal:
 fairwinds=> select * from food_journal where  fairian_name = 'zachary';
 
                            Food Journal - Zachary
- click | fairian_name | debit | credit | acknowledged |     description     
--------+--------------+-------+--------+--------------+---------------------
-   412 | zachary      |     7 |        | f            | Bought food for fc5
+ click | fairian_name | debit | credit |      description     
+-------+--------------+-------+--------+----------------------
+   412 | zachary      |     7 |        | Bought food for fc5
 (1 row)
 --------------------------------------------
 

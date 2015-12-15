@@ -8,8 +8,187 @@
 :max-width: 45em
 :data-uri:
 :icons:
-:date: 08-Dec-2015
+:date: 15-Dec-2015
 
-== TBD
+== Fairwinds Game Tutorial 0 - What is Fairwinds
 
-Check back later for updates to this tutorial.
+* Multi-Player On-Line Game Simulating Five Double-Auction Markets
+
+* Interactive Menu Interface
+
+The objective is to improve your standings relative to other
+players. A sample of the standings report is shown in the
+table below.
+
+
+--------------------------------------------
+                       Fairwinds Tournament Standings
+ fairian_name | health | wealth  |  cash   |  food  | bonds | land  | notes 
+--------------+--------+---------+---------+--------+-------+-------+-------
+ bob          | 0.9942 |   5.042 |   0.000 | 34.508 | 0.000 | 0.534 |   -30
+ david        | 0.9923 |  57.580 |  45.000 | 12.580 | 0.000 | 0.000 |     0
+ cathy        | 0.9895 |  86.089 |  69.000 | 17.089 | 0.000 | 0.000 |     0
+ edwin        | 0.9884 |  29.253 |  12.000 | 17.253 | 0.000 | 0.000 |     0
+ fredrick     | 0.9884 |  27.253 |  10.000 | 17.253 | 0.000 | 0.000 |     0
+ gina         | 0.9884 |  26.411 |  14.000 | 12.411 | 0.000 | 0.000 |     0
+ hendrik      | 0.9884 |  25.253 |   8.000 | 17.253 | 0.000 | 0.000 |     0
+ ingrid       | 0.9884 |  24.253 |   7.000 | 17.253 | 0.000 | 0.000 |     0
+ james        | 0.9884 |  23.253 |   6.000 | 17.253 | 0.000 | 0.000 |     0
+ karen        | 0.9884 |  22.253 |   5.000 | 17.253 | 0.000 | 0.000 |     0
+ leonard      | 0.9884 |  21.253 |   4.000 | 17.253 | 0.000 | 0.000 |     0
+ norman       | 0.9874 |  20.253 |   3.000 | 17.253 | 0.000 | 0.000 |     0
+ michelle     | 0.9874 |  20.253 |   3.000 | 17.253 | 0.000 | 0.000 |     0
+ olivia       | 0.9874 |  19.253 |   2.000 | 17.253 | 0.000 | 0.000 |     0
+ peter        | 0.9874 |  18.253 |   1.000 | 17.253 | 0.000 | 0.000 |     0
+--------------------------------------------
+
+
+The first column lists the Fairian name. Players are ranked
+according to health and wealth, as appear in the second and
+third columns. The remaining columns show the breakdown of
+the individual components that are summed to compute the total
+wealth represented in the third column.
+
+There is a lot going behind this ranking table. And while the
+following tutorials will help with understanding, a couple
+things to note are that no matter what level of total wealth,
+health always dominates as a ranking criteria, so even though
+Cathy, who ranks the highest wealth, is third behind Bob and
+David since the latter two have higher health percentage values.
+As will be demonstrated subsequently, achieving and maintaining
+perfect 100% health is expected to be realizable by multiple 
+players and so as the game progresses most likely wealth will 
+be the discriminating ranking factor.
+
+Even with that, though, it pays to be cognizant of the balance
+between the separate wealth components, as the worth of food
+and land will vary according to fluctuating market values for
+those assets.
+
+
+== Fairwinds Game Tutorial 1 - Basic Requirements: Client Software
+
+This tutorial demonstrates using the free interactive menu user 
+interface to play Fairwinds. 
+
+Playing 'Fairwinds' requires that your computer establish a connection
+to the game utilizing  with the free +psql+ client software application
+and the +fairbot.sh+ interactive menu script. 
+
+As you make menu selections with the +fairbot.sh+ script, the  script
+will construct apropriate structured query language (SQL) commands and
+send them to the game by using the +psql+ client software
+automatically.
+
+=== Obtaining PSQL Client Software
+
+
+==== PSQL on Linux
+
+The +psql+ client is part of the +postgresql+ package. On Linux this is
+installed with 
+
+--------------------------------------------
+yum install postgresql
+--------------------------------------------
+
+==== PSQL on Windows
+
+On Windows systems, +postgresql+ is available through the 'Cygwin' software
+tools package. Visit the Cygwin web site https://www.cygwin.com/ to download
+and install 'Cygwin'. During the installation, be sure to select the
++postgresql+ package.
+
+After installing Cygwin, double-click the Cygwin icon. This will open a local
+terminal window, and at this point the instructions are the same as for running
++psql+ on Linux.
+
+=== PSQL Configuration
+
+The 'Fairwinds' game communicates certain error conditions by means of
+interally raising execptions and emitting an associated, explanatory
+error message. In the default configuration, +psql+ emits additional
+contextual information which, while helpful to an administrative
+operator, may obscure the essential error message for a typical player.
+
+The verbosity of these outputs can be reduced with a configuration
+setting. If you are already running the +psql+ client, then you should
+run the following command at the +psql+ prompt:
+
+--------------------------------------------
+\set VERBOSITY terse
+--------------------------------------------
+
+Alternatively, you can easily create or modify the +psql+ client
+resource configuration file by copy-and-pasting the following command
+at the shell command prompt:
+
+--------------------------------------------
+echo "\set VERBOSITY terse" >> ~/.psqlrc
+--------------------------------------------
+
+=== Obtaining the Interactive Menu Script
+
+The +fairbot.sh+ menu application is a Bash shell script that runs from
+the Linux command line. You can download the +fairbot.sh+ menu script
+from
+
+ https://github.com/bmtober/fairwinds
+
+After downloading, make sure the script is executable with 
+
+--------------------------------------------
+ chmod +x fairbot.sh
+--------------------------------------------
+
+=== Invoking the Interactive Menu
+
+Runing the +fairbot.sh+ script at the Linux command line with no 
+parameters displays a simple usage and help menu:
+
+
+--------------------------------------------
+./fairbot.sh
+
+
+NAME
+  fairbot.sh - Interactive menu for the Fairwinds game. 
+
+SYNOPSIS
+  fairbot.sh [options] host [username]  
+
+DESCRIPTION
+  fairbot.sh is a script that presents an interactive menu system
+  for playing the Fairwinds game hosted on the specified host.
+  It requires that the psql data base client software
+  be installed and accessible in the user's PATH.
+   
+  If no username is specified, it defaults to the current user.
+
+  CTRL-D is used to exit menus.
+
+OPTIONS
+
+  -h
+      Show help menu.
+
+  -f file
+      Save generated SQL statements to file instead of executing them.
+
+--------------------------------------------
+
+The above explains that you must specify the hostname (or IP
+address) of the game, and optionally specify a username.
+
+By specifying an output file with the +-f+ option, you can
+create a file showing the SQL commands that would have been
+run. This file can then be studied and modified, and then if
+you develop facility with utilizing the +psql+ client directly,
+you could then run the file as a command script.
+
+
+
+== Fairwinds Game Tutorial 2 - Creating a user account
+
+
+Check back later for futher tutorial updates!

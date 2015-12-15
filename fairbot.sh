@@ -13,14 +13,22 @@ export COLUMNS=10
 unset file
 
 
-syntax=" \
+syntax="
+NAME
+  ${me} - Interactive menu for the Fairwinds game. 
 
-USAGE: $me [options] host [username]  
+SYNOPSIS
+  ${me} [options] host [username]  
 
-CTRL-D to exit menus
+DESCRIPTION
+  ${me} is a script that presents an interactive menu system
+  for playing the Fairwinds game hosted on the specified host.
+  It requires that the psql data base client software be
+  installed and accessible in the user's PATH.
 
-Creates and runs SQL statements for placing trade orders in the Fairwinds game
-running on specified host for Fairian username. Default username=${USER}.
+  If no username is specified, it defaults to the current user.
+
+  CTRL-D is used to exit menus.
 
 OPTIONS
 
@@ -28,7 +36,7 @@ OPTIONS
       Show help menu.
 
   -f file
-      Save generated SQL to file instead of executing them.
+      Save generated SQL statements to file instead of executing them.
 
 "
 
