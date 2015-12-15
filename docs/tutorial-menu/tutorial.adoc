@@ -191,4 +191,4 @@ you could then run the file as a command script.
 == Fairwinds Game Tutorial 2 - Creating a user account
 
 
-Check back later for futher tutorial updates!
+Check back later for further tutorial updates!
