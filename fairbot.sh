@@ -85,7 +85,7 @@ display_contracts="select * from work where customer = current_user or supplier 
 display_notes="select * from note where factor = current_user or debtor = current_user;"
 
 
-function executemenu {
+function executesql {
   if [[ -n "${file}" ]] 
   then
     echo "${sql}" >> "${file}"
@@ -103,7 +103,7 @@ function createmenu {
   sql="insert into fairian (fairian_name, passwd, email_address) values ('${fairian_name}', '${PGPASSWORD}', '${email}');"
   prompt="insert into fairian (fairian_name, passwd, email_address) values ('${fairian_name}', '******', '${email}');"
   export PGUSER="fairwinds"
-  executemenu "${sql}" "${prompt}"
+  executesql "${sql}" "${prompt}"
 }
 
 function labormenu {
@@ -111,6 +111,7 @@ function labormenu {
   skills=$(psql -q -A -t <<< "select skill_name from skill order by 1;")
 
   unset fields values
+  OLDPS3="${PS3}"
   PS3="Select skill name "
   select skill_name in ${skills}
   do
@@ -132,41 +133,43 @@ function labormenu {
     fi
     break
   done
-  unset PS3
+  PS3="${OLDPS3}"
 
   fields="${fields#,}"
   values="${values#,}"
   sql="insert into work (${fields}) values (${values});"
-  executemenu "${sql}"
+  executesql "${sql}"
 }
 
 function callmenu {
   notes=$(psql -q -A -t <<< "select serial_number from note where factor = current_user order by 1;")
 
   unset fields values
+  OLDPS3="${PS3}"
   PS3="Select note serial number "
   select note in ${notes}
   do
     [[ -z "${note}" ]] && break
     sql="update note set called = true where serial_number = '${note}';"
-    executemenu "${sql}"
+    executesql "${sql}"
     break
   done
-  unset PS3
+  PS3="${OLDPS3}"
 }
 
 function resignmenu {
   supplier_contracts=$(psql -q -A -t <<< "select contract_number from work where customer = current_user or supplier = current_user order by 1;")
 
+  OLDPS3="${PS3}"
   PS3="Select labor contract number "
   select contract_number in ${supplier_contracts}
   do
     [[ -z "${contract_number}" ]] && break
     sql="update work set active = false where contract_number = '${contract_number}';"
-    executemenu "${sql}"
+    executesql "${sql}"
     break
   done
-  unset PS3
+  PS3="${OLDPS3}"
 }
 
 function optionsmenu {
@@ -238,6 +241,7 @@ function optionsmenu {
       ;;
     note)
       notes=$(psql -q -A -t <<< "select serial_number from note order by 1;")
+      OLDPS3="${PS3}"
       PS3="Select note serial number "
       select serial_number in ${notes}
       do
@@ -245,7 +249,7 @@ function optionsmenu {
         values="${values}, '${serial_number}'"
         break
       done
-      unset PS3
+      PS3="${OLDPS3}"
   esac
     
   if [[ -z "${fields}" ]]
@@ -254,7 +258,7 @@ function optionsmenu {
   else
     sql="insert into ${mrkt}_${side% - *} (${fields##,}) values (${values##,});"
   fi
-  executemenu "${sql}"
+  executesql "${sql}"
 }
 
 
@@ -264,6 +268,7 @@ function sidemenu {
       "ask - Sell order"
       )
   unset side
+  OLDPS3="${PS3}"
   PS3="${mrkt} buy (bid) or sell (ask)? "
   select side in "${sides[@]}"
   do
@@ -292,12 +297,13 @@ function sidemenu {
     optionsmenu ${mrkt} ${side% - *}
     break
   done
-  unset PS3
+  PS3="${OLDPS3}"
 }
 
 function marketmenu {
   mrkts=("bond" "land" "work" "food" "note")
   unset mrkt
+  OLDPS3="${PS3}"
   PS3="Select market "
   select mrkt in "${mrkts[@]}"
   do
@@ -311,7 +317,7 @@ function marketmenu {
     esac
     break
   done
-  unset PS3
+  PS3="${OLDPS3}"
 }
 
 function reportsmenu {
@@ -326,6 +332,8 @@ function reportsmenu {
       "Bonds        - Display owned and issued bonds"
       "Contracts    - Display engaged labor contracts"
       "Notes        - Display factor/debtor notes")
+  OLDPS3="${PS3}"
+  PS3="Select report "
   unset option
   select option in "${options[@]}"
   do
@@ -338,7 +346,7 @@ function reportsmenu {
         ${display_game_info}
         \C
         "
-        executemenu "${sql}" "${display_game_info}"
+        executesql "${sql}" "${display_game_info}"
         ;;
       Connections)
         sql="
@@ -346,7 +354,7 @@ function reportsmenu {
         ${display_connections}
         \C
         "
-        executemenu "${sql}" "${display_game_info}"
+        executesql "${sql}" "${display_game_info}"
         ;;
       Players)
         sql="
@@ -354,7 +362,7 @@ function reportsmenu {
         ${display_players}
         \C
         "
-        executemenu "${sql}" "${display_game_info}"
+        executesql "${sql}" "${display_game_info}"
         ;;
       Health)
         sql="
@@ -362,7 +370,7 @@ function reportsmenu {
         ${display_health_journal}
         \C
         "
-        executemenu "${sql}" "${display_health_journal}"
+        executesql "${sql}" "${display_health_journal}"
         ;;
       Cash)
         sql="
@@ -370,7 +378,7 @@ function reportsmenu {
         ${display_cash_journal}
         \C
         "
-        executemenu "${sql}" "${display_cash_journal}"
+        executesql "${sql}" "${display_cash_journal}"
         ;;
       Food)
         sql="
@@ -378,7 +386,7 @@ function reportsmenu {
         ${display_food_journal}
         \C
         "
-        executemenu "${sql}" "${display_food_journal}"
+        executesql "${sql}" "${display_food_journal}"
         ;;
       Land)
         sql="
@@ -386,7 +394,7 @@ function reportsmenu {
         ${display_land}
         \C
         "
-        executemenu "${sql}" "${display_land}"
+        executesql "${sql}" "${display_land}"
         ;;
       Bonds)
         sql="
@@ -394,7 +402,7 @@ function reportsmenu {
         ${display_bonds}
         \C
         "
-        executemenu "${sql}" "${display_bonds}"
+        executesql "${sql}" "${display_bonds}"
         ;;
       Contracts)
         sql="
@@ -402,7 +410,7 @@ function reportsmenu {
         ${display_contracts}
         \C
         "
-        executemenu "${sql}" "${display_contracts}"
+        executesql "${sql}" "${display_contracts}"
         ;;
       Notes)
         sql="
@@ -410,11 +418,11 @@ function reportsmenu {
         ${display_notes}
         \C
         "
-        executemenu "${sql}" "${display_notes}"
+        executesql "${sql}" "${display_notes}"
         ;;
       esac
   done
-
+  PS3="${OLDPS3}"
 }
 
 function mainmenu {
@@ -426,6 +434,7 @@ function mainmenu {
       "Terminate  - End a labor contract" 
       "Call       - Demand note payment" 
       )
+  PS3="Main menu selection "
   unset option
   select option in "${options[@]}"
   do

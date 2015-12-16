@@ -8,7 +8,7 @@
 :max-width: 45em
 :data-uri:
 :icons:
-:date: 15-Dec-2015
+:date: 16-Dec-2015
 
 == Fairwinds Game Tutorial 0 - What is Fairwinds
 
@@ -220,7 +220,7 @@ displayed on the left for each item.
 4) Labor      - Assign self-owned labor contract
 5) Terminate  - End a labor contract
 6) Call       - Demand note payment
-#?
+Main menu selection 
 --------------------------------------------
 
 Alice enters option #1 to create her account, which leads to
@@ -331,37 +331,39 @@ A brief description of each is given below:
 
 
 [horizontal] 
-*+bond+*:: The +bond+ relation stores a list of, well,
-'bonds'. Literally a 'bond' is just that, a promise (as in "my
-word is my bond") to re-pay a fixed amount of money at some
-specified future time. It represents a contract between two
-'Fairians' or between a 'Fairian' and the governing market
-authority (which you can think of as "the government"). From
-the bond buyer's (the lender) perspective, bonds are guaranteed
-investments: regardless of the issuer's (the borrower) ability
-to repay, the governing market will create enough money to
-cover any shortfall and repay the full face amount at maturity.
+*+bond+*:: The finance market.  Literally a 'bond' is just
+that, a promise (as in "my word is my bond") to re-pay a fixed
+amount of money at some specified future time. It represents
+a contract between two 'Fairians' or between a 'Fairian' and
+the governing market authority (which you can think of as "the
+government"). From the bond buyer's (the lender) perspective,
+bonds are guaranteed investments: regardless of the issuer's
+(the borrower) ability to repay, the governing market will
+create enough money to cover any shortfall and repay the full
+face amount at maturity.
 
-*+note+*:: If a bond issuing 'Fairian' does not have sufficient
-cash on hand to repay at bond maturity, then a +note+ is
-written listing the borrower as a debtor, and that +note+
-is then factored (offered for sale at discount) and listed in
-the +note+ relation.
+*+land+*:: The real estate market. Plots of land which have
+been surveyed (note that "surveyed" is merely a notional
+term in this context meaning only "created by the game") and
+offered for sale, as well as listing the owner, if the land
+has been purchased.
 
-*+land+*:: The +land+ relation lists all the plots of land
-which have been surveyed (note that "surveyed" is merely a
-notional term in this context meaning only "created by the
-game") and offered for sale, as well as listing the owner,
-if the land has been purchased.
-
-*+work+*:: Lastly, the +work+ relation, similar to the +bond+
-relation, represents an agreement between 'Fairians', but in
-this case the subject is a list of labor contracts. Labor
-contracts specify that one 'Fairian' will work for another
-for at least a specified amount of time.  Entries in the
-+work+ relation are created when buyers, offering to hire,
+*+work+*:: The labor market. Similar to a +bond+, a labor
+contract represents an agreement between 'Fairians'.
+Labor contracts specify that one 'Fairian' will work for
+another for at least a specified amount of time.  Entries in
+the +work+ relation are created when buyers, offering to hire,
 and sellers, offering to work, offer mutually compatible terms
 (with respect to time, skill, effectiveness, and payment).
+
+*+food+*:: The commodity market. This allows 'Fairians' to
+buy and sell food.
+
+*+note+*:: The debt market. If a bond issuing 'Fairian' does
+not have sufficient cash on hand to repay at bond maturity,
+then a +note+ is written listing the borrower as a debtor,
+and that +note+ is then factored (offered for sale at discount)
+on the debt market.
 
 After selecting any one of these markets, you will prompted
 for which 'side' of the trade you want to place an order on.
@@ -373,9 +375,16 @@ Select market 1
 bond buy (bid) or sell (ask)? 
 --------------------------------------------
 
-Generally speaking, 'bid' and 'ask' refer to 'buy' and 'sell'
+'bid' and 'ask' refer to 'buy' and 'sell'
 orders, respectively.
 
+A successful player will utilize all five markets in order to
+improve their rank in the standings. Generally, the flow of 
+the game is driven by the standing ranking by health and 
+wealth, since sustaining health requires food, food is 
+produced by cultivating land, land is acquired using 
+capital, capital is raised through financing and 
+assumption of debt.
 == Fairwinds Game Tutorial 4 - Bootstrapping the Land Market
 
 When 'Fairwinds' is initialized, there are no 'Fairians', no land, no
@@ -402,6 +411,7 @@ buy land.
 
 
 --------------------------------------------
+#? 
 #? 3
 1) bond
 2) land
@@ -441,6 +451,6 @@ accept.
 In this case Alice specifies a productivity value of zero in
 order to invoke bootstrapping.
 
-== To Be Continued 
+== To Be Continued!
 
-Check back later for more updates!
+Check back later for further updates.
