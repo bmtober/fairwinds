@@ -74,6 +74,8 @@ export PGHOST="${1}"
 export PGUSER="${fairian_name}"
 
 display_game_info="select click, start_time, end_time, click_interval from fairwinds;"
+display_connections="select * from connection;"
+display_players="select  fairian_name, email_address, created_date, click_order_count, click_select_count from fairian order by fairian_name;"
 display_health_journal="select * from health_journal where fairian_name = current_user order by click;"
 display_cash_journal="select * from cash_journal where fairian_name = current_user order by click;"
 display_food_journal="select * from food_journal where fairian_name = current_user order by click;"
@@ -262,7 +264,7 @@ function sidemenu {
       "ask - Sell order"
       )
   unset side
-  PS3="Buy (bid) or sell (ask)? "
+  PS3="${mrkt} buy (bid) or sell (ask)? "
   select side in "${sides[@]}"
   do
     case "${side% - *}" in
@@ -314,14 +316,16 @@ function marketmenu {
 
 function reportsmenu {
   options=(
-      "Game       - Display game information" 
-      "Health     - Display health history journal"
-      "Cash       - Display cash transcation journal"
-      "Food       - Display food transcation journal"
-      "Land       - Display owned land plots"
-      "Bonds      - Display owned and issued bonds"
-      "Contracts  - Display engaged labor contracts"
-      "Notes      - Display factor/debtor notes")
+      "Game         - Display game information" 
+      "Connections  - Display currently logged in players" 
+      "Players      - Display registered players" 
+      "Health       - Display health history journal"
+      "Cash         - Display cash transcation journal"
+      "Food         - Display food transcation journal"
+      "Land         - Display owned land plots"
+      "Bonds        - Display owned and issued bonds"
+      "Contracts    - Display engaged labor contracts"
+      "Notes        - Display factor/debtor notes")
   unset option
   select option in "${options[@]}"
   do
@@ -332,6 +336,22 @@ function reportsmenu {
         sql="
         \C 'Game Information'
         ${display_game_info}
+        \C
+        "
+        executemenu "${sql}" "${display_game_info}"
+        ;;
+      Connections)
+        sql="
+        \C 'Connections'
+        ${display_connections}
+        \C
+        "
+        executemenu "${sql}" "${display_game_info}"
+        ;;
+      Players)
+        sql="
+        \C 'Fairians'
+        ${display_players}
         \C
         "
         executemenu "${sql}" "${display_game_info}"
@@ -400,11 +420,11 @@ function reportsmenu {
 function mainmenu {
   options=(
       "Create     - Create a Fairian account named ${fairian_name}" 
+      "Reports    - Display game data"
       "Trade      - Enter buy/sell orders" 
       "Labor      - Assign self-owned labor contract" 
       "Terminate  - End a labor contract" 
       "Call       - Demand note payment" 
-      "Reports    - Display game data"
       )
   unset option
   select option in "${options[@]}"
@@ -414,6 +434,9 @@ function mainmenu {
     case "${option}" in
       "Create")
         createmenu
+        ;;
+      "Reports")
+        reportsmenu
         ;;
       "Trade")
         marketmenu
@@ -426,9 +449,6 @@ function mainmenu {
         ;;
       "Call")
         callmenu
-        ;;
-      "Reports")
-        reportsmenu
         ;;
       *)
         break 

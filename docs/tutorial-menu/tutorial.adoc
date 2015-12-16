@@ -190,5 +190,281 @@ you could then run the file as a command script.
 
 == Fairwinds Game Tutorial 2 - Creating a user account
 
+To start the interactive menu, run the +fairbot.sh+ script
+specifying the host name and a username alias, for example
 
-Check back later for further tutorial updates!
+--------------------------------------------
+$ ./fairbot.sh localhost alice
+Fairwinds password:
+--------------------------------------------
+
+In this case the game is running on the localhost, but generally
+you will specify a fully-qualified host name or IP address. If
+you omit the username, then it defaults to the current system
+login name.
+
+The script immediately prompts for a password. The password
+characters you type are not echoed on the display.  If this is
+the first time you are playing, then this username and password
+will become the credentials you login with in future evolutions.
+The username will be your 'Fairian' name.
+
+The main menu and a short description of each menu item function
+is displayed. You select a menu item by entering the number
+displayed on the left for each item.
+
+--------------------------------------------
+1) Create     - Create a Fairian account named alice
+2) Reports    - Display game data
+3) Trade      - Enter buy/sell orders
+4) Labor      - Assign self-owned labor contract
+5) Terminate  - End a labor contract
+6) Call       - Demand note payment
+#?
+--------------------------------------------
+
+Alice enters option #1 to create her account, which leads to
+a prompt for an email address. Entering a valid email address
+is useful if you want to receive important game updates from
+time to time as they may be released. Player information is
+generally not shared with other organizations.
+
+
+--------------------------------------------
+#? 1
+Creating Fairian 'alice'
+Player email address=alice@example.com
+#?
+--------------------------------------------
+
+By default, when the menu system returns control it is back
+up one menu level, and the menu is not re-displayed.  If you
+simply press the +ENTER+ key, the current level menu will be
+displayed, showing that after creating the Fairian account
+the menu system returned to the top level.
+
+
+--------------------------------------------
+#? 
+1) Create     - Create a Fairian account named alice
+2) Reports    - Display game data
+3) Trade      - Enter buy/sell orders
+4) Labor      - Assign self-owned labor contract
+5) Terminate  - End a labor contract
+6) Call       - Demand note payment
+#? 
+--------------------------------------------
+
+--------------------------------------------
+#? 
+1) Create     - Create a Fairian account named alice
+2) Reports    - Display game data
+3) Trade      - Enter buy/sell orders
+4) Labor      - Assign self-owned labor contract
+5) Terminate  - End a labor contract
+6) Call       - Demand note payment
+#? 
+--------------------------------------------
+
+Option #2 displays a list of reports that can be used to learn
+information about the game and markets. All this information
+is updated automatically on the game web site periodically,
+but these reports allow you to view the most current
+information. Note, however, that there are fees assessed for
+excessive queries during each click, so you should be judicious.
+
+
+--------------------------------------------
+#? 2
+ 1) Game         - Display game information
+ 2) Connections  - Display currently logged in players
+ 3) Players      - Display registered players
+ 4) Health       - Display health history journal
+ 5) Cash         - Display cash transcation journal
+ 6) Food         - Display food transcation journal
+ 7) Land         - Display owned land plots
+ 8) Bonds        - Display owned and issued bonds
+ 9) Contracts    - Display engaged labor contracts
+10) Notes        - Display factor/debtor notes
+#?
+--------------------------------------------
+
+For illustration purposes, Alice selects option #3 which lists
+her new account as the only registered player, since in this
+tutorial exposition she is, in fact, the first player to enter
+the game.
+
+
+--------------------------------------------
+#? 3
+                                             Fairians
+ fairian_name |   email_address   |        created_date        | click_order_count | click_select_count 
+--------------+-------------------+----------------------------+-------------------+--------------------
+ alice        | alice@example.com | 2015-12-15 20:23:29.893926 |                 0 |                  1
+(1 row)
+
+#?
+--------------------------------------------
+
+The +click_order_count+ and the +click_select_count+ keep track
+of how many trade orders and select queries, respectively,
+each 'Fairian' has executed during the current click. While
+there is a threshold level of free activity, and the two
+counter values reset to zero at the beginning of each click,
+subsequent tutorials discuss the fee accessed to discourage
+excessive trade and query activity.
+
+Some of the other report menu items will be illustrated in
+later tutorials.
+
+
+== Fairwinds Game Tutorial 3 - Trade Menu
+
+The 'Trade' menu option on the main menu allows entry to
+trading activity on the five markets: finance (+bond+), real
+estate (+land+), commodity (+food+), labor (+work+), and debt
+(+note+).
+
+--------------------------------------------
+1) Create     - Create a Fairian account named alice
+2) Reports    - Display game data
+3) Trade      - Enter buy/sell orders
+4) Labor      - Assign self-owned labor contract
+5) Terminate  - End a labor contract
+6) Call       - Demand note payment
+#? 3
+1) bond
+2) land
+3) work
+4) food
+5) note
+Select market
+--------------------------------------------
+
+A brief description of each is given below:
+
+
+=== Instruments of Trade
+
+
+[horizontal] 
+*+bond+*:: The +bond+ relation stores a list of, well,
+'bonds'. Literally a 'bond' is just that, a promise (as in "my
+word is my bond") to re-pay a fixed amount of money at some
+specified future time. It represents a contract between two
+'Fairians' or between a 'Fairian' and the governing market
+authority (which you can think of as "the government"). From
+the bond buyer's (the lender) perspective, bonds are guaranteed
+investments: regardless of the issuer's (the borrower) ability
+to repay, the governing market will create enough money to
+cover any shortfall and repay the full face amount at maturity.
+
+*+note+*:: If a bond issuing 'Fairian' does not have sufficient
+cash on hand to repay at bond maturity, then a +note+ is
+written listing the borrower as a debtor, and that +note+
+is then factored (offered for sale at discount) and listed in
+the +note+ relation.
+
+*+land+*:: The +land+ relation lists all the plots of land
+which have been surveyed (note that "surveyed" is merely a
+notional term in this context meaning only "created by the
+game") and offered for sale, as well as listing the owner,
+if the land has been purchased.
+
+*+work+*:: Lastly, the +work+ relation, similar to the +bond+
+relation, represents an agreement between 'Fairians', but in
+this case the subject is a list of labor contracts. Labor
+contracts specify that one 'Fairian' will work for another
+for at least a specified amount of time.  Entries in the
++work+ relation are created when buyers, offering to hire,
+and sellers, offering to work, offer mutually compatible terms
+(with respect to time, skill, effectiveness, and payment).
+
+After selecting any one of these markets, you will prompted
+for whichi 'side' of the trade you want to place an order ona.
+
+--------------------------------------------
+Select market 1
+1) bid - Buy order
+2) ask - Sell order
+bond buy (bid) or sell (ask)? 
+--------------------------------------------
+
+Generally speaking, 'bid' and 'ask' refer to 'buy' and 'sell'
+orders, respectively.
+
+== Fairwinds Game Tutorial 4 - Bootstrapping the Land Market
+
+When 'Fairwinds' is initialized, there are no 'Fairians', no land, no
+food, and no money. As players enter the game, resources must be brought
+into existence by means of market activity that creates demand. The
+market response that creates the land and money needed for the game to
+progress is called "bootstrapping", 'i.e.', the game is figuratively
+"lifted by the bootstraps" to create wealth out of nothing.
+
+This tutorial illustrates that bootstrapping protocol for the land market
+and the role you play in making it happen.
+
+For purposes of illustration, in this tutorial there will be only a
+single 'Fairian', named Alice, participating in the game.  This
+obviously is a circumstance almost all players will not encounter (since
+only one player is ever the first player to enter the game!), but
+the techniques employed are sufficiently illustrative as to be
+instructive on how general play proceeds.
+
+Utilizing the interactive menu, Alice connects to 'Fairwinds' and
+and makes selections to issue a land bid, i.e. a trade order to 
+buy land.
+
+
+
+--------------------------------------------
+#? 
+1) Create     - Create a Fairian account named alice
+2) Reports    - Display game data
+3) Trade      - Enter buy/sell orders
+4) Labor      - Assign self-owned labor contract
+5) Terminate  - End a labor contract
+6) Call       - Demand note payment
+#? 3
+1) bond
+2) land
+3) work
+4) food
+5) note
+Select market 2
+1) bid - Buy order
+2) ask - Sell order
+land buy (bid) or sell (ask)? 1
+expiration=
+
+--------------------------------------------
+
+At this point, as series of prompts are presented to define
+the details of the order. The first prompt is for +expiration+,
+which is optional and defaults to 1. 
+
+The expiration value specifies how many clicks the offer
+will stand for and at which point, if it has not been executed,
+will be deleted.
+
+
+The price value is also optional: omitting it implies a
+'market order', similar to the real-world financial markets
+where a market order means "I will match and trade at as good
+an offer as any other offer."
+
+Productivity is a measure of land quality, and, as the name
+implies, is a value between zero and one indicating how much
+food the land can produce when cultivated -- so more productive
+land is more valuable than less productive land.
+The specified value is the minimum land productivity value she will
+accept.
+
+
+In this case Alice specifies a productivity value of zero in
+order to invoke bootstrapping.
+
+== To Be Continued 
+
+Check back later for more updates!
