@@ -255,17 +255,6 @@ the menu system returned to the top level.
 #? 
 --------------------------------------------
 
---------------------------------------------
-#? 
-1) Create     - Create a Fairian account named alice
-2) Reports    - Display game data
-3) Trade      - Enter buy/sell orders
-4) Labor      - Assign self-owned labor contract
-5) Terminate  - End a labor contract
-6) Call       - Demand note payment
-#? 
---------------------------------------------
-
 Option #2 displays a list of reports that can be used to learn
 information about the game and markets. All this information
 is updated automatically on the game web site periodically,
@@ -326,12 +315,6 @@ estate (+land+), commodity (+food+), labor (+work+), and debt
 (+note+).
 
 --------------------------------------------
-1) Create     - Create a Fairian account named alice
-2) Reports    - Display game data
-3) Trade      - Enter buy/sell orders
-4) Labor      - Assign self-owned labor contract
-5) Terminate  - End a labor contract
-6) Call       - Demand note payment
 #? 3
 1) bond
 2) land
@@ -381,7 +364,7 @@ and sellers, offering to work, offer mutually compatible terms
 (with respect to time, skill, effectiveness, and payment).
 
 After selecting any one of these markets, you will prompted
-for whichi 'side' of the trade you want to place an order ona.
+for which 'side' of the trade you want to place an order on.
 
 --------------------------------------------
 Select market 1
@@ -419,13 +402,6 @@ buy land.
 
 
 --------------------------------------------
-#? 
-1) Create     - Create a Fairian account named alice
-2) Reports    - Display game data
-3) Trade      - Enter buy/sell orders
-4) Labor      - Assign self-owned labor contract
-5) Terminate  - End a labor contract
-6) Call       - Demand note payment
 #? 3
 1) bond
 2) land
