@@ -267,7 +267,6 @@ be judicious.
 
 
 --------------------------------------------
-Main menu selection 2
  1) Game         - Display game information
  2) Connections  - Display currently logged in players
  3) Players      - Display registered players
@@ -278,7 +277,7 @@ Main menu selection 2
  8) Bonds        - Display owned and issued bonds
  9) Contracts    - Display engaged labor contracts
 10) Notes        - Display factor/debtor notes
-#?
+Select report 1
 --------------------------------------------
 
 The Game report lists a short report showing the current click,
@@ -290,7 +289,6 @@ display of game information on the web site.
 
 
 --------------------------------------------
-Select report 1
                 Game Information
 click | start_time | end_time | click_interval 
 -------+------------+----------+----------------
@@ -429,7 +427,6 @@ After selecting any one of these markets, you will prompted
 for which 'side' of the trade you want to place an order on.
 
 --------------------------------------------
-Select market 1
 1) bid - Buy order
 2) ask - Sell order
 bond buy (bid) or sell (ask)? 
@@ -470,6 +467,7 @@ Main menu selection 3
 4) food
 5) note
 Select market 2
+
 1) bid - Buy order
 2) ask - Sell order
 land buy (bid) or sell (ask)? 1
@@ -620,8 +618,8 @@ type), followed by a menu selection of land plots Alice owns.
 4) Labor      - Assign self-owned labor contract
 5) Terminate  - End a labor contract
 6) Call       - Demand note payment
-
 Main menu selection 4
+
 1) farmer
 Select skill name 1
 
@@ -629,9 +627,9 @@ Select skill name 1
 Select work place serial number 1
 --------------------------------------------
 
-The +work_place+ should be specified as the land plot
-+serial_number+ value corresponding to the land to be
-cultivated. The +skill_name+ corresponding to land cultivation
+The work place should be specified as the land plot
+serial number value corresponding to the land to be
+cultivated. The skill name corresponding to land cultivation
 is "farmer".
 
 The game standings web site subsequently lists the created
@@ -680,7 +678,7 @@ of land, there are a few important implications.
 The first important implication is that Alice develops
 proficiency at a skill, namely, by engaging in cultivation,
 she gets better at it.  A record of her developing skill
-proficiency is recorded in the skill_journal displayed on the
+proficiency is recorded in the skill journal displayed on the
 game standings web page and shows the slowly improving skill
 balance starting at click 6, when cultivation was initiated.
 
@@ -699,7 +697,7 @@ balance starting at click 6, when cultivation was initiated.
 
 As in the real world, proficiency at any skill will improve
 with practise and will atrophy with neglect. The rows shown in
-this report of the skill_journal shows that Alice, engaging
+this report of the skill journal shows that Alice, engaging
 in farming, improved her proficiency by a small, decreasing
 amount each click. The growth and atrophy rates for each skill
 are small numbers pseudo-randomly fixed when the game starts.
@@ -780,15 +778,15 @@ A record of the fruits of her labor is recorded in the food journal:
 (13 rows)
 --------------------------------------------
 
-The rows resulting from this query show that during each click
-Alice received the total food production (by virtue of her
-owning the land) associated with the particular contract.
-Note the trend, just barely within rounding error, of
-increasing total food production at the start of each click.
-This increase is a due to a combination of Alice's improving
-cultivation proficiency and the increasing land productivity,
-as discussed in the previous tutorials, and results in a food
-surplus (i.e., a net balance of excess food).
+This report shows that during each click Alice received the
+total food production (by virtue of her owning the land)
+associated with the particular contract.  Note the trend,
+just barely within rounding error, of increasing total food
+production at the start of each click.  This increase is a
+due to a combination of Alice's improving health, cultivation
+proficiency, and the increasing land productivity, as discussed
+in the previous tutorials, and results in a food surplus (i.e.,
+a net balance of excess food).
 
 The one unit per click deduction for daily sustenance is a
 game constant: every 'Fairian' consumes one unit of food
@@ -805,155 +803,115 @@ indefinitely.
 
 Over time, as cultivation maximizes the land productivity and
 Alice's proficiency and health improve, this net surplus will
-grow. As it grows, the amount of food spoilage will accordingly
-increase until the net surplus growth reaches an equilibrium
-point.  Exactly how much food can be maximally retained and
-how quickly that maximum is achieved will be dependent upon the
-various game parameters randomly determined at game start up.
+grow. As the surplus grows, the amount of food spoilage will
+accordingly increase until the net surplus growth reaches an
+equilibrium point.  Exactly how much food can be maximally
+retained and how quickly that maximum is achieved will be
+dependent upon the various game parameters randomly determined
+at game start up.
 
 
 == Fairwinds Game Tutorial 9 - Sustenance and the Health Journal
 
-When a new 'Fairian' joins the game, they have no money, no land, and no food.
-A newly-created 'Fairian' has health status that depends upon when the player
-enters the game: Prior to the game start time, new 'Fairians' are endowed with
-perfect health; after the game has started, the initial 'Fairian' health status
-for newcomers is zero.  The consequences of the latter circumstance are
-discussed in a subsequent tutorial; this tutorial treats the former
-circumstance.
+A newly-created 'Fairian' health status is set to the lesser of
+100% or the lowest health percentage value of all other players.
+
+Changes to 'Fairian' health are recorded in the health journal.
 
 === Maintaining Health
 
-Maintaining health requires sustenance (food): during each click that a
-'Fairian' has a food surplus over the amount to meet the sustenance requirement
-of one food unit per click, health improves; during each click that a 'Fairian'
-has less than one sustenance unit, health deteriorates. Otherwise, health
-status remains unchanged.
+Maintaining health requires sustenance (food): during each
+click that a 'Fairian' has a food surplus over the amount to
+meet the sustenance requirement of one food unit per click,
+health improves; during each click that a 'Fairian' has less
+than one sustenance unit, health deteriorates. Otherwise,
+health status remains unchanged.
 
-=== Heath Status Changes
+=== Health Status Changes
 
-In both the first two cases, the change over time exhibits diminishing returns
-behavior in that as improving health approaches 100%, the per click improvement
-decreases so as to never exceed unity. Conversely, diminishing health is never
-less than zero so as health decreases, the per-click amount of atrophy itself
-decreases.
+In both the first two cases, the change over time exhibits
+diminishing returns behavior in that as improving health
+approaches 100%, the per click improvement decreases so that
+the balance never exceeds unity. Conversely, diminishing health
+is never less than zero so as health decreases, the per-click
+amount of atrophy itself decreases.
  
-The changes to 'Fairian' health are recorded in the health_journal.
-
 
 --------------------------------------------
-fairwinds=> select click,debit,credit,description 
-			from health_journal where fairian_name = 'alice';
-
- click |  debit   |  credit  |                           description                           
--------+----------+----------+-----------------------------------------------------------------
-     1 |        1 |          | Initial health
-     2 |          | 0.059635 | health deterioration based on insufficient sustenance balance 0
-     3 |          | 0.056079 | health deterioration based on insufficient sustenance balance 0
-     4 |          | 0.052735 | health deterioration based on insufficient sustenance balance 0
-     5 |          |  0.04959 | health deterioration based on insufficient sustenance balance 0
-     6 |          | 0.046633 | health deterioration based on insufficient sustenance balance 0
-     7 |          | 0.043852 | health deterioration based on insufficient sustenance balance 0
-     8 |          | 0.041236 | health deterioration based on insufficient sustenance balance 0
-     9 |          | 0.038777 | health deterioration based on insufficient sustenance balance 0
-    10 |          | 0.036465 | health deterioration based on insufficient sustenance balance 0
-    11 |          |  0.03429 | health deterioration based on insufficient sustenance balance 0
-    13 |  0.02739 |          | health improvement based on sustenance balance 1.000007
-    14 | 0.025757 |          | health improvement based on sustenance balance 1.000035
-    15 |  0.02422 |          | health improvement based on sustenance balance 1.000101
-    16 | 0.022776 |          | health improvement based on sustenance balance 1.000221
-    17 | 0.021418 |          | health improvement based on sustenance balance 1.000414
-(16 rows)
+                                                    Health Journal
+ click | fairian_name |  debit  | credit  | balance |                           description                           
+-------+--------------+---------+---------+---------+-----------------------------------------------------------------
+     1 | alice        | 1.00000 |         |   1.000 | Initial health
+     2 | alice        |         | 0.01964 |   0.980 | health deterioration based on insufficient sustenance balance 0
+     3 | alice        |         | 0.01925 |   0.961 | health deterioration based on insufficient sustenance balance 0
+     4 | alice        |         | 0.01887 |   0.942 | health deterioration based on insufficient sustenance balance 0
+     5 | alice        |         | 0.01850 |   0.924 | health deterioration based on insufficient sustenance balance 0
+     7 | alice        | 0.00150 |         |   0.925 | health improvement based on sustenance balance 1.000012
+     8 | alice        | 0.00147 |         |   0.927 | health improvement based on sustenance balance 1.000058
+     9 | alice        | 0.00144 |         |   0.928 | health improvement based on sustenance balance 1.000161
+    10 | alice        | 0.00141 |         |   0.930 | health improvement based on sustenance balance 1.000341
+(9 rows)
 --------------------------------------------
 
-These seventeen rows show that:
+This report shows that:
 
 * At click 1, when Alice entered the game, she was endowed with perfect health (100%).
-* Through click eleven, Alice's health decreased by a small percentage each click since she had no food.
-* At click 13, Alice's health began to increase once she began producing food through cultivation.
+* Alice's health immediately began atrophying by a small percentage each click since she had no food.
+* Recovery started once she began producing food through cultivation.
 
-The transition to improving health corresponds to when Alice began her
-engagement in cultivation and thereby satisfied the periodic sustenance
-requirement. Note further that the per-click health decrease itself
-decreases, that is, her health decreases by a continually smaller amount.
-Conversely, during the improving health, health improves by decreasing
-amounts. And lastly note in the description column annotates these effects.
+The transition to improving health corresponds to when Alice
+began her engagement in cultivation and thereby satisfied
+the periodic sustenance requirement. Note further that the
+per-click health atrophy decreases by a continually smaller
+amount as her net health atophies.
 
-With the following more complex, 'running total' query, Alice can review
-her net health change over time:
+Conversely, during recovery, health improves by continually
+decreasing amounts.
+
+And lastly note in the description column annotates these
+effects.
 
 
---------------------------------------------
-fairwinds=> with running_total as 
-	(
-	  select fairian_name, click, debit, credit, 
-            sum(debit) over w as d, sum(credit) over w as c 
-	    from health_journal 
-            window w as (partition by fairian_name order by click)
-	) select fairian_name, click, debit, credit, d-c as net 
-            from running_total order by fairian_name, click;
-			
- fairian_name | click |  debit   |  credit  |   net    
---------------+-------+----------+----------+----------
- alice        |     1 |        1 |          |         
- alice        |     2 |          | 0.059635 | 0.940365
- alice        |     3 |          | 0.056079 | 0.884286
- alice        |     4 |          | 0.052735 | 0.831551
- alice        |     5 |          |  0.04959 | 0.781961
- alice        |     6 |          | 0.046633 | 0.735328
- alice        |     7 |          | 0.043852 | 0.691476
- alice        |     8 |          | 0.041236 |  0.65024
- alice        |     9 |          | 0.038777 | 0.611463
- alice        |    10 |          | 0.036465 | 0.574998
- alice        |    11 |          |  0.03429 | 0.540708
- alice        |    13 |  0.02739 |          | 0.568098
- alice        |    14 | 0.025757 |          | 0.593855
- alice        |    15 |  0.02422 |          | 0.618075
- alice        |    16 | 0.022776 |          | 0.640851
- alice        |    17 | 0.021418 |          | 0.662269
-(16 rows)
---------------------------------------------
+The rate of health improvement and deterioration are small
+percentage constants fixed when the game is initialized.
 
-The net column shows the running total of the difference between the
-additions (debit) and reductions (credit) columns, thus for each row, while
-the debit and credit columns show changes to health, the net column indicates
-her actual health at that click in time: it decreases through click 4 and
-then transitions to improvement subsequently.
-
-The rate of health improvement and deterioration are small percentage
-constants fixed when the game is initialized.
-
-Note that a 'Fairian'''s' net health value influences their ability to
-perform skilled tasks, 'e.g.', a 'Fairian'''s' 'effectiveness' is adversely
-affected by poor health and decreases their food production.
+Note that a 'Fairian'''s' net health value influences their
+ability to perform skilled tasks, 'e.g.', a 'Fairian'''s'
+'effectiveness' is adversely affected by poor health and
+decreases their food production.
 
 === Stationary Zero Health Status
 
-The third case, 'i.e.', when a 'Fairian' enters a click with exactly one food
-unit, results in no change to health status. In the particular circumstance
-of zero health and being a sole cultivator of a land plot, health status
-remains at zero. 
+The third case, 'i.e.', when a 'Fairian' enters a click with
+exactly one food unit, results in no change to health status. In
+the particular circumstance of zero health and being a sole
+cultivator of a land plot, health status remains at zero since
+zero health results in zero cultivation effectiveness so there
+is no food surplus generated.
 
 === Emerging from Stationary Zero Health Status
 
-There are three ways to emerge from stationary zero health, and they all
-involve, as a necessary condition, a food surplus.
+There are three ways to emerge from stationary zero health,
+and they all involve, as a necessary condition, a food surplus.
 
 
 [horizontal] 
-Buy Food:: Maybe the most straightforward means of emerging from
-stationarity is to buy food. This works, of course, only if other 'Fairians'
-have generated a food surplus and are willing to sell some.
+Buy Food:: Maybe the most straightforward means of emerging
+from stationarity is to buy food. This works, of course,
+only if other 'Fairians' have generated a food surplus and
+are willing to sell some.
 
-Sell Labor:: Another means is to hire on as a supplier on the labor market.
-Provided that the work site is being cultivated by at least one other 'Fairian'
-with non-zero effectiveness, you will share in the fruits of the combined team
-effectiveness and get a share of the excess production.
+Sell Labor:: Another means is to hire on as a supplier on the
+labor market.  Provided that the work site is being cultivated
+by at least one other 'Fairian' with non-zero effectiveness,
+you will share in the fruits of the combined team effectiveness
+and get a share of the excess production.
 
-Buy Labor:: Similar to hiring out as a supplier as above, you can alternatively
-hire another 'Fairian' to jointly cultivate a land plot you own. Provided they
-have non-zero effectiveness, you will similarly share in the fruits of the
-combined team effectiveness.
+Buy Labor:: Similar to hiring out as a supplier as above, you
+can alternatively hire another 'Fairian' to jointly cultivate a
+land plot you own. Provided they have non-zero effectiveness,
+you will similarly share in the fruits of the combined team
+effectiveness.
 
 
 
@@ -961,4 +919,401 @@ combined team effectiveness.
 
 == Fairwinds Game Tutorial A - We Have Company
 
-Check back later for more updates!
+At this point we introduce a second player, Bob. Bob goes through
+similar initial steps as Alice creating an account and runs the 
+Player report:
+
+--------------------------------------------
+                                               Fairians
+ fairian_name |  email_address  |        created_date        | click_order_count | click_select_count 
+--------------+-----------------+----------------------------+-------------------+--------------------
+ alice        |                 | 2015-12-17 12:17:23.156867 |                 0 |                  0
+ bob          | bob@example.com | 2015-12-17 19:25:54.064911 |                 0 |                  0
+(2 rows)
+--------------------------------------------
+
+Note that upon listing other players, the system does not allow Bob to
+see the email address of other registered players, only his own.
+
+
+Then he places a market bid order with default values to bootstrap
+the land market. The game standings web page shows the newly
+surveyed land offered for sale:
+
+--------------------------------------------
+                                  Land Asks
+ serial_number  | expiration | productivity |  price   | fairian_name | side 
+----------------+------------+--------------+----------+--------------+------
+ 77de68daecd823 |            |      0.00000 | 0.534242 |              | ask
+(1 row)
+--------------------------------------------
+
+
+At this point, Bob's experience differs from that of Alice earlier:
+This second land plot, rather than being given away free, has a non-zero
+price according to the virgin land scarcity pricing algorithm, so Bob 
+needs cash.
+
+
+== Fairwinds Game Tutorial B - Bootstrapping the Bond Market
+
+As described earlier, when 'Fairwinds' is initialized, there
+are no 'Fairians', no land, no food, and no money.  As players
+enter the game, resources must be brought into existence by
+means of market activity that creates demand.  We have already
+seen bootstrapping the land market. Bootstrapping money happens
+on the bond market.
+
+This tutorial illustrates the bootstrapping protocol for the
+bond market.
+
+Bob invokes the fairbot menu script and selects the Trading
+menu item for a bond ask order:
+
+--------------------------------------------
+1) Create     - Create a Fairian account named bob
+2) Reports    - Display game data
+3) Trade      - Enter buy/sell orders
+4) Labor      - Assign self-owned labor contract
+5) Terminate  - End a labor contract
+6) Call       - Demand note payment
+Main menu selection 3
+
+1) bond
+2) land
+3) work
+4) food
+5) note
+Select market 1
+
+1) bid - Buy order
+2) ask - Sell order
+bond buy or sell? 2
+
+expiration=
+ask price=
+bond term=
+--------------------------------------------
+
++Expiration+ is the same as for other markets, specifying how
+long the order will stand open for before expiration. Defaults
+to one.
+
++Price+ in the case of a bond sell order is the minumum loan
+amount the bond issuer asks to borrow. Unspecified implies a
+market order, i.e., the available bid price.
+
++Term+ is the minimum amount of time in clicks the borrow
+wants before repayment is required.
+
+Bob borrows money by issuing ('i.e.', selling) a bond, that
+is, he makes a promise to repay a fixed amount at some future
+time. 'Fairian' bonds always have a face value of fc1000
+(1000 'Faircoin') and trade at a discount from this. That
+is, in 'Fairwinds', bonds are more similar to real-world
+Treasury Bills, having no coupon, than to Treasury Bonds
+('i.e.' real-world bonds pay periodic interest as well as
+derive value by discount trading; 'Fairwinds' bonds employ the
+discount mechanism only). An effective interest rate is implied
+by the discount from face value and the term length to maturity.
+
+For the case of bootstrapping, none of the trade parameter
+value entries are required.
+
+The default values effectively specify a market order selling a
+bond with a term of one click, but, as with bootstrapping the
+land market, since there were no open orders on the opposite
+side, the sell order is not recorded in the order book but
+rather triggers the governing market authority to create a
+bond buy order.
+
+The price for this bootstrapped buy order is not discounted,
+'i.e.', bootstrapped bond buy orders are offered at zero
+effective interest rate. Note also though, that it is a very
+short-term maturity. The implication here is that when no other
+'Fairians' are willing to lend money ('i.e.', to buy bonds),
+then the game will create money and lend it short term for free.
+This provides a degree of liquidity, making it possible for new
+players to buy a land plot or initiate other economic activity.
+
+As with the land bootstrapping protocol, the 'Fairian' who
+triggers demand invoking the bootstrapping protocol has no
+special right to the proceeds. The bootstrapped bond bid order
+will be matched against the best of any 'Fairians' open bond
+issue sell order.
+
+Bob (re-)places his bond market ask order in order to complete
+his loan execution and confirms that the bond has been issued
+by examining the game standings web site:
+
+--------------------------------------------
+                                    Bonds
+ serial_number  | issue_date | term | face_amount | bond_owner | bond_issuer 
+----------------+------------+------+-------------+------------+-------------
+ 1b6453892473a4 |         11 |    2 |        1000 |            | bob
+(1 row)
+--------------------------------------------
+
+
+Bob has borrowed fc1000 of cash created by the governing market
+authority, which he can see in his cash journal
+
+--------------------------------------------
+                         Recent Cash Journal Entries
+ click | fairian_name | debit | credit | balance |        description         
+-------+--------------+-------+--------+---------+----------------------------
+    10 | bob          |     0 |      0 |       0 | Initial cash balance
+    11 | bob          |  1000 |        |    1000 | Issued bond 1b6453892473a4
+(2 rows)
+--------------------------------------------
+
+which lists Bob's inital zero cash balance and the bond issue 
+loan proceeds.
+
+
+
+=== Deploying Bond Proceeds
+
+Now that Bob has cash, he can proceed to buy the land plot, so 
+he (re-)places his land market order to buy and then confirms 
+that he is now the owner of land plot \'77de68daecd823':
+
+--------------------------------------------
+                        Land Plots
+ fairian_name | serial_number  | productivity | land_value 
+--------------+----------------+--------------+------------
+ alice        | 356a192b7913b0 |      0.00506 |      0.534
+ bob          | 77de68daecd823 |      0.00000 |      0.534
+(2 rows)
+--------------------------------------------
+
+Note the +land_value+ entry. Land value is adjusted whenever
+a land trade executes. The executed trade is taken to set
+the value of the subject plot and all others according to
+productivity values. Any land with greater productivity than
+the subject plot are set to be at least as valuable as the
+traded plot value, and plots with lesser productivity are set
+to value no more than the traded plot value.
+
+As this market activity occurs, the net wealth of 'Fairians'
+as listed in the standings report will be adjusted accordingly.
+
+Once Bob succeeds in buying the land plot, he proceeds similarly
+to as Alice did and creates a self-owned land labor contract
+and commences cultivation and then checks the status of
+existing labor contracts. As expected he sees his own, newly
+established labor contract listed as well as the earlier one
+involving Alice on her land:
+
+--------------------------------------------
+                                           Labor Contracts
+   work_place   | skill_name | contract_number | issue_date | term | customer | supplier | labor_rate 
+----------------+------------+-----------------+------------+------+----------+----------+------------
+ 356a192b7913b0 | farmer     | da4b9237bacccd  |          5 |    1 | alice    | alice    |      0.000
+ 77de68daecd823 | farmer     | ac3478d69a3c81  |         12 |    1 | bob      | bob      |      0.000
+(2 rows)
+--------------------------------------------
+
+
+== Fairwinds Game Tutorial C - The Cash Journal
+
+The cash_journal records transactions involving Faircoin. For 
+example, all executed buy and sell transactions, bond issues 
+and redemptions, etc., are recorded:
+
+--------------------------------------------
+                                         Cash Journal
+ click | fairian_name | account |  debit   | credit  | balance  |         description          
+-------+--------------+---------+----------+---------+----------+------------------------------
+     1 | alice        | cash    |    0.000 |   0.000 |    0.000 | Initial cash balance
+     4 | alice        | land    |          |   0.000 |    0.000 | Bought land 356a192b7913b0
+    10 | bob          | cash    |    0.000 |   0.000 |    0.000 | Initial cash balance
+    11 | bob          | bond    | 1000.000 |         | 1000.000 | Issued bond 1b6453892473a4
+    12 | bob          | land    |          |   0.534 |  999.466 | Bought land 77de68daecd823
+    13 | bob          | bond    |          | 999.466 |    0.000 | Redeemed bond 1b6453892473a4
+(6 rows)
+--------------------------------------------
+
+This listing shows the initial zero balance for players as they 
+entered the game, the zero-cost land purchase by Alice, and then
+several transactions by Bob. First is the
+distribution to Bob of the loan proceeds of him issuing a 
+bond, then the land purchase is listed next, followed
+by the matured bond. Since Bob spent some of the money on land, 
+he did not have sufficient funds to fully repay the loan.
+
+Note that, from the lenders perspective Bob's cash shortfall is irrelevant:
+Bonds are guaranteed investments as far as the lender is concerned. The
+governing market authority creates enough Faircoin to fully repay the lender
+at bond maturity.
+
+But Bob does not necessarily get let off the hook for the cash shortfall.
+
+
+
+== Fairwinds Game Tutorial D - The Debt Market
+
+In the previous tutorial, Bob was short of cash to repay a bond
+he issued.  When this happens, a demand note is issued listing
+Bob as a debtor for the amount of the shortfall. Demand notes
+are a mechanism for factoring ('i.e.', re-selling) debt. The
+factor ('i.e.', the owner) of a note incurs the right to call
+the debt at any time. Any cash the debtor has at the time
+of call, up to the note face amount, is relinquished by the
+debtor and transferred to the factor.
+
+Demand notes are traded somewhat similarly to bonds in that they
+are purchased at a discount from "face value".  Face value in
+this case is the corresponding bond redemption shortfall amount.
+
+Note however that there is no secondary market for notes. They
+are sold by the governing market authority once, and the buyer
+has no mechanism to resell (in contrast to as is the case,
+for example, with the real estate or commodity markets for
+land or food).
+
+For Bob's case the shortfall is equal to the cost of the
+purchased land plot and listed in a report of demand notes:
+
+
+--------------------------------------------
+                         Notes
+ serial_number  | issue_date | amount | factor | debtor 
+----------------+------------+--------+--------+--------
+ c1dfd96eea8cc2 |         23 |  0.534 |        | bob
+(1 row)
+--------------------------------------------
+
+The +serial_number+ serves as a unique identifier and is
+automatically assigned when the note is created.
+
+The +issue_date+ is automatically set for a future click. This
+allows for other players to discover the bidding opportunity
+and consider how much, if at all, they want to bid on the debt.
+
+When game time advances to the issue_date click, a market sell
+order is added to the note_ask table and is automatically
+matched against any open limit buy orders for that specific
+note serial number: the highest bid amount trade executes and
+the others are expired on the subsequent click. If there are
+no open bid orders for a specific note at issue time, then
+the note order is changed from a market order to a limit order
+with price zero.
+
+The 'factor' of a note is equivalent to the owner of a bond,
+and calling a note is something like redemption at maturity
+of a bond. Upon demand note redemption, cash is transferred
+from the debtor to the factor, provided the debtor has cash
+when the note is called.
+
+Demand notes are redeemed by calling them, which is action on
+the +fairbot+ main menu. Calling a note is literally a demand
+for payment.
+
+A demand note can be called only once, after which it is
+expired and no longer listed in the note view nor accessible
+to the factor or other players.
+
+Alice proceeds to place a buy order for the note.  (This
+particular case is not very lucrative, but it serves to
+illustrate the process.)
+
+--------------------------------------------
+1) Create     - Create a Fairian account named alice
+2) Reports    - Display game data
+3) Trade      - Enter buy/sell orders
+4) Labor      - Assign self-owned labor contract
+5) Terminate  - End a labor contract
+6) Call       - Demand note payment
+Main menu selection 3
+
+1) bond
+2) land
+3) work
+4) food
+5) note
+Select market 5
+
+1) bid - Buy order
+2) ask - Sell order
+note buy or sell? 1
+
+expiration=10
+bid price=0
+1) c1dfd96eea8cc2
+Select note serial number 1
+--------------------------------------------
+
+The serial_number is essential and must be specified
+since a note bid is made for specific notes individually.
+The expiration, if not specified, defaults to one, but generally
+should be long enough to last until the future note issue date.
+
+Since Alice knows she is the only bidder, she "low-balls"
+by making a bid for zero Faircoin and confirms her entry by
+examining the note bids listed on the game standings web site:
+
+--------------------------------------------
+                     Note Bids
+ serial_number  | expiration | price | fairian_name 
+----------------+------------+-------+--------------
+ c1dfd96eea8cc2 |         24 | 0.000 | alice
+(1 row)
+--------------------------------------------
+
+
+Ten clicks later, when the note is actually sold, Alice's bid
+"wins" and she becomes the note owner (factor):
+
+--------------------------------------------
+                         Notes
+ serial_number  | issue_date | amount | factor | debtor 
+----------------+------------+--------+--------+--------
+ c1dfd96eea8cc2 |         23 |  0.534 | alice  | bob
+(1 row)
+--------------------------------------------
+
+
+Although it makes little sense for Alice to do so now, since
+Bob has no cash, for purposes of illustration we show how
+Alice would call the note:
+
+--------------------------------------------
+1) Create     - Create a Fairian account named alice
+2) Reports    - Display game data
+3) Trade      - Enter buy/sell orders
+4) Labor      - Assign self-owned labor contract
+5) Terminate  - End a labor contract
+6) Call       - Demand note payment
+Main menu selection 6
+
+1) c1dfd96eea8cc2
+Select note serial number 1
+--------------------------------------------
+
+The effect of the demand is evident in the cash journal
+report that now includes the collection activity, which
+was unsuccessful since Bob the debtor was indigent at time
+of demand.
+
+
+--------------------------------------------
+                                                  Cash Journal
+ click | fairian_name | account |  debit   | credit  | balance  |                  description                  
+-------+--------------+---------+----------+---------+----------+-----------------------------------------------
+     1 | alice        | cash    |    0.000 |   0.000 |    0.000 | Initial cash balance
+     4 | alice        | land    |          |   0.000 |    0.000 | Bought land 356a192b7913b0
+    10 | bob          | cash    |    0.000 |   0.000 |    0.000 | Initial cash balance
+    11 | bob          | bond    | 1000.000 |         | 1000.000 | Issued bond 1b6453892473a4
+    12 | bob          | land    |          |   0.534 |  999.466 | Bought land 77de68daecd823
+    13 | bob          | bond    |          | 999.466 |    0.000 | Redeemed bond 1b6453892473a4
+    23 | alice        | note    |          |   0.000 |    0.000 | Bought note c1dfd96eea8cc2
+    24 | bob          | note    |          |   0.000 |    0.000 | Collection c1dfd96eea8cc2: Debtor is indigent
+    24 | alice        | note    |    0.000 |         |    0.000 | Collection c1dfd96eea8cc2: Debtor is indigent
+(9 rows)
+--------------------------------------------
+
+
+== Fairwinds Game Tutorial E - Hiring Labor
+
+Check back later for more updates!!!

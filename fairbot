@@ -271,9 +271,10 @@ function sidemenu {
       )
   unset side
   OLDPS3="${PS3}"
-  PS3="${mrkt} buy (bid) or sell (ask)? "
+  PS3="${mrkt} buy or sell? "
   select side in "${sides[@]}"
   do
+    side="${side%%[[:space:]]*- *}"
     case "${side% - *}" in
       "bid"|"ask")
         read -p "expiration=" expiration
@@ -285,7 +286,7 @@ function sidemenu {
           fields=""
         fi
 
-        read -p "price=" price
+        read -p "${side} price=" price
         if [[ -n "${price}" ]]
         then
           fields="${fields}, price"
