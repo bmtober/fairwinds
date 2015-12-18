@@ -8,7 +8,7 @@
 :max-width: 45em
 :data-uri:
 :icons:
-:date: 17-Dec-2015
+:date: 18-Dec-2015
 
 == Fairwinds Game Tutorial 0 - What is Fairwinds
 
@@ -995,15 +995,16 @@ ask price=
 bond term=
 --------------------------------------------
 
-+Expiration+ is the same as for other markets, specifying how
+[horizontal] 
+*+expiration+*:: is the same as for other markets, specifying how
 long the order will stand open for before expiration. Defaults
 to one.
 
-+Price+ in the case of a bond sell order is the minumum loan
+*+price+*:: in the case of a bond sell order is the minumum loan
 amount the bond issuer asks to borrow. Unspecified implies a
-market order, i.e., the available bid price.
+market order, i.e., the best available bid price, if any.
 
-+Term+ is the minimum amount of time in clicks the borrow
+*+term+*:: is the minimum amount of time in clicks the borrow
 wants before repayment is required.
 
 Bob borrows money by issuing ('i.e.', selling) a bond, that
@@ -1024,7 +1025,7 @@ The default values effectively specify a market order selling a
 bond with a term of one click, but, as with bootstrapping the
 land market, since there were no open orders on the opposite
 side, the sell order is not recorded in the order book but
-rather triggers the governing market authority to create a
+rather triggers the governing market authority to bootstrap a
 bond buy order.
 
 The price for this bootstrapped buy order is not discounted,
@@ -1042,9 +1043,9 @@ special right to the proceeds. The bootstrapped bond bid order
 will be matched against the best of any 'Fairians' open bond
 issue sell order.
 
-Bob (re-)places his bond market ask order in order to complete
-his loan execution and confirms that the bond has been issued
-by examining the game standings web site:
+Bob (re-)places his bond market ask order in order to execute 
+against the bootstrapped bond bid order and then confirms that 
+the bond has been issued by examining the game standings web site:
 
 --------------------------------------------
                                     Bonds
@@ -1055,8 +1056,9 @@ by examining the game standings web site:
 --------------------------------------------
 
 
-Bob has borrowed fc1000 of cash created by the governing market
-authority, which he can see in his cash journal
+Note the blank value for +bond_owner+: Bob has borrowed fc1000
+of cash created by the governing market authority, which he
+can see reflected in his cash journal
 
 --------------------------------------------
                          Recent Cash Journal Entries
@@ -1074,9 +1076,10 @@ loan proceeds.
 
 === Deploying Bond Proceeds
 
-Now that Bob has cash, he can proceed to buy the land plot, so 
-he (re-)places his land market order to buy and then confirms 
-that he is now the owner of land plot \'77de68daecd823':
+Now that Bob has cash, he can proceed to buy the
+earlier-bootstrapped land plot, so he (re-)places his land
+market order to buy and then confirms that he is now the owner
+of land plot \'77de68daecd823':
 
 --------------------------------------------
                         Land Plots
@@ -1301,12 +1304,8 @@ of demand.
                                                   Cash Journal
  click | fairian_name | account |  debit   | credit  | balance  |                  description                  
 -------+--------------+---------+----------+---------+----------+-----------------------------------------------
-     1 | alice        | cash    |    0.000 |   0.000 |    0.000 | Initial cash balance
-     4 | alice        | land    |          |   0.000 |    0.000 | Bought land 356a192b7913b0
-    10 | bob          | cash    |    0.000 |   0.000 |    0.000 | Initial cash balance
-    11 | bob          | bond    | 1000.000 |         | 1000.000 | Issued bond 1b6453892473a4
-    12 | bob          | land    |          |   0.534 |  999.466 | Bought land 77de68daecd823
-    13 | bob          | bond    |          | 999.466 |    0.000 | Redeemed bond 1b6453892473a4
+        ...               ...             ...            ...           ...
+        ...               ...             ...            ...           ...
     23 | alice        | note    |          |   0.000 |    0.000 | Bought note c1dfd96eea8cc2
     24 | bob          | note    |          |   0.000 |    0.000 | Collection c1dfd96eea8cc2: Debtor is indigent
     24 | alice        | note    |    0.000 |         |    0.000 | Collection c1dfd96eea8cc2: Debtor is indigent
@@ -1316,4 +1315,4 @@ of demand.
 
 == Fairwinds Game Tutorial E - Hiring Labor
 
-Check back later for more updates!!!
+Check back later for more updates!
