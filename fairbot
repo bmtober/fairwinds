@@ -112,7 +112,7 @@ function labormenu {
   skills=$(psql -q -A -t <<< "select skill_name from skill order by 1 limit 1;")
 
   unset fields values
-  OLDPS3="${PS3}"
+  local OLDPS3="${PS3}"
   PS3="Select skill name "
   select skill_name in ${skills}
   do
@@ -146,7 +146,7 @@ function callmenu {
   notes=$(psql -q -A -t <<< "select serial_number from note where factor = current_user order by 1;")
 
   unset fields values
-  OLDPS3="${PS3}"
+  local OLDPS3="${PS3}"
   PS3="Select note serial number "
   select note in ${notes}
   do
@@ -161,7 +161,7 @@ function callmenu {
 function resignmenu {
   supplier_contracts=$(psql -q -A -t <<< "select contract_number from work where customer = current_user or supplier = current_user order by 1;")
 
-  OLDPS3="${PS3}"
+  local OLDPS3="${PS3}"
   PS3="Select labor contract number "
   select contract_number in ${supplier_contracts}
   do
@@ -242,7 +242,7 @@ function optionsmenu {
       ;;
     note)
       notes=$(psql -q -A -t <<< "select serial_number from note order by 1;")
-      OLDPS3="${PS3}"
+      local OLDPS3="${PS3}"
       PS3="Select note serial number "
       select serial_number in ${notes}
       do
@@ -270,7 +270,7 @@ function sidemenu {
       "ask - Sell order"
       )
   unset side
-  OLDPS3="${PS3}"
+  local OLDPS3="${PS3}"
   PS3="${mrkt} buy or sell? "
   select side in "${sides[@]}"
   do
@@ -293,11 +293,7 @@ function sidemenu {
           values="${values}, ${price}"
         fi
         ;;
-      *)
-        break 
-        ;;
     esac
-    optionsmenu ${mrkt} ${side% - *}
     break
   done
   PS3="${OLDPS3}"
@@ -306,7 +302,7 @@ function sidemenu {
 function marketmenu {
   mrkts=("bond" "land" "work" "food" "note")
   unset mrkt
-  OLDPS3="${PS3}"
+  local OLDPS3="${PS3}"
   PS3="Select market "
   select mrkt in "${mrkts[@]}"
   do
@@ -314,12 +310,11 @@ function marketmenu {
       "bond"|"land"|"work"|"food"|"note")
         sidemenu
         ;;
-      *)
-        break 
-        ;;
     esac
     break
   done
+
+  [[ -n "${mrkt}" ]] && [[ -n "${side}" ]] && optionsmenu ${mrkt} ${side}
   PS3="${OLDPS3}"
 }
 
@@ -335,7 +330,7 @@ function reportsmenu {
       "Bonds        - Display owned and issued bonds"
       "Contracts    - Display engaged labor contracts"
       "Notes        - Display factor/debtor notes")
-  OLDPS3="${PS3}"
+  local OLDPS3="${PS3}"
   PS3="Select report "
   unset option
   select option in "${options[@]}"
