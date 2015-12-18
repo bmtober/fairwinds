@@ -76,8 +76,8 @@ export PGUSER="${fairian_name}"
 display_game_info="select click, start_time, end_time, click_interval from fairwinds;"
 display_connections="select * from connection;"
 display_players="select  fairian_name, email_address, created_date, click_order_count, click_select_count from fairian order by fairian_name;"
-display_health_journal="select * from health_journal where fairian_name = current_user order by click;"
-display_cash_journal="select * from cash_journal where fairian_name = current_user order by click;"
+display_health_journal="select click, fairian_name, debit, credit, balance, description from health_journal where fairian_name = current_user order by click, seq;"
+display_cash_journal="select click, fairian_name, debit, credit, balance, description from cash_journal where fairian_name = current_user order by click, seq;"
 display_food_journal="select * from food_journal where fairian_name = current_user order by click;"
 display_bonds="select * from bond where bond_owner = current_user or bond_issuer = current_user;"
 display_land="select * from land where fairian_name = current_user;"
@@ -104,11 +104,12 @@ function createmenu {
   prompt="insert into fairian (fairian_name, passwd, email_address) values ('${fairian_name}', '******', '${email}');"
   export PGUSER="fairwinds"
   executesql "${sql}" "${prompt}"
+  export PGUSER="${fairian_name}"
 }
 
 function labormenu {
   land_plots=$(psql -q -A -t <<< "select serial_number from land where fairian_name = current_user order by 1;")
-  skills=$(psql -q -A -t <<< "select skill_name from skill order by 1;")
+  skills=$(psql -q -A -t <<< "select skill_name from skill order by 1 limit 1;")
 
   unset fields values
   OLDPS3="${PS3}"
@@ -250,6 +251,7 @@ function optionsmenu {
         break
       done
       PS3="${OLDPS3}"
+      ;;
   esac
     
   if [[ -z "${fields}" ]]

@@ -8,7 +8,7 @@
 :max-width: 45em
 :data-uri:
 :icons:
-:date: 16-Dec-2015
+:date: 17-Dec-2015
 
 == Fairwinds Game Tutorial 0 - What is Fairwinds
 
@@ -16,9 +16,13 @@
 
 * Interactive Menu Interface
 
-The objective is to improve your standings relative to other
-players. A sample of the standings report is shown in the
-table below.
+A successful player will utilize all five markets in order to
+improve their rank in the standings relative to other players. 
+
+A sample of the standings report is shown in the table below in
+which the first column lists the Fairian name, and players are
+ranked according to health and wealth, as appear in the second
+and third columns. 
 
 
 --------------------------------------------
@@ -42,28 +46,27 @@ table below.
  peter        | 0.9874 |  18.253 |   1.000 | 17.253 | 0.000 | 0.000 |     0
 --------------------------------------------
 
+There is a lot going behind this ranking table, but generally
+speaking, the flow of the game is driven by the standings
+ranking since sustaining health requires food, food is
+produced by cultivating land, land is acquired using capital,
+and capital is raised through financing and assumption of debt.
 
-The first column lists the Fairian name. Players are ranked
-according to health and wealth, as appear in the second and
-third columns. The remaining columns show the breakdown of
-the individual components that are summed to compute the total
-wealth represented in the third column.
-
-There is a lot going behind this ranking table. And while the
-following tutorials will help with understanding, a couple
-things to note are that no matter what level of total wealth,
-health always dominates as a ranking criteria, so even though
-Cathy, who ranks the highest wealth, is third behind Bob and
+While the following tutorials will help with understanding,
+one thing to note here is that no matter what level of
+total wealth, health always dominates as a ranking criteria,
+so Cathy, who ranks the highest wealth, is third behind Bob and
 David since the latter two have higher health percentage values.
+
 As will be demonstrated subsequently, achieving and maintaining
-perfect 100% health is expected to be realizable by multiple 
-players and so as the game progresses most likely wealth will 
+perfect 100% health is expected to be realizable by multiple
+players and so as the game progresses most likely wealth will
 be the discriminating ranking factor.
 
-Even with that, though, it pays to be cognizant of the balance
-between the separate wealth components, as the worth of food
-and land will vary according to fluctuating market values for
-those assets.
+Therefore, it pays to remain cognizant of the balance between the
+separate wealth components, as listed in the remaining table
+columns, as the worth of food and land will vary according to
+fluctuating market values for those assets.
 
 
 == Fairwinds Game Tutorial 1 - Basic Requirements: Client Software
@@ -73,9 +76,9 @@ interface to play Fairwinds.
 
 Playing 'Fairwinds' requires that your computer establish a connection
 to the game utilizing  with the free +psql+ client software application
-and the +fairbot.sh+ interactive menu script. 
+and the +fairbot+ interactive menu script. 
 
-As you make menu selections with the +fairbot.sh+ script, the  script
+As you make menu selections with the +fairbot+ script, the  script
 will construct apropriate structured query language (SQL) commands and
 send them to the game by using the +psql+ client software
 automatically.
@@ -129,8 +132,8 @@ echo "\set VERBOSITY terse" >> ~/.psqlrc
 
 === Obtaining the Interactive Menu Script
 
-The +fairbot.sh+ menu application is a Bash shell script that runs from
-the Linux command line. You can download the +fairbot.sh+ menu script
+The +fairbot+ menu application is a Bash shell script that runs from
+the Linux command line. You can download the +fairbot+ menu script
 from
 
  https://github.com/bmtober/fairwinds
@@ -138,27 +141,27 @@ from
 After downloading, make sure the script is executable with 
 
 --------------------------------------------
- chmod +x fairbot.sh
+ chmod +x fairbot
 --------------------------------------------
 
 === Invoking the Interactive Menu
 
-Runing the +fairbot.sh+ script at the Linux command line with no 
+Runing the +fairbot+ script at the Linux command line with no 
 parameters displays a simple usage and help menu:
 
 
 --------------------------------------------
-./fairbot.sh
+./fairbot
 
 
 NAME
-  fairbot.sh - Interactive menu for the Fairwinds game. 
+  fairbot - Interactive menu for the Fairwinds game. 
 
 SYNOPSIS
-  fairbot.sh [options] host [username]  
+  fairbot [options] host [username]  
 
 DESCRIPTION
-  fairbot.sh is a script that presents an interactive menu system
+  fairbot is a script that presents an interactive menu system
   for playing the Fairwinds game hosted on the specified host.
   It requires that the psql data base client software
   be installed and accessible in the user's PATH.
@@ -190,11 +193,11 @@ you could then run the file as a command script.
 
 == Fairwinds Game Tutorial 2 - Creating a user account
 
-To start the interactive menu, run the +fairbot.sh+ script
+To start the interactive menu, run the +fairbot+ script
 specifying the host name and a username alias, for example
 
 --------------------------------------------
-$ ./fairbot.sh localhost alice
+$ ./fairbot localhost alice
 Fairwinds password:
 --------------------------------------------
 
@@ -231,7 +234,7 @@ generally not shared with other organizations.
 
 
 --------------------------------------------
-#? 1
+Main menu selection 1
 Creating Fairian 'alice'
 Player email address=alice@example.com
 #?
@@ -245,26 +248,26 @@ the menu system returned to the top level.
 
 
 --------------------------------------------
-#? 
 1) Create     - Create a Fairian account named alice
 2) Reports    - Display game data
 3) Trade      - Enter buy/sell orders
 4) Labor      - Assign self-owned labor contract
 5) Terminate  - End a labor contract
 6) Call       - Demand note payment
-#? 
+Main menu selection  
 --------------------------------------------
 
 Option #2 displays a list of reports that can be used to learn
 information about the game and markets. All this information
-is updated automatically on the game web site periodically,
-but these reports allow you to view the most current
-information. Note, however, that there are fees assessed for
-excessive queries during each click, so you should be judicious.
+is updated automatically and also displayed on the game web
+site periodically, but these reports allow you to view the
+most current information. Note, however, that there are fees
+assessed for excessive queries during each click, so you should
+be judicious.
 
 
 --------------------------------------------
-#? 2
+Main menu selection 2
  1) Game         - Display game information
  2) Connections  - Display currently logged in players
  3) Players      - Display registered players
@@ -278,14 +281,34 @@ excessive queries during each click, so you should be judicious.
 #?
 --------------------------------------------
 
-For illustration purposes, Alice selects option #3 which lists
-her new account as the only registered player, since in this
-tutorial exposition she is, in fact, the first player to enter
-the game.
+The Game report lists a short report showing the current click,
+which is a measure of advancing game time, a real-world start
+and end time, if specified, for the game, and the real-world
+duration in seconds of each click. The latter determines how
+quickly the game advances as well as the frequency of updated
+display of game information on the web site.
 
 
 --------------------------------------------
-#? 3
+Select report 1
+                Game Information
+click | start_time | end_time | click_interval 
+-------+------------+----------+----------------
+    1 |            |          |             20
+(1 row)
+--------------------------------------------
+
+The Connections report lists the current game connections. Note
+that this report is updated once each click, so it will always
+be a little out of date.
+
+The Players report lists the registered players, whether
+currently active or not.  Her new account is the only registered
+player, since in this tutorial exposition she is, in fact,
+the first player to enter the game.
+
+
+--------------------------------------------
                                              Fairians
  fairian_name |   email_address   |        created_date        | click_order_count | click_select_count 
 --------------+-------------------+----------------------------+-------------------+--------------------
@@ -303,6 +326,44 @@ counter values reset to zero at the beginning of each click,
 subsequent tutorials discuss the fee accessed to discourage
 excessive trade and query activity.
 
+The Health report lists the health journal, that is, the
+history of changes to 'Fairian' health.  The first row shows
+the initially-assigned 100% health value.  The 'Fairwinds'
+game assigns new players a health value equal to the lowest
+health value of all other players, i.e., as tied with the
+last-place player.
+
+--------------------------------------------
+Select report 4
+                     Recent Health Journal Entries
+ click | fairian_name | debit |  credit  | balance  |                           description                           
+-------+--------------+-------+----------+----------+-----------------------------------------------------------------
+     1 | alice        |     1 |          |        1 | Initial health
+     2 | alice        |       | 0.019635 | 0.980365 | health deterioration based on insufficient sustenance balance 0
+     3 | alice        |       |  0.01925 | 0.961115 | health deterioration based on insufficient sustenance balance 0
+(3 rows)
+
+--------------------------------------------
+
+When there are no other players to compare to, as is the case
+for the first player to join, this initial value is set to
+100%. Without further action to sustain health, 'Fairian'
+health deteriorates as game time advances, as shown for
+click 2 and 3.
+
+The Cash report similarly presents a journal, or history,
+of activity, showing the initial state of poverty.
+
+--------------------------------------------
+Select report 5
+                              Recent Cash Journal Entries
+ click | fairian_name | account | debit | credit | balance |     description      
+-------+--------------+---------+-------+--------+---------+----------------------
+     1 | alice        | cash    |     0 |      0 |       0 | Initial cash balance
+(1 row)
+--------------------------------------------
+
+
 Some of the other report menu items will be illustrated in
 later tutorials.
 
@@ -311,11 +372,11 @@ later tutorials.
 
 The 'Trade' menu option on the main menu allows entry to
 trading activity on the five markets: finance (+bond+), real
-estate (+land+), commodity (+food+), labor (+work+), and debt
+estate (+land+), labor (+work+), commodity (+food+), and debt
 (+note+).
 
 --------------------------------------------
-#? 3
+Main menu selection 3
 1) bond
 2) land
 3) work
@@ -342,28 +403,27 @@ bonds are guaranteed investments: regardless of the issuer's
 create enough money to cover any shortfall and repay the full
 face amount at maturity.
 
-*+land+*:: The real estate market. Plots of land which have
-been surveyed (note that "surveyed" is merely a notional
-term in this context meaning only "created by the game") and
-offered for sale, as well as listing the owner, if the land
-has been purchased.
+*+land+*:: The real estate market. Plots of land which have been
+intially surveyed (note that "surveyed" is merely a notional
+term in this context meaning only "created by the game")
+are offered for sale. If a land plot has been purchased by a
+'Fairian', the this market can be used for re-sale.
 
 *+work+*:: The labor market. Similar to a +bond+, a labor
-contract represents an agreement between 'Fairians'.
-Labor contracts specify that one 'Fairian' will work for
-another for at least a specified amount of time.  Entries in
-the +work+ relation are created when buyers, offering to hire,
-and sellers, offering to work, offer mutually compatible terms
-(with respect to time, skill, effectiveness, and payment).
+contract represents an agreement between 'Fairians'. Labor
+contracts specify that one 'Fairian' will work for another
+for at least a specified amount of time. Labor contracts are
+created when buyers, bidding to hire, and sellers, asking to
+work, offer mutually compatible terms with respect to time,
+skill, effectiveness, and payment.
 
-*+food+*:: The commodity market. This allows 'Fairians' to
-buy and sell food.
+*+food+*:: The commodity market allows 'Fairians' to buy and
+sell food.
 
 *+note+*:: The debt market. If a bond issuing 'Fairian' does
 not have sufficient cash on hand to repay at bond maturity,
 then a +note+ is written listing the borrower as a debtor,
-and that +note+ is then factored (offered for sale at discount)
-on the debt market.
+and that +note+ is then factored at discount on the debt market.
 
 After selecting any one of these markets, you will prompted
 for which 'side' of the trade you want to place an order on.
@@ -378,41 +438,32 @@ bond buy (bid) or sell (ask)?
 'bid' and 'ask' refer to 'buy' and 'sell'
 orders, respectively.
 
-A successful player will utilize all five markets in order to
-improve their rank in the standings. Generally, the flow of 
-the game is driven by the standing ranking by health and 
-wealth, since sustaining health requires food, food is 
-produced by cultivating land, land is acquired using 
-capital, capital is raised through financing and 
-assumption of debt.
 == Fairwinds Game Tutorial 4 - Bootstrapping the Land Market
 
-When 'Fairwinds' is initialized, there are no 'Fairians', no land, no
-food, and no money. As players enter the game, resources must be brought
-into existence by means of market activity that creates demand. The
-market response that creates the land and money needed for the game to
-progress is called "bootstrapping", 'i.e.', the game is figuratively
-"lifted by the bootstraps" to create wealth out of nothing.
+When 'Fairwinds' is initialized, there are no 'Fairians',
+no land, no food, and no money. As players enter the game,
+resources must be brought into existence by means of market
+activity that creates demand. The market response that creates
+the land and money needed for the game to progress is called
+"bootstrapping", 'i.e.', the game is figuratively "lifted by
+the bootstraps".
 
-This tutorial illustrates that bootstrapping protocol for the land market
-and the role you play in making it happen.
+This tutorial illustrates the bootstrapping protocol for the
+land market and the role you play in making it happen.
 
-For purposes of illustration, in this tutorial there will be only a
-single 'Fairian', named Alice, participating in the game.  This
-obviously is a circumstance almost all players will not encounter (since
-only one player is ever the first player to enter the game!), but
-the techniques employed are sufficiently illustrative as to be
-instructive on how general play proceeds.
+For purposes of illustration in this tutorial there is only
+a single 'Fairian' participating in the game.  While this
+obviously is a circumstance almost all players will not
+encounter (since only one player is ever the first player to
+enter the game!), the techniques employed are sufficiently
+illustrative as to be instructive on how general play proceeds.
 
-Utilizing the interactive menu, Alice connects to 'Fairwinds' and
-and makes selections to issue a land bid, i.e. a trade order to 
-buy land.
-
-
+Utilizing the interactive menu, Alice connects to 'Fairwinds'
+and makes selections to issue a land bid, i.e. a trade
+order to buy land.
 
 --------------------------------------------
-#? 
-#? 3
+Main menu selection 3
 1) bond
 2) land
 3) work
@@ -427,30 +478,487 @@ expiration=
 --------------------------------------------
 
 At this point, as series of prompts are presented to define
-the details of the order. The first prompt is for +expiration+,
-which is optional and defaults to 1. 
+the details of the order. 
 
-The expiration value specifies how many clicks the offer
-will stand for and at which point, if it has not been executed,
+--------------------------------------------
+land buy (bid) or sell (ask)? 1
+expiration=
+price=
+land productivity=
+--------------------------------------------
+
+The first prompt is for +expiration+, which is optional and
+defaults to 1.
+
+The expiration value specifies how many clicks the offer will
+stand for and at which point, if it has not been executed,
 will be deleted.
 
-
-The price value is also optional: omitting it implies a
+The +price+ value is also optional: omitting it implies a
 'market order', similar to the real-world financial markets
 where a market order means "I will match and trade at as good
 an offer as any other offer."
 
-Productivity is a measure of land quality, and, as the name
-implies, is a value between zero and one indicating how much
-food the land can produce when cultivated -- so more productive
-land is more valuable than less productive land.
-The specified value is the minimum land productivity value she will
-accept.
++Productivity+ is a measure of land quality and is a value
+between zero and one indicating how much food the land can
+produce when cultivated -- so more productive land is more
+valuable than less productive land. The specified value is
+the minimum land productivity value the buyer will accept.
+It defaults to zero if not specified.
+
+In this case Alice specifies no value for each entry, thus
+implying default values for each. Since there are no existing
+land sell orders, the game invokes bootstrapping, which results
+in creating a new land plot that is then offered for sale and
+listed on the game standings report web site.
 
 
-In this case Alice specifies a productivity value of zero in
-order to invoke bootstrapping.
+--------------------------------------------
+                                Land Asks
+ serial_number  | expiration | productivity | price | fairian_name | side 
+----------------+------------+--------------+-------+--------------+------
+ 356a192b7913b0 |            |      0.00000 |     0 |              | ask
+(1 row)
+--------------------------------------------
 
-== To Be Continued!
+Note that the +fairian_name+ column is blank, which indicates
+that this land plot is being sold by the governing market
+authority rather than another 'Fairian', and that there is no
+expiration date. This land sell offer will stand open until some
+'Fairian' makes an offer.
 
-Check back later for further updates.
+The +serial_number+ is a unique identifier automatically 
+generated by the game.
+
+The ask +price+ for bootstrapped land is determined by a
+land-scarcity pricing formula according to a simple quadratic
+polynomial. For the very first plot of land, the plot is
+offered for sale at zero cost, and subsequent plots are priced
+at monotonically-increasing values.
+
+Note that the way bootstrapping works, two orders are
+required for Alice to actually purchase the land: one to invoke
+bootstrapping, and a second to actually make the purchase. While
+apparently cumbersome, bootstrapping works this way as a matter
+of fairness. That is, the 'Fairian' invoking bootstrapping
+has no special right to take ownership of the land: Any one
+can bid competitively for it.  Had there been any open bid
+orders, the bootstrap sell order may have matched against,
+and executed with, one of those.
+
+But since Alice enjoys the non-competitive situation of being
+the sole player, she then places another land bid order with
+default values and confirms her acquisition of the land plot
+by reviewing the game standing web page
+
+--------------------------------------------
+                        Land Plots
+ fairian_name | serial_number  | productivity | land_value 
+--------------+----------------+--------------+------------
+ alice        | 356a192b7913b0 |      0.00000 |      0.000
+(1 row)
+--------------------------------------------
+
+showing that she is now listed as the owner.
+
+The land_value is set according to the trade execution 
+price.
+
+The cash journal report reflects the transaction, even though 
+no cash changed hands.
+
+--------------------------------------------
+                         Recent Cash Journal Entries
+ click | fairian_name | debit | credit | balance |        description         
+-------+--------------+-------+--------+---------+----------------------------
+     1 | alice        |     0 |      0 |       0 | Initial cash balance
+     4 | alice        |       |      0 |       0 | Bought land 356a192b7913b0
+(2 rows)
+--------------------------------------------
+
+Now that Alice is a land owner, she can cultivate the land to produce
+food.
+
+
+== Fairwinds Game Tutorial 5 - Cultivating Self-Owned Land
+
+'Fairians' require sustenance ('i.e.', food) as the game
+advances. Provisioning sufficient sustenance has implications
+that will be dicussed more fully in subsequent tutorials,
+but suffice it to say for now that food is important, just
+like in the real world.
+
+Sustenance is derived from land plots by cultivation (or
+'farming'). The activity of cultivation is an example of
+skilled labor, and 'Fairwinds' labor activity is executed
+under contracts established on the labor market.
+
+Normally, a labor contract is made between two 'Fairians': a
+customer (the land-owning buyer of a labor contract bidding to
+employ others) and a supplier (the seller of a labor contract
+asking to earn 'Faircoin' by working for another 'Fairian').
+
+That more typical, competitive/cooperative arrangement is
+the topic of a later tutorial. This tutorial explains how a
+'Fairian' can engage in cultivation of their own land.
+
+The self-owned land cultivation scenario is less complicated
+than labor contracts between 'Fairians' because the land owner
+is both the customer and the supplier, and neither bidding
+nor exchange of money is involved: A contract for self-owned
+land labor is established directly without using the market
+bid/ask process.
+
+From the main menu, the Labor menu selection leads to a prompt
+for a skill type (currently 'farming' is the only skill
+type), followed by a menu selection of land plots Alice owns.
+
+--------------------------------------------
+1) Create     - Create a Fairian account named alice
+2) Reports    - Display game data
+3) Trade      - Enter buy/sell orders
+4) Labor      - Assign self-owned labor contract
+5) Terminate  - End a labor contract
+6) Call       - Demand note payment
+
+Main menu selection 4
+1) farmer
+Select skill name 1
+
+1) 356a192b7913b0
+Select work place serial number 1
+--------------------------------------------
+
+The +work_place+ should be specified as the land plot
++serial_number+ value corresponding to the land to be
+cultivated. The +skill_name+ corresponding to land cultivation
+is "farmer".
+
+The game standings web site subsequently lists the created
+labor contract:
+
+--------------------------------------------
+                                           Labor Contracts
+   work_place   | skill_name | contract_number | issue_date | term | customer | supplier | labor_rate 
+----------------+------------+-----------------+------------+------+----------+----------+------------
+ 356a192b7913b0 | farmer     | da4b9237bacccd  |          5 |    1 | alice    | alice    |      0.000
+(1 row)
+--------------------------------------------
+
+The contract_number and issue_date column values are determined
+automatically when a labor contract is created. The labor rate
+is a derived value of price divided by term.  As mentioned
+above, the customer and supplier will both automatially be set
+to the land-owning 'Fairian'. The term will be automatically
+set to a value of one (which is discussed further below).
+
+The term column specifies the minimum time period committment
+(in clicks) that the labor supplier makes to the customer. That
+is, while the customer can terminate a labor contract at any
+time, the supplier can do so only after the contract term
+has expired. For the self-owned land scenario, since the land
+owner is both customer and supplier there is no need to limit
+the authority to terminate the labor contract, so a value of
+one is automatically assigned, and it need not be specified
+in the insert statement.
+
+Note, though, that a labor contract does not terminate
+automatically upon time advancing beyond the contract term. The
+supplier will continue in the activity of cultivation on the
+contracted plot of land until one or the other party to the
+contract explicitly terminates the contract.  Consequently,
+it makes no sense for the self-owned land labor contract
+to set the value to anything larger than one, which is the
+automatically-assigned value.
+
+
+== Fairwinds Game Tutorial 6 - Skills Development and the Skill Journal
+
+Once Alice has engaged herself in cultivation of her own plot
+of land, there are a few important implications.
+
+The first important implication is that Alice develops
+proficiency at a skill, namely, by engaging in cultivation,
+she gets better at it.  A record of her developing skill
+proficiency is recorded in the skill_journal displayed on the
+game standings web page and shows the slowly improving skill
+balance starting at click 6, when cultivation was initiated.
+
+
+--------------------------------------------
+                                                    Skill Journal
+ click | fairian_name | skill_name |  debit  | credit | balance |                    description                     
+-------+--------------+------------+---------+--------+---------+----------------------------------------------------
+     6 | alice        | farmer     | 0.01732 |        |   0.017 | skill improvement based on contract da4b9237bacccd
+     7 | alice        | farmer     | 0.01702 |        |   0.034 | skill improvement based on contract da4b9237bacccd
+     8 | alice        | farmer     | 0.01672 |        |   0.051 | skill improvement based on contract da4b9237bacccd
+     9 | alice        | farmer     | 0.01643 |        |   0.067 | skill improvement based on contract da4b9237bacccd
+    10 | alice        | farmer     | 0.01615 |        |   0.084 | skill improvement based on contract da4b9237bacccd
+(5 rows)
+--------------------------------------------
+
+As in the real world, proficiency at any skill will improve
+with practise and will atrophy with neglect. The rows shown in
+this report of the skill_journal shows that Alice, engaging
+in farming, improved her proficiency by a small, decreasing
+amount each click. The growth and atrophy rates for each skill
+are small numbers pseudo-randomly fixed when the game starts.
+
+Proficiency will continue to improve so long as she continues as
+the supplier to an active labor contract, but the improvement
+exhibits 'diminishing returns' since the value approaches
+unity and will never exceed 100%.
+
+When the contract is terminated, her proficiency will atrophy
+unless she engages as a supplier on a new contract.
+
+Proficiency atrophies at a constant percentage rate (which
+thus also exhibits diminishing returns behavior in that the
+amount by which proficiency decreases each click continually
+itself diminishes).
+
+== Fairwinds Game Tutorial 7 - Cultivation and the Land Journal
+
+The second consequence of Alice engaging in cultivation of
+her own land plot is that the land productivity improves.
+
+A record of the land productivity improvement is recorded in
+the land journal.
+
+--------------------------------------------
+                                                  Land Journal
+ click | serial_number  | fairian_name |  debit   |  credit  | balance |              description               
+-------+----------------+--------------+----------+----------+---------+----------------------------------------
+     3 | 356a192b7913b0 |              | 0.000000 | 0.000000 |   0.000 | Initial land productivity
+     6 | 356a192b7913b0 | alice        | 0.000725 |          |   0.001 | land improvement based on cultivation 
+     7 | 356a192b7913b0 | alice        | 0.000724 |          |   0.001 | land improvement based on cultivation 
+     8 | 356a192b7913b0 | alice        | 0.000724 |          |   0.002 | land improvement based on cultivation 
+     9 | 356a192b7913b0 | alice        | 0.000723 |          |   0.003 | land improvement based on cultivation 
+    10 | 356a192b7913b0 | alice        | 0.000723 |          |   0.004 | land improvement based on cultivation 
+(6 rows)
+--------------------------------------------
+
+The rows in this report show the initial zero productivity
+at the point of land survey and initial offer for sale,
+and then during each click starting once the land came
+under cultivation, the land productivity improved by a small
+amount. The behavior of land productivity is very similar to
+the way skill proficiency changes as a 'Fairian' engages in
+activity: when land is cultivated, the productivity improves,
+and when left fallow, the productivity diminishes. And in both
+cases the amount of change exhibits dimishing returns behavior
+as the net balance approaches one or zero, respectively.
+
+Proficiency and productivity together influence the total food
+production yield.
+
+
+== Fairwinds Game Tutorial 8 - Cultivation and the Food Journal
+
+Another important consequence of Alice engaging in cultivation of her
+own plot of land is that this activity results in food production.
+
+A record of the fruits of her labor is recorded in the food journal:
+
+--------------------------------------------
+                                         Food Journal
+ click | fairian_name | debit  | credit | balance |                description                
+-------+--------------+--------+--------+---------+-------------------------------------------
+     1 | alice        | 0.0000 | 0.0000 |  0.0000 | Initial food balance
+     6 | alice        | 1.0000 |        |  1.0000 | total production from land 356a192b7913b0
+     6 | alice        |        | 1.0000 |  0.0000 | daily sustenance
+     7 | alice        | 1.0000 |        |  1.0000 | total production from land 356a192b7913b0
+     7 | alice        |        | 1.0000 |  0.0000 | daily sustenance
+     8 | alice        | 1.0000 |        |  1.0001 | total production from land 356a192b7913b0
+     8 | alice        |        | 1.0000 |  0.0001 | daily sustenance
+     9 | alice        | 1.0001 |        |  1.0002 | total production from land 356a192b7913b0
+     9 | alice        |        | 1.0000 |  0.0002 | daily sustenance
+     9 | alice        |        | 0.0000 |  0.0002 | spoilage
+    10 | alice        | 1.0002 |        |  1.0003 | total production from land 356a192b7913b0
+    10 | alice        |        | 1.0000 |  0.0003 | daily sustenance
+    10 | alice        |        | 0.0000 |  0.0003 | spoilage
+(13 rows)
+--------------------------------------------
+
+The rows resulting from this query show that during each click
+Alice received the total food production (by virtue of her
+owning the land) associated with the particular contract.
+Note the trend, just barely within rounding error, of
+increasing total food production at the start of each click.
+This increase is a due to a combination of Alice's improving
+cultivation proficiency and the increasing land productivity,
+as discussed in the previous tutorials, and results in a food
+surplus (i.e., a net balance of excess food).
+
+The one unit per click deduction for daily sustenance is a
+game constant: every 'Fairian' consumes one unit of food
+per click, or the net balance if the net balance is less
+than one. The consequence of this latter situation (i.e.,
+having insufficient food to meet the sustenance requirement)
+adversely affects 'Fairian' health and is discussed more fully
+in a subsequent tutorial.
+
+The per-click deduction for spoilage is a small constant
+percentage calculated on the 'Fairian''s net balance
+of food. This ensures that no 'Fairian' can hoard food
+indefinitely.
+
+Over time, as cultivation maximizes the land productivity and
+Alice's proficiency and health improve, this net surplus will
+grow. As it grows, the amount of food spoilage will accordingly
+increase until the net surplus growth reaches an equilibrium
+point.  Exactly how much food can be maximally retained and
+how quickly that maximum is achieved will be dependent upon the
+various game parameters randomly determined at game start up.
+
+
+== Fairwinds Game Tutorial 9 - Sustenance and the Health Journal
+
+When a new 'Fairian' joins the game, they have no money, no land, and no food.
+A newly-created 'Fairian' has health status that depends upon when the player
+enters the game: Prior to the game start time, new 'Fairians' are endowed with
+perfect health; after the game has started, the initial 'Fairian' health status
+for newcomers is zero.  The consequences of the latter circumstance are
+discussed in a subsequent tutorial; this tutorial treats the former
+circumstance.
+
+=== Maintaining Health
+
+Maintaining health requires sustenance (food): during each click that a
+'Fairian' has a food surplus over the amount to meet the sustenance requirement
+of one food unit per click, health improves; during each click that a 'Fairian'
+has less than one sustenance unit, health deteriorates. Otherwise, health
+status remains unchanged.
+
+=== Heath Status Changes
+
+In both the first two cases, the change over time exhibits diminishing returns
+behavior in that as improving health approaches 100%, the per click improvement
+decreases so as to never exceed unity. Conversely, diminishing health is never
+less than zero so as health decreases, the per-click amount of atrophy itself
+decreases.
+ 
+The changes to 'Fairian' health are recorded in the health_journal.
+
+
+--------------------------------------------
+fairwinds=> select click,debit,credit,description 
+			from health_journal where fairian_name = 'alice';
+
+ click |  debit   |  credit  |                           description                           
+-------+----------+----------+-----------------------------------------------------------------
+     1 |        1 |          | Initial health
+     2 |          | 0.059635 | health deterioration based on insufficient sustenance balance 0
+     3 |          | 0.056079 | health deterioration based on insufficient sustenance balance 0
+     4 |          | 0.052735 | health deterioration based on insufficient sustenance balance 0
+     5 |          |  0.04959 | health deterioration based on insufficient sustenance balance 0
+     6 |          | 0.046633 | health deterioration based on insufficient sustenance balance 0
+     7 |          | 0.043852 | health deterioration based on insufficient sustenance balance 0
+     8 |          | 0.041236 | health deterioration based on insufficient sustenance balance 0
+     9 |          | 0.038777 | health deterioration based on insufficient sustenance balance 0
+    10 |          | 0.036465 | health deterioration based on insufficient sustenance balance 0
+    11 |          |  0.03429 | health deterioration based on insufficient sustenance balance 0
+    13 |  0.02739 |          | health improvement based on sustenance balance 1.000007
+    14 | 0.025757 |          | health improvement based on sustenance balance 1.000035
+    15 |  0.02422 |          | health improvement based on sustenance balance 1.000101
+    16 | 0.022776 |          | health improvement based on sustenance balance 1.000221
+    17 | 0.021418 |          | health improvement based on sustenance balance 1.000414
+(16 rows)
+--------------------------------------------
+
+These seventeen rows show that:
+
+* At click 1, when Alice entered the game, she was endowed with perfect health (100%).
+* Through click eleven, Alice's health decreased by a small percentage each click since she had no food.
+* At click 13, Alice's health began to increase once she began producing food through cultivation.
+
+The transition to improving health corresponds to when Alice began her
+engagement in cultivation and thereby satisfied the periodic sustenance
+requirement. Note further that the per-click health decrease itself
+decreases, that is, her health decreases by a continually smaller amount.
+Conversely, during the improving health, health improves by decreasing
+amounts. And lastly note in the description column annotates these effects.
+
+With the following more complex, 'running total' query, Alice can review
+her net health change over time:
+
+
+--------------------------------------------
+fairwinds=> with running_total as 
+	(
+	  select fairian_name, click, debit, credit, 
+            sum(debit) over w as d, sum(credit) over w as c 
+	    from health_journal 
+            window w as (partition by fairian_name order by click)
+	) select fairian_name, click, debit, credit, d-c as net 
+            from running_total order by fairian_name, click;
+			
+ fairian_name | click |  debit   |  credit  |   net    
+--------------+-------+----------+----------+----------
+ alice        |     1 |        1 |          |         
+ alice        |     2 |          | 0.059635 | 0.940365
+ alice        |     3 |          | 0.056079 | 0.884286
+ alice        |     4 |          | 0.052735 | 0.831551
+ alice        |     5 |          |  0.04959 | 0.781961
+ alice        |     6 |          | 0.046633 | 0.735328
+ alice        |     7 |          | 0.043852 | 0.691476
+ alice        |     8 |          | 0.041236 |  0.65024
+ alice        |     9 |          | 0.038777 | 0.611463
+ alice        |    10 |          | 0.036465 | 0.574998
+ alice        |    11 |          |  0.03429 | 0.540708
+ alice        |    13 |  0.02739 |          | 0.568098
+ alice        |    14 | 0.025757 |          | 0.593855
+ alice        |    15 |  0.02422 |          | 0.618075
+ alice        |    16 | 0.022776 |          | 0.640851
+ alice        |    17 | 0.021418 |          | 0.662269
+(16 rows)
+--------------------------------------------
+
+The net column shows the running total of the difference between the
+additions (debit) and reductions (credit) columns, thus for each row, while
+the debit and credit columns show changes to health, the net column indicates
+her actual health at that click in time: it decreases through click 4 and
+then transitions to improvement subsequently.
+
+The rate of health improvement and deterioration are small percentage
+constants fixed when the game is initialized.
+
+Note that a 'Fairian'''s' net health value influences their ability to
+perform skilled tasks, 'e.g.', a 'Fairian'''s' 'effectiveness' is adversely
+affected by poor health and decreases their food production.
+
+=== Stationary Zero Health Status
+
+The third case, 'i.e.', when a 'Fairian' enters a click with exactly one food
+unit, results in no change to health status. In the particular circumstance
+of zero health and being a sole cultivator of a land plot, health status
+remains at zero. 
+
+=== Emerging from Stationary Zero Health Status
+
+There are three ways to emerge from stationary zero health, and they all
+involve, as a necessary condition, a food surplus.
+
+
+[horizontal] 
+Buy Food:: Maybe the most straightforward means of emerging from
+stationarity is to buy food. This works, of course, only if other 'Fairians'
+have generated a food surplus and are willing to sell some.
+
+Sell Labor:: Another means is to hire on as a supplier on the labor market.
+Provided that the work site is being cultivated by at least one other 'Fairian'
+with non-zero effectiveness, you will share in the fruits of the combined team
+effectiveness and get a share of the excess production.
+
+Buy Labor:: Similar to hiring out as a supplier as above, you can alternatively
+hire another 'Fairian' to jointly cultivate a land plot you own. Provided they
+have non-zero effectiveness, you will similarly share in the fruits of the
+combined team effectiveness.
+
+
+
+
+
+== Fairwinds Game Tutorial A - We Have Company
+
+Check back later for more updates!
