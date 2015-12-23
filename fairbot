@@ -75,13 +75,14 @@ export PGUSER="${fairian_name}"
 
 display_game_info="select click, start_time, end_time, click_interval from fairwinds;"
 display_connections="select * from connection;"
-display_players="select  fairian_name, email_address, created_date, click_order_count, click_select_count from fairian order by fairian_name;"
+display_players="select fairian_name, email_address, created_date, click_order_count, click_select_count from fairian order by fairian_name;"
 display_health_journal="select click, fairian_name, debit, credit, balance, description from health_journal where fairian_name = current_user order by click, seq;"
 display_cash_journal="select click, fairian_name, debit, credit, balance, description from cash_journal where fairian_name = current_user order by click, seq;"
-display_food_journal="select * from food_journal where fairian_name = current_user order by click;"
+display_food_journal="select click, fairian_name, debit, credit, balance, description from food_journal where fairian_name = current_user order by click, seq;"
+display_skill_journal="select click, fairian_name, skill_name, debit, credit, balance, description from skill_journal where fairian_name = current_user order by click, seq;"
 display_bonds="select * from bond where bond_owner = current_user or bond_issuer = current_user;"
 display_land="select * from land where fairian_name = current_user;"
-display_contracts="select * from work where customer = current_user or supplier = current_user;"
+display_contracts="select contract_number, issue_date, term, customer, supplier, work_place, skill_name from work where customer = current_user or supplier = current_user;"
 display_notes="select * from note where factor = current_user or debtor = current_user;"
 
 
@@ -173,7 +174,7 @@ function resignmenu {
   PS3="${OLDPS3}"
 }
 
-function optionsmenu {
+function tradeparametersmenu {
   case "${1}" in
     bond)
       read -p "bond term=" term
@@ -220,12 +221,19 @@ function optionsmenu {
             values="${values}, ${effectiveness}"
           fi
 
-          read -p "work place serial number=" work_place
-          if [[ -n "${work_place}" ]]
-          then
-            fields="${fields}, work_place"
-            values="${values}, '${work_place}'"
-          fi
+          land_plots=$(psql -q -A -t <<< "select serial_number from land where fairian_name = current_user order by 1;")
+          local OLDPS3="${PS3}"
+          PS3="Select work place serial number "
+          select work_place in ${land_plots}
+          do
+            if [[ -n "${work_place}" ]]
+            then
+              fields="${fields}, work_place"
+              values="${values}, '${work_place}'"
+            fi
+            break
+          done
+          PS3="${OLDPS3}"
           ;;
       esac
 
@@ -314,7 +322,7 @@ function marketmenu {
     break
   done
 
-  [[ -n "${mrkt}" ]] && [[ -n "${side}" ]] && optionsmenu ${mrkt} ${side}
+  [[ -n "${mrkt}" ]] && [[ -n "${side}" ]] && tradeparametersmenu ${mrkt} ${side}
   PS3="${OLDPS3}"
 }
 
@@ -326,6 +334,7 @@ function reportsmenu {
       "Health       - Display health history journal"
       "Cash         - Display cash transcation journal"
       "Food         - Display food transcation journal"
+      "Skill        - Display skill history journal"
       "Land         - Display owned land plots"
       "Bonds        - Display owned and issued bonds"
       "Contracts    - Display engaged labor contracts"
@@ -385,6 +394,14 @@ function reportsmenu {
         \C
         "
         executesql "${sql}" "${display_food_journal}"
+        ;;
+      Skill)
+        sql="
+        \C 'Skill Journal Entries'
+        ${display_skill_journal}
+        \C
+        "
+        executesql "${sql}" "${display_skill_journal}"
         ;;
       Land)
         sql="
@@ -456,9 +473,6 @@ function mainmenu {
         ;;
       "Call")
         callmenu
-        ;;
-      *)
-        break 
         ;;
     esac
   done
