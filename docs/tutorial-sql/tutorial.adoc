@@ -8,7 +8,7 @@
 :max-width: 45em
 :data-uri:
 :icons:
-:date: 15-Dec-2015
+:date: 30-Jan-2016
 
 == Fairwinds Game Tutorial 0 - What is Fairwinds
 
@@ -24,48 +24,61 @@ table below.
 
 
 --------------------------------------------
-                       Fairwinds Tournament Standings
- fairian_name | health | wealth  |  cash   |  food  | bonds | land  | notes 
---------------+--------+---------+---------+--------+-------+-------+-------
- bob          | 0.9942 |   5.042 |   0.000 | 34.508 | 0.000 | 0.534 |   -30
- david        | 0.9923 |  57.580 |  45.000 | 12.580 | 0.000 | 0.000 |     0
- cathy        | 0.9895 |  86.089 |  69.000 | 17.089 | 0.000 | 0.000 |     0
- edwin        | 0.9884 |  29.253 |  12.000 | 17.253 | 0.000 | 0.000 |     0
- fredrick     | 0.9884 |  27.253 |  10.000 | 17.253 | 0.000 | 0.000 |     0
- gina         | 0.9884 |  26.411 |  14.000 | 12.411 | 0.000 | 0.000 |     0
- hendrik      | 0.9884 |  25.253 |   8.000 | 17.253 | 0.000 | 0.000 |     0
- ingrid       | 0.9884 |  24.253 |   7.000 | 17.253 | 0.000 | 0.000 |     0
- james        | 0.9884 |  23.253 |   6.000 | 17.253 | 0.000 | 0.000 |     0
- karen        | 0.9884 |  22.253 |   5.000 | 17.253 | 0.000 | 0.000 |     0
- leonard      | 0.9884 |  21.253 |   4.000 | 17.253 | 0.000 | 0.000 |     0
- norman       | 0.9874 |  20.253 |   3.000 | 17.253 | 0.000 | 0.000 |     0
- michelle     | 0.9874 |  20.253 |   3.000 | 17.253 | 0.000 | 0.000 |     0
- olivia       | 0.9874 |  19.253 |   2.000 | 17.253 | 0.000 | 0.000 |     0
- peter        | 0.9874 |  18.253 |   1.000 | 17.253 | 0.000 | 0.000 |     0
+                           Fairwinds Tournament Standings
+ fairian_name | health |  rank  | wealth  |  cash  |  food   | bonds | land  | notes 
+--------------+--------+--------+---------+--------+---------+-------+-------+-------
+ bob          | 0.6771 | 1.0000 | 185.590 |  5.714 | 206.576 | 0.000 | 3.300 |   -30
+ cathy        | 0.5737 | 0.9583 | 172.288 | 69.000 | 103.288 | 0.000 | 0.000 |     0
+ edwin        | 0.5386 | 0.8750 | 120.751 |  5.000 | 112.961 | 0.000 | 3.300 | -0.51
+ david        | 0.5565 | 0.7500 | 112.187 | 45.000 |  67.187 | 0.000 | 0.000 |     0
+ fredrick     | 0.4803 | 0.7917 | 113.288 | 10.000 | 103.288 | 0.000 | 0.000 |     0
+ gina         | 0.4373 | 0.8333 | 117.288 | 14.000 | 103.288 | 0.000 | 0.000 |     0
+ hendrik      | 0.4373 | 0.7083 | 111.288 |  8.000 | 103.288 | 0.000 | 0.000 |     0
+ vincent      | 0.2273 | 0.9167 | 127.251 |  0.714 | 132.537 | 0.000 | 3.300 |  -9.3
+ ingrid       | 0.4261 | 0.6667 | 110.288 |  7.000 | 103.288 | 0.000 | 0.000 |     0
+ james        | 0.4146 | 0.6250 | 109.288 |  6.000 | 103.288 | 0.000 | 0.000 |     0
+ karen        | 0.4029 | 0.5833 | 108.288 |  5.000 | 103.288 | 0.000 | 0.000 |     0
+ leonard      | 0.4029 | 0.5417 | 107.288 |  4.000 | 103.288 | 0.000 | 0.000 |     0
+ michelle     | 0.3787 | 0.4583 | 106.288 |  3.000 | 103.288 | 0.000 | 0.000 |     0
+ norman       | 0.3406 | 0.4583 | 106.288 |  3.000 | 103.288 | 0.000 | 0.000 |     0
+ alice        | 0.6573 | 0.1250 |  59.782 |  4.286 |  97.196 | 0.000 | 3.300 |   -45
+ olivia       | 0.3274 | 0.4167 | 105.288 |  2.000 | 103.288 | 0.000 | 0.000 |     0
+ peter        | 0.3139 | 0.3750 | 104.288 |  1.000 | 103.288 | 0.000 | 0.000 |     0
+ ursula       | 0.2424 | 0.3333 | 103.565 |  0.000 | 102.395 | 0.000 | 3.300 | -2.13
+ quincy       | 0.3139 | 0.2500 | 103.288 |  0.000 | 103.288 | 0.000 | 0.000 |     0
+ wendy        | 0.2273 | 0.2917 | 103.399 |  0.000 | 102.889 | 0.000 | 3.300 | -2.79
+ robert       | 0.3002 | 0.2083 |  79.589 | 10.000 |  69.589 | 0.000 | 0.000 |     0
+ zachary      | 0.1635 | 0.1667 |  76.630 | 10.000 |  71.630 | 0.000 | 0.000 |    -5
+ xavier       | 0.0000 | 0.0000 |   0.000 |  0.000 |   0.000 | 0.000 | 0.000 |     0
+ thomas       | 0.0000 | 0.0000 |   0.000 |  0.000 |   0.000 | 0.000 | 0.000 |     0
+ samantha     | 0.0000 | 0.0000 |   0.000 |  0.000 |   0.000 | 0.000 | 0.000 |     0
 --------------------------------------------
 
 
-The first column lists the Fairian name. Players are ranked
-according to health and wealth, as appear in the second and
-third columns. The remaining columns show the breakdown of
-the individual components that are summed to compute the total
-wealth represented in the third column.
+The first column lists the Fairian name. Players are scored
+according to the sum of health and wealth rank, as appear in the second,
+and third columns, where the "health" value is a percentage
+and the "rank" value is the percentile rank calculated based 
+the the the "wealth" column. Wealth is the sum of the remaining
+column values which show the breakdown of
+the individual consituents of total
+wealth.
 
-There is a lot going behind this ranking table. And while the
-following tutorials will help with understanding, a couple
-things to note are that no matter what level of total wealth,
-health always dominates as a ranking criteria, so even though
-Cathy, who ranks the highest wealth, is third behind Bob and
-David since the latter two have higher health percentage values.
+There is a lot going behind this standings table, but generally
+speaking, the flow of the game is driven by the standings
+score since sustaining health requires food, food is
+produced by cultivating land, land is acquired using capital,
+and capital is raised through financing and assumption of debt.
+
 As will be demonstrated subsequently, achieving and maintaining
-perfect 100% health is expected to be realizable by multiple 
-players and so as the game progresses most likely wealth will 
+perfect 100% health is expected to be realizable by multiple
+players and so, as the game progresses, most likely wealth will
 be the discriminating ranking factor.
 
-Even with that, though, it pays to be cognizant of the balance
-between the separate wealth components, as the worth of food
-and land will vary according to fluctuating market values for
-those assets.
+Therefore, it pays to remain cognizant of the balance between the
+separate wealth components, as listed in the remaining table
+columns, as the worth of food and land will vary according to
+fluctuating market values for those assets.
 
 
 == Fairwinds Game Tutorial 1 - Basic Requirements: Client Software
@@ -1038,10 +1051,10 @@ see the email address of other registered players, only his own:
 --------------------------------------------
 fairwinds=> select * from fairian;
 
- fairian_name | play_level |  email_address  |        created_date        | click_order_count | click_select_count 
---------------+------------+-----------------+----------------------------+-------------------+--------------------
- alice        | privileged |                 | 2015-08-02 09:28:09.926956 |                 0 |                  1
- bob          | privileged | bob@example.com | 2015-08-02 09:28:09.926956 |                 0 |                  0
+ fairian_name |  email_address  |        created_date        | click_order_count | click_select_count 
+--------------+-----------------+----------------------------+-------------------+--------------------
+ alice        |                 | 2015-08-02 09:28:09.926956 |                 0 |                  1
+ bob          | bob@example.com | 2015-08-02 09:28:09.926956 |                 0 |                  0
 (2 rows)
 --------------------------------------------
 

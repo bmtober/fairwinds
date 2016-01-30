@@ -8,7 +8,7 @@
 :max-width: 45em
 :data-uri:
 :icons:
-:date: 22-Dec-2015
+:date: 30-Jan-2016
 
 == Fairwinds Game Tutorial 0 - What is Fairwinds
 
@@ -21,46 +21,55 @@ improve their rank in the standings relative to other players.
 
 A sample of the standings report is shown in the table below in
 which the first column lists the Fairian name, and players are
-ranked according to health and wealth, as appear in the second
-and third columns. 
+scored according to the sum of health and wealth rank, as appear in the second,
+and third columns, where the "health" value is a percentage
+and the "rank" value is the percentile rank calculated based 
+the the the "wealth" column. Wealth is the sum of the remaining
+column values which show the breakdown of
+the individual consituents of total
+wealth.
 
 
 --------------------------------------------
-                       Fairwinds Tournament Standings
- fairian_name | health | wealth  |  cash   |  food  | bonds | land  | notes 
---------------+--------+---------+---------+--------+-------+-------+-------
- bob          | 0.9942 |   5.042 |   0.000 | 34.508 | 0.000 | 0.534 |   -30
- david        | 0.9923 |  57.580 |  45.000 | 12.580 | 0.000 | 0.000 |     0
- cathy        | 0.9895 |  86.089 |  69.000 | 17.089 | 0.000 | 0.000 |     0
- edwin        | 0.9884 |  29.253 |  12.000 | 17.253 | 0.000 | 0.000 |     0
- fredrick     | 0.9884 |  27.253 |  10.000 | 17.253 | 0.000 | 0.000 |     0
- gina         | 0.9884 |  26.411 |  14.000 | 12.411 | 0.000 | 0.000 |     0
- hendrik      | 0.9884 |  25.253 |   8.000 | 17.253 | 0.000 | 0.000 |     0
- ingrid       | 0.9884 |  24.253 |   7.000 | 17.253 | 0.000 | 0.000 |     0
- james        | 0.9884 |  23.253 |   6.000 | 17.253 | 0.000 | 0.000 |     0
- karen        | 0.9884 |  22.253 |   5.000 | 17.253 | 0.000 | 0.000 |     0
- leonard      | 0.9884 |  21.253 |   4.000 | 17.253 | 0.000 | 0.000 |     0
- norman       | 0.9874 |  20.253 |   3.000 | 17.253 | 0.000 | 0.000 |     0
- michelle     | 0.9874 |  20.253 |   3.000 | 17.253 | 0.000 | 0.000 |     0
- olivia       | 0.9874 |  19.253 |   2.000 | 17.253 | 0.000 | 0.000 |     0
- peter        | 0.9874 |  18.253 |   1.000 | 17.253 | 0.000 | 0.000 |     0
+                           Fairwinds Tournament Standings
+ fairian_name | health |  rank  | wealth  |  cash  |  food   | bonds | land  | notes 
+--------------+--------+--------+---------+--------+---------+-------+-------+-------
+ bob          | 0.6771 | 1.0000 | 185.590 |  5.714 | 206.576 | 0.000 | 3.300 |   -30
+ cathy        | 0.5737 | 0.9583 | 172.288 | 69.000 | 103.288 | 0.000 | 0.000 |     0
+ edwin        | 0.5386 | 0.8750 | 120.751 |  5.000 | 112.961 | 0.000 | 3.300 | -0.51
+ david        | 0.5565 | 0.7500 | 112.187 | 45.000 |  67.187 | 0.000 | 0.000 |     0
+ fredrick     | 0.4803 | 0.7917 | 113.288 | 10.000 | 103.288 | 0.000 | 0.000 |     0
+ gina         | 0.4373 | 0.8333 | 117.288 | 14.000 | 103.288 | 0.000 | 0.000 |     0
+ hendrik      | 0.4373 | 0.7083 | 111.288 |  8.000 | 103.288 | 0.000 | 0.000 |     0
+ vincent      | 0.2273 | 0.9167 | 127.251 |  0.714 | 132.537 | 0.000 | 3.300 |  -9.3
+ ingrid       | 0.4261 | 0.6667 | 110.288 |  7.000 | 103.288 | 0.000 | 0.000 |     0
+ james        | 0.4146 | 0.6250 | 109.288 |  6.000 | 103.288 | 0.000 | 0.000 |     0
+ karen        | 0.4029 | 0.5833 | 108.288 |  5.000 | 103.288 | 0.000 | 0.000 |     0
+ leonard      | 0.4029 | 0.5417 | 107.288 |  4.000 | 103.288 | 0.000 | 0.000 |     0
+ michelle     | 0.3787 | 0.4583 | 106.288 |  3.000 | 103.288 | 0.000 | 0.000 |     0
+ norman       | 0.3406 | 0.4583 | 106.288 |  3.000 | 103.288 | 0.000 | 0.000 |     0
+ alice        | 0.6573 | 0.1250 |  59.782 |  4.286 |  97.196 | 0.000 | 3.300 |   -45
+ olivia       | 0.3274 | 0.4167 | 105.288 |  2.000 | 103.288 | 0.000 | 0.000 |     0
+ peter        | 0.3139 | 0.3750 | 104.288 |  1.000 | 103.288 | 0.000 | 0.000 |     0
+ ursula       | 0.2424 | 0.3333 | 103.565 |  0.000 | 102.395 | 0.000 | 3.300 | -2.13
+ quincy       | 0.3139 | 0.2500 | 103.288 |  0.000 | 103.288 | 0.000 | 0.000 |     0
+ wendy        | 0.2273 | 0.2917 | 103.399 |  0.000 | 102.889 | 0.000 | 3.300 | -2.79
+ robert       | 0.3002 | 0.2083 |  79.589 | 10.000 |  69.589 | 0.000 | 0.000 |     0
+ zachary      | 0.1635 | 0.1667 |  76.630 | 10.000 |  71.630 | 0.000 | 0.000 |    -5
+ xavier       | 0.0000 | 0.0000 |   0.000 |  0.000 |   0.000 | 0.000 | 0.000 |     0
+ thomas       | 0.0000 | 0.0000 |   0.000 |  0.000 |   0.000 | 0.000 | 0.000 |     0
+ samantha     | 0.0000 | 0.0000 |   0.000 |  0.000 |   0.000 | 0.000 | 0.000 |     0
 --------------------------------------------
 
-There is a lot going behind this ranking table, but generally
+There is a lot going behind this standings table, but generally
 speaking, the flow of the game is driven by the standings
-ranking since sustaining health requires food, food is
+score since sustaining health requires food, food is
 produced by cultivating land, land is acquired using capital,
 and capital is raised through financing and assumption of debt.
 
-While the following tutorials will help with understanding,
-one thing to note here is that no matter what level of
-total wealth, health always dominates as a ranking criteria,
-so Cathy, who ranks the highest wealth, is third behind Bob and
-David since the latter two have higher health percentage values.
-
 As will be demonstrated subsequently, achieving and maintaining
 perfect 100% health is expected to be realizable by multiple
-players and so as the game progresses most likely wealth will
+players and so, as the game progresses, most likely wealth will
 be the discriminating ranking factor.
 
 Therefore, it pays to remain cognizant of the balance between the
@@ -223,6 +232,7 @@ displayed on the left for each item.
 4) Labor      - Assign self-owned labor contract
 5) Terminate  - End a labor contract
 6) Call       - Demand note payment
+7) Tax        - Set property tax mill rate
 Main menu selection 
 --------------------------------------------
 
@@ -253,6 +263,7 @@ the menu system returned to the top level.
 4) Labor      - Assign self-owned labor contract
 5) Terminate  - End a labor contract
 6) Call       - Demand note payment
+7) Tax        - Set property tax mill rate
 Main menu selection  
 --------------------------------------------
 
@@ -272,10 +283,11 @@ be judicious.
  4) Health       - Display health history journal
  5) Cash         - Display cash transcation journal
  6) Food         - Display food transcation journal
- 7) Land         - Display owned land plots
- 8) Bonds        - Display owned and issued bonds
- 9) Contracts    - Display engaged labor contracts
-10) Notes        - Display factor/debtor notes
+ 7) Skill        - Display skill history journal
+ 8) Land         - Display owned land plots
+ 9) Bonds        - Display owned and issued bonds
+10) Contracts    - Display engaged labor contracts
+11) Notes        - Display factor/debtor notes
 Select report 1
 --------------------------------------------
 
@@ -289,9 +301,9 @@ display of game information on the web site.
 
 --------------------------------------------
                 Game Information
-click | start_time | end_time | click_interval 
+ click | start_time | end_time | click_interval 
 -------+------------+----------+----------------
-    1 |            |          |             20
+    17 |            |          |             20
 (1 row)
 --------------------------------------------
 
@@ -630,6 +642,7 @@ type), followed by a menu selection of land plots Alice owns.
 4) Labor      - Assign self-owned labor contract
 5) Terminate  - End a labor contract
 6) Call       - Demand note payment
+7) Tax        - Set property tax mill rate
 Main menu selection 4
 
 1) farmer
@@ -992,6 +1005,7 @@ menu item for a bond ask order:
 4) Labor      - Assign self-owned labor contract
 5) Terminate  - End a labor contract
 6) Call       - Demand note payment
+7) Tax        - Set property tax mill rate
 Main menu selection 3
 
 1) bond
@@ -1232,6 +1246,7 @@ illustrate the process.)
 4) Labor      - Assign self-owned labor contract
 5) Terminate  - End a labor contract
 6) Call       - Demand note payment
+7) Tax        - Set property tax mill rate
 Main menu selection 3
 
 1) bond
@@ -1292,6 +1307,7 @@ Alice would call the note:
 4) Labor      - Assign self-owned labor contract
 5) Terminate  - End a labor contract
 6) Call       - Demand note payment
+7) Tax        - Set property tax mill rate
 Main menu selection 6
 
 1) ac3478d69a3c81
@@ -1340,6 +1356,7 @@ to +fc2.5+ per click:
 4) Labor      - Assign self-owned labor contract
 5) Terminate  - End a labor contract
 6) Call       - Demand note payment
+7) Tax        - Set property tax mill rate
 Main menu selection 3
 
 1) bond
@@ -1392,6 +1409,7 @@ bid to buy a labor contract.
 4) Labor      - Assign self-owned labor contract
 5) Terminate  - End a labor contract
 6) Call       - Demand note payment
+7) Tax        - Set property tax mill rate
 Main menu selection 3
 
 1) bond
@@ -1420,6 +1438,7 @@ market order bid for labor with
 4) Labor      - Assign self-owned labor contract
 5) Terminate  - End a labor contract
 6) Call       - Demand note payment
+7) Tax        - Set property tax mill rate
 Main menu selection 3
 
 1) bond
@@ -1504,7 +1523,7 @@ recent click for Alice:
 
 Alice is initally credited with the total food production
 from the land due to her and two laborers. A cultivation labor
-contract implitly entails an obligation to pay workers in kind
+contract implicitly entails an obligation to pay workers in kind
 with a share of the total production, hence we see listed two
 share distributions from Alice. This journal listing does 
 not show it, but the distributions are to Cathy and David, 
@@ -1537,14 +1556,319 @@ which can be see by listing the same report for those two
 Also listed is the deduction for the daily sustenance 
 and a spoilage percentage.
 
-*Check back later for more tutorial!!!*
+
+== Fairwinds Game Tutorial F - The Commodity Market
+
+The final market to illustrate is the commodity market, which  
+is used to buy and sell food. 
+
+At the close of the previous tutorial, Bob had hired a team 
+of workers to cultivate his land plot, but they were generating 
+no food surplus because all suppliers had zero effectiveness:
+Bob and his team were stuck in a zero-effectiveness stationary
+point.
+
+An action by Cathy makes it possible to emerge from that 
+zero-production stationary point. Cathy notices that Bob 
+was aggressively hiring, so she abandons her contract with
+Alice and puts herself on the labor market, offering a 
+for a fee of +fc20+:
+
+Cathy:
+
+--------------------------------------------
+update work set active=false where contract_number = 'b1d5781111d84f';
+insert into work_ask (skill_name,expiration,price) values ('farmer', 20, 20);
+--------------------------------------------
+
+--------------------------------------------
+                                 Labor Contract Asks
+ skill_name | expiration | term | effectiveness | price | rate | fairian_name | side 
+------------+------------+------+---------------+-------+------+--------------+------
+ farmer     |        200 |    1 |       0.92045 |    20 |   20 | cathy        | ask
+(1 row)
+--------------------------------------------
+
+Even though Cathy offerred a committment of only a single click, effectively
+asking for a comparitively high rate of +fc20+ per click, Bob decides it 
+is worth it to improve his combined team productivity so as to start 
+generating a food surplus.
+Bob bootstraps the bond market, borrowing money, and places a market order
+to buy the labor contract, which executes the open limit order precedingly
+placed by Cathy. A labor contract is created between Bob and Cathy:
+
+
+--------------------------------------------
+                                     Labor Contracts
+   work_place   | skill_name | contract_number | issue_date | term | customer | supplier 
+----------------+------------+-----------------+------------+------+----------+----------
+ ...            | ...        | ...             | ...        | ...  | ...      | ...  
+ 77de68daecd823 | farmer     | f1f836cb4ea6ef  |        180 |    1 | bob      | cathy
+ ...            | ...        | ...             | ...        | ...  | ...      | ...  
+--------------------------------------------
+
+Thus with a food surplus now being generated by Bob's team, after the game
+has advanced several hundred clicks, all 'Fairians' engaged in cultivation 
+have developed a food surplus:
+
+--------------------------------------------
+     food_balance
+
+       Food Balance
+ fairian_name |  balance  
+--------------+-----------
+ alice        | 34.553808
+ bob          | 45.455726
+ cathy        | 23.884388
+ david        | 17.275817
+ edwin        |  22.72787
+ fredrick     |  22.72787
+ gina         |  22.72787
+ hendrik      |  22.72787
+ ingrid       |  22.72787
+ james        |  22.72787
+ karen        |  22.72787
+ leonard      |  22.72787
+ michelle     |  22.72787
+ norman       |  22.72787
+ olivia       |  22.72787
+ peter        |  22.72787
+ quincy       |  22.72787
+ robert       |  22.72787
+ samantha     |  22.72787
+ thomas       |  22.72787
+ ursula       |  22.72787
+ vincent      |  22.72787
+ wendy        |  22.72787
+ xavier       |  22.72787
+(24 rows)
+--------------------------------------------
+
+James, Ingrid, and Gina decide to sell a portion of 
+their respective food surplus at various prices by placing
+limit orders, resulting 
+in different per-food-unit asking prices.
+
+
+Gina:
+
+--------------------------------------------
+insert into food_ask (expiration, quantity, price) values (40, 9, 5); 
+--------------------------------------------
+
+Ingrid:
+
+--------------------------------------------
+insert into food_ask (expiration, quantity, price) values (40, 10, 15);
+--------------------------------------------
+
+James:
+
+--------------------------------------------
+insert into food_ask (expiration, quantity, price) values (40, 11, 15);
+--------------------------------------------
+
+
+--------------------------------------------
+fairwinds=> select * from food_ask;
+
+ fairian_name | expiration | quantity | price |    unit_price     
+--------------+------------+----------+-------+-------------------
+ james        |        465 |       11 |    15 |  1.36363636363636
+ ingrid       |        465 |       10 |    15 |               1.5
+ gina         |        465 |        9 |     5 | 0.555555555555556
+(3 rows)
+--------------------------------------------
+
+Then new player Zachary enters the game, issues a bond to raise
+cash, and then places a market order to buy five food units:
+
+--------------------------------------------
+fairwinds=> insert into food_bid (quantity) values (5);
+--------------------------------------------
+
+
+We can see the effect of these transactions in few different 
+ways. First, re-listing the open commodity market sell orders 
+after Zachary's purchase shows that the "best" (i.e, the lowest) 
+unit price limit order was matched with Zachary's market order, 
+since now only the sell orders for James and Ingrid remain:
+
+--------------------------------------------
+fairwinds=> select * from food_ask;
+
+ fairian_name | expiration | quantity | price |    unit_price    
+--------------+------------+----------+-------+------------------
+ james        |        465 |       11 |    15 | 1.36363636363636
+ ingrid       |        465 |       10 |    15 |              1.5
+(2 rows)
+--------------------------------------------
+
+Next we can see the record of relevent cash transactions in the
+cash_journal:
+
+--------------------------------------------
+fairwinds=> select click, fairian_name, account, debit, credit, description 
+			from cash_journal where click >= 400;
+
+ click | fairian_name | account | debit | credit |          description          
+-------+--------------+---------+-------+--------+-------------------------------
+   411 | zachary      | bond    |  1000 |        | Issued bond fc074d501302eb
+   412 | gina         | food    |     5 |        | Sold food quantity 7 units.
+   412 | zachary      | food    |       |      5 | Bought food quantity 7 units.
+(3 rows)
+--------------------------------------------
+
+And we can see the effect of the food purchase in the food_journal:
+
+--------------------------------------------
+fairwinds=> select * from food_journal where  fairian_name = 'zachary';
+
+                           Food Journal - Zachary
+ click | fairian_name | debit | credit |      description     
+-------+--------------+-------+--------+----------------------
+   412 | zachary      |     7 |        | Bought food for fc5
+(1 row)
+--------------------------------------------
+
+
+Note the food_journal shows Zachary buying 7 food units even though he
+had bid for 5 units. This apparent discrepancy results from the fact
+that the best match open sell order (that of Gina) was to sell 9 units,
+consequently the market order matching process struck a compromise
+quantity half-way between the quantity specifications on either
+side of the transaction and then executed the transaction at the
+limit price Gina had specified. The net result is that Gina sells
+at her specified Faircoin limit price but at a per-unit price
+better than what she implicitely specified, i.e.,
+
+
+$$ fc5 / 7 food units = 0.71428571428571428571 fc per unit $$
+
+
+From Zachary the buyer's perspective, his cost matched the lowest 
+offered selling price and he received more food than he bid for, 
+and no other seller offered food at a lower unit cost that he 
+ended up paying to Gina.
 
 
 == Fairwinds Game Tutorial 10 - Extinguishing Debt
 
+Notice from the standings that Bob has negative net wealth 
 
-*Check back later for more tutorial!!!*
 
+--------------------------------------------
+                                   Fairwinds Tournament Standings
+ fairian_name | health_balance | food_balance | wealth  | cash_balance | bond_balance | note_balance 
+--------------+----------------+--------------+---------+--------------+--------------+--------------
+  ...         |    ...         |    ...       |  ...    |      ...     |              |    ...    
+ bob          |         1.0000 |       45.819 | -465.00 |         0.00 |              |      -465.00
+  ...         |    ...         |    ...       |  ...    |      ...     |              |    ...    
+
+--------------------------------------------
+ 
+which is a consequence of the two demand notes written against him as a debtor
+from prior activity, as seen in the note table:
+
+
+--------------------------------------------
+                          Notes
+ serial_number  | issue_date | amount  | factor | debtor  
+----------------+------------+---------+--------+---------
+    ...         |            |         |        |
+ 91032ad7bbcb6c |         48 | 374.000 |        | bob
+ 972a67c4819272 |        215 |  91.000 |        | bob
+    ...         |            |         |        |
+--------------------------------------------
+
+In a non-competitive market, Bob may have the opportunity to extinquish that
+debt by first issuing a bond in order to raise money, and then make a bid to
+buy the outstanding notes. (The reason Bob needs to issue a bond is because
+having a negative net cash balance means that he will not be permitted to
+place any buy orders.)
+
+Bob raises cash by bootstrapping the bond market and borrowing.
+This leaves him in the same place in the standings overall, 
+but the details of his wealth are altered by borrowing Faircoin:
+He has cash on hand.
+
+--------------------------------------------
+                                   Fairwinds Tournament Standings
+ fairian_name | health_balance | food_balance | wealth  | cash_balance | bond_balance | note_balance 
+--------------+----------------+--------------+---------+--------------+--------------+--------------
+  ...         |       ...      |      ...     |   ...   |     ...      |     ...      |     ...
+ bob          |         1.0000 |       45.819 | -465.00 |      1000.00 |     -1000.00 |      -465.00
+  ...         |       ...      |      ...     |   ...   |     ...      |     ...      |     ...
+
+--------------------------------------------
+
+That is, his net wealth remains unchanged at negative fc465, but he temporarily
+has cash on hand and so can place an order to buy the demand notes upon which he
+is listed as the debtor:
+
+
+--------------------------------------------
+fairwinds=> insert into note_bid (serial_number, expiration, price) values ('91032ad7bbcb6c', 15,  0);
+fairwinds=> insert into note_bid (serial_number, expiration, price) values ('972a67c4819272', 15,  0);
+INSERT 0 1
+--------------------------------------------
+
+
+which results in Bob becoming listed as factor as well as the debtor on both notes:
+
+
+--------------------------------------------
+                          Notes
+ serial_number  | issue_date | amount  | factor | debtor  
+----------------+------------+---------+--------+---------
+      ...       |     ...    |   ...   |  ...   |  ...
+ 91032ad7bbcb6c |         48 | 374.000 | bob    | bob
+ 972a67c4819272 |        215 |  91.000 | bob    | bob
+      ...       |     ...    |   ...   |  ...   |  ...
+(4 rows)
+--------------------------------------------
+
+And it is apparent from the standings that his position is improved
+because his net wealth has increased to fc0 from -fc465 because his taking
+ownership of the notes offsets the debt. That is, he has the rights
+call to his own debt, making for a wash with respect debts.
+
+--------------------------------------------
+                                   Fairwinds Tournament Standings
+ fairian_name | health_balance | food_balance | wealth  | cash_balance | bond_balance | note_balance 
+--------------+----------------+--------------+---------+--------------+--------------+--------------
+  ...         |       ...      |      ...     |   ...   |     ...      |     ...      |     ...
+ bob          |         1.0000 |       46.182 |    0.00 |         0.00 |              |       0.00
+  ...         |       ...      |      ...     |   ...   |     ...      |     ...      |     ...
+
+--------------------------------------------
+
+
+
+
+Lastly, Bob can call the notes he owns:
+
+--------------------------------------------
+update note set called=true where debtor='bob';
+--------------------------------------------
+
+so that he has completely extinguished his debti and the 
+notes no longer appear in the note relation:
+
+--------------------------------------------
+                          Notes
+ serial_number  | issue_date | amount  | factor | debtor  
+----------------+------------+---------+--------+---------
+ 0ade7c2cf97f75 |         43 |  45.000 |        | alice
+ cb7a1d775e800f |        423 |   5.000 |        | zachary
+(4 rows)
+--------------------------------------------
+
+Take care to recall, however, as mentioned at the outset, this strategy likely
+works this well only if other 'Fairians' are not attentive. In a competitive
+market, others would be watching for profitable opportunities and likely make
+bids competing with those shown above for illustration, thus altering the
+outcome. 'Caveat emptor'.
 
 == Fairwinds Game Tutorial 11 - Economic Friction
 
@@ -1566,14 +1890,15 @@ costs two Faircoins, the fourth costs three Faircoins, etc.
 
 Fairains can learn information about the state of the markets by
 refreshing their web browser view of the standings report, which is
-updated at least once per click. Fairians can also execute SELECT
-queries directly against the various bid and ask relations to obtain
-more current information. Fairwinds keeps a count of each of these
-queries, and similarly to the Excessive Trade Fee, this counter is reset to
-zero at the start of each click.  The first sixteen queries are free,
-and then an arithmetically increasing fee is assessed so that the
-seventeenth query costs one Faircoin, the eighteenth costs two
-Faircoin, etc.
+updated at least once per click, and incurs no fee for viewing. 
+Fairians can also request current reports from the interactive menu,
+which executes queries directly against the various bid and ask 
+relations to obtain more current information. Fairwinds keeps a count 
+of each of these queries, and similarly to the Excessive Trade Fee, 
+this counter is reset to zero at the start of each click.  The first 
+sixteen queries are free, and then an arithmetically increasing fee 
+is assessed so that the seventeenth query costs one Faircoin, the 
+eighteenth costs two Faircoin, etc.
 
 
 === Usury Fee
@@ -1591,3 +1916,5 @@ When a land plot is sold, a fee is charged equal to the difference between
 the asking price and the current virgin land price for new land plots. As
 with the usury fee, this fee is charged when the land ask limit order is 
 placed and is not refundable even if the order never executes.
+
+

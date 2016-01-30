@@ -75,7 +75,7 @@ export PGUSER="${fairian_name}"
 
 display_game_info="select click, start_time, end_time, click_interval from fairwinds;"
 display_connections="select * from connection;"
-display_players="select fairian_name, email_address, created_date, click_order_count, click_select_count from fairian order by fairian_name;"
+display_players="select fairian_name, email_address, created_date, click_order_count, click_select_count, mill_rate from fairian order by fairian_name;"
 display_health_journal="select click, fairian_name, debit, credit, balance, description from health_journal where fairian_name = current_user order by click, seq;"
 display_cash_journal="select click, fairian_name, debit, credit, balance, description from cash_journal where fairian_name = current_user order by click, seq;"
 display_food_journal="select click, fairian_name, debit, credit, balance, description from food_journal where fairian_name = current_user order by click, seq;"
@@ -110,11 +110,16 @@ function createmenu {
 
 function labormenu {
   land_plots=$(psql -q -A -t <<< "select serial_number from land where fairian_name = current_user order by 1;")
+  if [[ "${land_plots##[[:space:]]}" = "" ]]
+  then
+    echo "You own no land plots"
+    exit 
+  fi
+
   skills=$(psql -q -A -t <<< "select skill_name from skill order by 1 limit 1;")
 
   unset fields values
-  local OLDPS3="${PS3}"
-  PS3="Select skill name "
+  local PS3="Select skill name "
   select skill_name in ${skills}
   do
     if [[ -n "${skill_name}" ]]
@@ -125,7 +130,7 @@ function labormenu {
     break
   done
 
-  PS3="Select work place serial number "
+  local PS3="Select work place serial number "
   select work_place in ${land_plots}
   do
     if [[ -n "${work_place}" ]]
@@ -135,7 +140,6 @@ function labormenu {
     fi
     break
   done
-  PS3="${OLDPS3}"
 
   fields="${fields#,}"
   values="${values#,}"
@@ -144,26 +148,44 @@ function labormenu {
 }
 
 function callmenu {
-  notes=$(psql -q -A -t <<< "select serial_number from note where factor = current_user order by 1;")
-
+  notelist="select 
+    ltrim(serial_number), round(amount::numeric, 3), factor, debtor
+    from note
+    where factor = current_user order by 1;"
+  notes=$(psql -q  -t <<< "${notelist}")
   unset fields values
-  local OLDPS3="${PS3}"
-  PS3="Select note serial number "
-  select note in ${notes}
+  local PS3="Select note serial number "
+  local IFS=$'\n' 
+  select serial_number in ${notes}
   do
-    [[ -z "${note}" ]] && break
-    sql="update note set called = true where serial_number = '${note}';"
+    serial_number="${serial_number##[[:space:]]}"
+    serial_number="${serial_number%%[[:space:]]*\| *}"
+    [[ -z "${serial_number}" ]] && break
+    sql="update note set called = true where serial_number = '${serial_number}';"
     executesql "${sql}"
     break
   done
-  PS3="${OLDPS3}"
 }
+
+function taxmenu {
+  unset fields values
+
+  read -p "Property tax mill rate=" mill_rate
+  if [[ -n "${mill_rate}" ]]
+  then
+    fields="${fields}, mill_rate"
+    values="${values}, ${mill_rate}"
+    sql="update fairian set mill_rate = '${mill_rate}' where fairian_name = current_user;"
+    executesql "${sql}"
+  fi
+
+}
+
 
 function resignmenu {
   supplier_contracts=$(psql -q -A -t <<< "select contract_number from work where customer = current_user or supplier = current_user order by 1;")
 
-  local OLDPS3="${PS3}"
-  PS3="Select labor contract number "
+  local PS3="Select labor contract number "
   select contract_number in ${supplier_contracts}
   do
     [[ -z "${contract_number}" ]] && break
@@ -171,10 +193,18 @@ function resignmenu {
     executesql "${sql}"
     break
   done
-  PS3="${OLDPS3}"
 }
 
 function tradeparametersmenu {
+  landlist="
+    SELECT 
+      --city_name,  
+      land.serial_number, 
+      land.productivity
+    FROM privileged.land
+    WHERE  land.fairian_name = current_user
+    ORDER BY land.serial_number ASC;"
+
   case "${1}" in
     bond)
       read -p "bond term=" term
@@ -195,22 +225,32 @@ function tradeparametersmenu {
           fi
           ;;
         ask)
-          read -p "land serial number=" serial_number
-          if [[ -n "${serial_number}" ]]
-          then
-            fields="${fields}, serial_number"
-            values="${values}, '${serial_number}'"
-          fi
+          land_plots=$(psql -q -A -t <<< "$landlist")
+          local PS3="Select land serial number "
+          select serial_number in ${land_plots}
+          do
+            serial_number="${serial_number##[[:space:]]}"
+            serial_number="${serial_number%%\|*}"
+            serial_number="${serial_number%%[[:space:]]*}"
+            if [[ -n "${serial_number}" ]]
+            then
+              fields="${fields}, serial_number"
+              values="${values}, '${serial_number}'"
+            fi
+            break
+          done
           ;;
       esac
       ;;
     work)
-        read -p "contract term=" term
-        if [[ -n "${term}" ]]
-        then
-          fields="${fields}, term"
-          values="${values}, ${term}"
-        fi
+      fields="${fields}, skill_name"
+      values="${values}, 'farmer'"
+      read -p "contract term=" term
+      if [[ -n "${term}" ]]
+      then
+        fields="${fields}, term"
+        values="${values}, ${term}"
+      fi
         
       case "${2}" in
         bid)
@@ -221,11 +261,20 @@ function tradeparametersmenu {
             values="${values}, ${effectiveness}"
           fi
 
-          land_plots=$(psql -q -A -t <<< "select serial_number from land where fairian_name = current_user order by 1;")
-          local OLDPS3="${PS3}"
-          PS3="Select work place serial number "
+          land_plots=$(psql -q -A -t <<< "$landlist")
+          if [[ "${land_plots##[[:space:]]}" = "" ]]
+          then
+            echo "You own no land plots"
+            exit
+          fi
+
+          local PS3="Select work place serial number "
+          local IFS=$'\n' 
           select work_place in ${land_plots}
           do
+            work_place="${work_place##[[:space:]]}"
+            work_place="${work_place%%\|*}"
+            work_place="${work_place%%[[:space:]]*}"
             if [[ -n "${work_place}" ]]
             then
               fields="${fields}, work_place"
@@ -233,12 +282,8 @@ function tradeparametersmenu {
             fi
             break
           done
-          PS3="${OLDPS3}"
           ;;
-      esac
-
-      fields="${fields}, skill_name"
-      values="${values}, 'farmer'"
+        esac
       ;;
     food)
       read -p "quantity=" quantity
@@ -249,16 +294,35 @@ function tradeparametersmenu {
       fi
       ;;
     note)
-      notes=$(psql -q -A -t <<< "select serial_number from note order by 1;")
-      local OLDPS3="${PS3}"
-      PS3="Select note serial number "
+      case "${2}" in
+        bid)
+          local factor=" is null"
+          ;;
+        ask)
+          local factor=" = current_user"
+          ;;
+        esac
+
+      notelist="
+        select 
+          serial_number, 
+          round(amount::numeric, 3), 
+          factor, 
+          debtor
+        from note
+        where factor ${factor};"
+
+      notes=$(psql -q  -t <<< "${notelist}")
+      local PS3="Select note serial number "
+      local IFS=$'\n' 
       select serial_number in ${notes}
       do
+        serial_number="${serial_number##[[:space:]]}"
+        serial_number="${serial_number%%[[:space:]]*\| *}"
         fields="${fields}, serial_number"
         values="${values}, '${serial_number}'"
         break
       done
-      PS3="${OLDPS3}"
       ;;
   esac
     
@@ -268,6 +332,7 @@ function tradeparametersmenu {
   else
     sql="insert into ${mrkt}_${side% - *} (${fields##,}) values (${values##,});"
   fi
+
   executesql "${sql}"
 }
 
@@ -278,8 +343,7 @@ function sidemenu {
       "ask - Sell order"
       )
   unset side
-  local OLDPS3="${PS3}"
-  PS3="${mrkt} buy or sell? "
+  local PS3="${mrkt} buy or sell? "
   select side in "${sides[@]}"
   do
     side="${side%%[[:space:]]*- *}"
@@ -304,14 +368,12 @@ function sidemenu {
     esac
     break
   done
-  PS3="${OLDPS3}"
 }
 
 function marketmenu {
   mrkts=("bond" "land" "work" "food" "note")
   unset mrkt
-  local OLDPS3="${PS3}"
-  PS3="Select market "
+  local PS3="Select market "
   select mrkt in "${mrkts[@]}"
   do
     case "${mrkt}" in
@@ -323,7 +385,6 @@ function marketmenu {
   done
 
   [[ -n "${mrkt}" ]] && [[ -n "${side}" ]] && tradeparametersmenu ${mrkt} ${side}
-  PS3="${OLDPS3}"
 }
 
 function reportsmenu {
@@ -339,8 +400,7 @@ function reportsmenu {
       "Bonds        - Display owned and issued bonds"
       "Contracts    - Display engaged labor contracts"
       "Notes        - Display factor/debtor notes")
-  local OLDPS3="${PS3}"
-  PS3="Select report "
+  local PS3="Select report "
   unset option
   select option in "${options[@]}"
   do
@@ -437,7 +497,6 @@ function reportsmenu {
         ;;
       esac
   done
-  PS3="${OLDPS3}"
 }
 
 function mainmenu {
@@ -448,8 +507,9 @@ function mainmenu {
       "Labor      - Assign self-owned labor contract" 
       "Terminate  - End a labor contract" 
       "Call       - Demand note payment" 
+      "Tax        - Set property tax mill rate"
       )
-  PS3="Main menu selection "
+  local PS3="Main menu selection "
   unset option
   select option in "${options[@]}"
   do
@@ -474,9 +534,11 @@ function mainmenu {
       "Call")
         callmenu
         ;;
+      "Tax")
+        taxmenu
+        ;;
     esac
   done
-  unset PS3
 }
 
 [[ -z "${PGPASSWORD}" ]] && read -s -p "Fairwinds password:" PGPASSWORD
