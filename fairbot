@@ -1,14 +1,12 @@
 #!/bin/sh
 
+#
 # FAIRBOT script to create SQL for playing Fairwinds
 #
 # Copyright 2015, Berend M. Tober
 #
 
 me=$(basename $0)
-tmp=".${me}.$$"
-touch "${tmp}"
-trap 'rm "${tmp}"' EXIT
 export COLUMNS=10
 unset file
 
@@ -36,7 +34,7 @@ OPTIONS
       Show help menu.
 
   -f file
-      Save generated SQL statements to file instead of executing them.
+      Save generated SQL statements to file.
 
 "
 
@@ -72,7 +70,10 @@ fairian_name="${2-$USER}"
 export PGDATABASE="fairwinds"
 export PGHOST="${1}"
 export PGUSER="${fairian_name}"
+export PGAPPNAME="${me}"
 
+[[ -n "${file}" ]] && printf "%s\n%s\n" "\set QUIET on" "\set VERBOSITY terse" > "${file}"
+  
 display_game_info="select click, start_time, end_time, click_interval from fairwinds;"
 display_connections="select * from connection;"
 display_players="select fairian_name, email_address, created_date, click_order_count, click_select_count, mill_rate from fairian order by fairian_name;"
@@ -87,14 +88,11 @@ display_notes="select * from note where factor = current_user or debtor = curren
 
 
 function executesql {
-  if [[ -n "${file}" ]] 
-  then
-    echo "${sql}" >> "${file}"
-  else
-    sql="\set VERBOSITY terse
-        ${1}"
-    psql -q <<< "${sql}"
-  fi
+  [[ -n "${file}" ]] && echo "${1}" >> "${file}"
+
+  local sql=$(printf "%s\n%s\n" "\set VERBOSITY terse" "${1}")
+
+  psql -q <<< "${sql}"
 }
 
 function createmenu {
@@ -104,24 +102,26 @@ function createmenu {
   sql="insert into fairian (fairian_name, passwd, email_address) values ('${fairian_name}', '${PGPASSWORD}', '${email}');"
   prompt="insert into fairian (fairian_name, passwd, email_address) values ('${fairian_name}', '******', '${email}');"
   export PGUSER="fairwinds"
-  executesql "${sql}" "${prompt}"
+  executesql "${sql}"
   export PGUSER="${fairian_name}"
 }
 
 function labormenu {
-  land_plots=$(psql -q -A -t <<< "select serial_number from land where fairian_name = current_user order by 1;")
+  local IFS=$'\n' 
+  land_plots=$(psql -q -t <<< "select serial_number, productivity from land where fairian_name = current_user order by 1;")
   if [[ "${land_plots##[[:space:]]}" = "" ]]
   then
     echo "You own no land plots"
-    exit 
+    return 
   fi
 
-  skills=$(psql -q -A -t <<< "select skill_name from skill order by 1 limit 1;")
+  skills=$(psql -q -t <<< "select skill_name from skill order by 1 limit 1;")
 
   unset fields values
-  local PS3="Select skill name "
+  local ps3="select skill name "
   select skill_name in ${skills}
   do
+    skill_name="${skill_name##[[:space:]]}"
     if [[ -n "${skill_name}" ]]
     then
       fields="${fields}, skill_name"
@@ -133,6 +133,9 @@ function labormenu {
   local PS3="Select work place serial number "
   select work_place in ${land_plots}
   do
+    work_place="${work_place##[[:space:]]}"
+    work_place="${work_place%%\|*}"
+    work_place="${work_place%%[[:space:]]*}"
     if [[ -n "${work_place}" ]]
     then
       fields="${fields}, work_place"
@@ -144,6 +147,83 @@ function labormenu {
   fields="${fields#,}"
   values="${values#,}"
   sql="insert into work (${fields}) values (${values});"
+  executesql "${sql}"
+}
+
+function terminatemenu {
+  local supplier_contracts=$(psql -q -t <<< "select contract_number, issue_date, term, customer, supplier, work_place, skill_name from work where customer = current_user or supplier = current_user order by 1;")
+
+  local PS3="Select labor contract number "
+  local IFS=$'\n' 
+  select contract_number in ${supplier_contracts}
+  do
+    contract_number="${contract_number##[[:space:]]}"
+    contract_number="${contract_number%%\|*}"
+    contract_number="${contract_number%%[[:space:]]*}"
+    [[ -z "${contract_number}" ]] && break
+    sql="update work set active = false where contract_number = '${contract_number}';"
+    executesql "${sql}"
+    break
+  done
+}
+
+function managemenu {
+  skills=$(psql -q -t <<< "select skill_name from skill order by 1 limit 1;")
+
+  unset set_clause where_clause
+  local PS3="Select skill name "
+  local IFS=$'\n' 
+  select skill_name in ${skills}
+  do
+    skill_name="${skill_name##[[:space:]]}"
+    break
+  done
+  
+
+  local display_contracts="select contract_number, issue_date, term, customer, supplier, work_place, skill_name from work where customer = current_user and skill_name::text = '${skill_name}';"
+  contracts=$(psql -q -t <<< "${display_contracts}")
+  if [[ "${contracts##[[:space:]]}" = "" ]]
+  then
+    echo "You have no labor contracts"
+    return 
+  fi
+
+  local PS3="Select contract number "
+
+  select contract in ${contracts}
+  do
+    contract="${contract##[[:space:]]}"
+    contract="${contract%%\|*}"
+    contract="${contract%%[[:space:]]*}"
+    if [[ -n "${contract}" ]]
+    then
+      where_clause="where contract_number = '${contract}'"
+    fi
+    break
+  done
+
+  land_plots=$(psql -q -t <<< "${display_land}")
+  if [[ "${land_plots##[[:space:]]}" = "" ]]
+  then
+    echo "You own no land plots"
+    return 
+  fi
+
+  local PS3="Select work place serial number "
+
+  select work_place in ${land_plots}
+  do
+    work_place="${work_place##[[:space:]]}"
+    work_place="${work_place%%\|*}"
+    work_place="${work_place%%[[:space:]]*}"
+    if [[ -n "${work_place}" ]]
+    then
+      set_clause="set work_place = '${work_place}'"
+    fi
+    break
+  done
+
+  sql="update work ${set_clause} ${where_clause};"
   executesql "${sql}"
 }
 
@@ -181,19 +261,6 @@ function taxmenu {
 
 }
 
-
-function resignmenu {
-  supplier_contracts=$(psql -q -A -t <<< "select contract_number from work where customer = current_user or supplier = current_user order by 1;")
-
-  local PS3="Select labor contract number "
-  select contract_number in ${supplier_contracts}
-  do
-    [[ -z "${contract_number}" ]] && break
-    sql="update work set active = false where contract_number = '${contract_number}';"
-    executesql "${sql}"
-    break
-  done
-}
 
 function tradeparametersmenu {
   landlist="
@@ -260,28 +327,6 @@ function tradeparametersmenu {
             fields="${fields}, effectiveness"
             values="${values}, ${effectiveness}"
           fi
-
-          land_plots=$(psql -q -A -t <<< "$landlist")
-          if [[ "${land_plots##[[:space:]]}" = "" ]]
-          then
-            echo "You own no land plots"
-            exit
-          fi
-
-          local PS3="Select work place serial number "
-          local IFS=$'\n' 
-          select work_place in ${land_plots}
-          do
-            work_place="${work_place##[[:space:]]}"
-            work_place="${work_place%%\|*}"
-            work_place="${work_place%%[[:space:]]*}"
-            if [[ -n "${work_place}" ]]
-            then
-              fields="${fields}, work_place"
-              values="${values}, '${work_place}'"
-            fi
-            break
-          done
           ;;
         esac
       ;;
@@ -413,7 +458,7 @@ function reportsmenu {
         ${display_game_info}
         \C
         "
-        executesql "${sql}" "${display_game_info}"
+        executesql "${sql}"
         ;;
       Connections)
         sql="
@@ -421,7 +466,7 @@ function reportsmenu {
         ${display_connections}
         \C
         "
-        executesql "${sql}" "${display_game_info}"
+        executesql "${sql}"
         ;;
       Players)
         sql="
@@ -429,7 +474,7 @@ function reportsmenu {
         ${display_players}
         \C
         "
-        executesql "${sql}" "${display_game_info}"
+        executesql "${sql}"
         ;;
       Health)
         sql="
@@ -437,7 +482,7 @@ function reportsmenu {
         ${display_health_journal}
         \C
         "
-        executesql "${sql}" "${display_health_journal}"
+        executesql "${sql}"
         ;;
       Cash)
         sql="
@@ -445,7 +490,7 @@ function reportsmenu {
         ${display_cash_journal}
         \C
         "
-        executesql "${sql}" "${display_cash_journal}"
+        executesql "${sql}"
         ;;
       Food)
         sql="
@@ -453,7 +498,7 @@ function reportsmenu {
         ${display_food_journal}
         \C
         "
-        executesql "${sql}" "${display_food_journal}"
+        executesql "${sql}"
         ;;
       Skill)
         sql="
@@ -461,7 +506,7 @@ function reportsmenu {
         ${display_skill_journal}
         \C
         "
-        executesql "${sql}" "${display_skill_journal}"
+        executesql "${sql}"
         ;;
       Land)
         sql="
@@ -469,7 +514,7 @@ function reportsmenu {
         ${display_land}
         \C
         "
-        executesql "${sql}" "${display_land}"
+        executesql "${sql}"
         ;;
       Bonds)
         sql="
@@ -477,7 +522,7 @@ function reportsmenu {
         ${display_bonds}
         \C
         "
-        executesql "${sql}" "${display_bonds}"
+        executesql "${sql}"
         ;;
       Contracts)
         sql="
@@ -485,7 +530,7 @@ function reportsmenu {
         ${display_contracts}
         \C
         "
-        executesql "${sql}" "${display_contracts}"
+        executesql "${sql}"
         ;;
       Notes)
         sql="
@@ -493,7 +538,7 @@ function reportsmenu {
         ${display_notes}
         \C
         "
-        executesql "${sql}" "${display_notes}"
+        executesql "${sql}"
         ;;
       esac
   done
@@ -504,6 +549,7 @@ function mainmenu {
       "Create     - Create a Fairian account named ${fairian_name}" 
       "Reports    - Display game data"
       "Trade      - Enter buy/sell orders" 
+      "Manage     - Assign work place to labor contracts"
       "Labor      - Assign self-owned labor contract" 
       "Terminate  - End a labor contract" 
       "Call       - Demand note payment" 
@@ -525,11 +571,14 @@ function mainmenu {
       "Trade")
         marketmenu
         ;;
+      "Manage")
+        managemenu
+        ;;
       "Labor")
         labormenu
         ;;
       "Terminate")
-        resignmenu
+        terminatemenu
         ;;
       "Call")
         callmenu
@@ -545,5 +594,4 @@ function mainmenu {
 echo
 export PGPASSWORD
 mainmenu
-
 
