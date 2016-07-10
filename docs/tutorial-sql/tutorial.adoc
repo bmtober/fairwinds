@@ -289,7 +289,8 @@ When connected as a valid player, you have a significantly expanded view into
 the game showing the privileged relations used to participate in the finance
 (+bond+), real estate (+land+), commodity (+food+), labor (+work+), and debt
 (+note+) markets. Adding a "+" to the "\d" command includes additional
-descriptive infomation to the listing:
+descriptive infomation to the listing, in particular it adds a short
+description explaining the purpose of each relation:
 
 .......................................
 fairwinds=# \d+
@@ -322,9 +323,14 @@ fairwinds=# \d+
 (23 rows)
 .......................................
 
+=== Placing Trade Orders
 
-Generally speaking, you use the 'bid' and 'ask' relations to issue buy
-and sell orders, respectively, on the markets. The 'journal' relations
+Generally speaking, you insert rows in the 'bid' and 'ask' relations to issue buy
+and sell orders, respectively, on the markets. 
+
+=== Activity History
+
+The 'journal' relations
 record history of cash transactions, food production and consumption,
 changes to 'Fairian' health status, land plot productivity and ownership, 
 and skill proficiency.
@@ -480,7 +486,7 @@ fairwinds=> select * from land_ask;
 (0 rows)
 .......................................
 
-In this circumstance where no offers to sell exist and when a market order
+In this circumstance with no extant offers to sell, when a market order
 to buy is placed for a zero-productivity land plot, the 'bootstrapping'
 protocol is invoked and a new land plot is created by the game and
 offered for sale. 
@@ -547,7 +553,7 @@ fairwinds=> select * from land_ask;
 
 which shows that a new, zero-productivity, un-owned land plot has been
 created and offered for sale. 'Bootstrapped' land sell orders have no
-expiration date ... land, once surveyed and entered into the land
+expiration date: land, once surveyed and entered into the land
 records is never destroyed or deleted from the game, so this land_ask
 order will persist until a 'Fairian' buys the land.
 

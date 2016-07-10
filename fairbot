@@ -11,7 +11,7 @@ export COLUMNS=10
 unset file
 
 
-syntax="
+usage="
 NAME
   ${me} - Interactive menu for the Fairwinds game. 
 
@@ -40,7 +40,7 @@ OPTIONS
 
 if [ $# -lt 1 ]
 then
-  echo "${syntax}"
+  echo "${usage}"
   exit
 fi
 
@@ -49,7 +49,7 @@ do
   case $1 in
     -\?|-h)
       shift
-      syntax
+      echo "${usage}"
       exit
       ;;
     -f)
@@ -72,7 +72,7 @@ export PGHOST="${1}"
 export PGUSER="${fairian_name}"
 export PGAPPNAME="${me}"
 
-[[ -n "${file}" ]] && printf "%s\n%s\n" "\set QUIET on" "\set VERBOSITY terse" > "${file}"
+[[ -n "${file}" ]] && printf "%s\n%s\n" "\set QUIET on" "\set VERBOSITY terse" >> "${file}"
   
 display_game_info="select click, start_time, end_time, click_interval from fairwinds;"
 display_connections="select * from connection;"
@@ -88,11 +88,14 @@ display_notes="select * from note where factor = current_user or debtor = curren
 
 
 function executesql {
-  [[ -n "${file}" ]] && echo "${1}" >> "${file}"
-
-  local sql=$(printf "%s\n%s\n" "\set VERBOSITY terse" "${1}")
-
-  psql -q <<< "${sql}"
+  if [[ -n "${file}" ]] 
+  then
+      echo "${1}" >> "${file}"
+      echo "SQL written to file ${file}"
+  else
+    local sql=$(printf "%s\n%s\n" "\set VERBOSITY terse" "${1}")
+    psql -q <<< "${sql}"
+  fi
 }
 
 function createmenu {
@@ -115,7 +118,7 @@ function labormenu {
     return 
   fi
 
-  skills=$(psql -q -t <<< "select skill_name from skill order by 1 limit 1;")
+  skills=$(psql -q -t <<< "select skill_name from skill order by 1;")
 
   unset fields values
   local ps3="select skill name "
@@ -168,7 +171,7 @@ function terminatemenu {
 }
 
 function managemenu {
-  skills=$(psql -q -t <<< "select skill_name from skill order by 1 limit 1;")
+  skills=$(psql -q -t <<< "select skill_name from skill order by 1;")
 
   unset set_clause where_clause
   local PS3="Select skill name "
@@ -310,8 +313,20 @@ function tradeparametersmenu {
       esac
       ;;
     work)
-      fields="${fields}, skill_name"
-      values="${values}, 'farmer'"
+      skills=$(psql -q -t <<< "select skill_name from skill order by 1;")
+
+      local PS3="select skill name "
+      select skill_name in ${skills}
+      do
+        skill_name="${skill_name##[[:space:]]}"
+        if [[ -n "${skill_name}" ]]
+        then
+          fields="${fields}, skill_name"
+          values="${values}, '${skill_name}'"
+        fi
+        break
+      done
+
       read -p "contract term=" term
       if [[ -n "${term}" ]]
       then
@@ -593,5 +608,10 @@ function mainmenu {
 [[ -z "${PGPASSWORD}" ]] && read -s -p "Fairwinds password:" PGPASSWORD
 echo
 export PGPASSWORD
+
+[[ -n "${file}" ]] && echo "set session authorization ${2};" >> "${file}"
+
 mainmenu
+
+[[ -n "${file}" ]] && echo "reset session authorization;" >> "${file}"
 
