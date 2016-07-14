@@ -8,7 +8,7 @@
 :max-width: 75em
 :data-uri:
 :icons:
-:date: 20-Mar-2016
+:date: 14-Jul-2016
 
 == Fairwinds Game Tutorial 0 - What is Fairwinds
 
@@ -26,7 +26,7 @@ table below.
 .......................................
                            Fairwinds Tournament Standings
  fairian_name | health |  rank  | wealth  |  cash  |  food   | bonds | land  | notes 
-+-------------+--------+--------+---------+--------+---------+-------+-------+-------
+--------------+--------+--------+---------+--------+---------+-------+-------+-------
  bob          | 0.6771 | 1.0000 | 185.590 |  5.714 | 206.576 | 0.000 | 3.300 |   -30
  cathy        | 0.5737 | 0.9583 | 172.288 | 69.000 | 103.288 | 0.000 | 0.000 |     0
  edwin        | 0.5386 | 0.8750 | 120.751 |  5.000 | 112.961 | 0.000 | 3.300 | -0.51
@@ -193,7 +193,7 @@ the +\d+ command:
 fairwinds=> \d
            List of relations
  Schema |    Name    | Type |  Owner
-+-------+------------+------+----------
+--------+------------+------+----------
  public | fairian    | view | postgres
 (1 row)
 .......................................
@@ -223,7 +223,7 @@ view:
 fairwinds=> \dS fairian
       View "public.fairian"
     Column     | Type | Modifiers
-+--------------+------+-----------
+---------------+------+-----------
  fairian_name  | name |
  passwd        | name |
  email_address | name |
@@ -294,33 +294,34 @@ description explaining the purpose of each relation:
 
 .......................................
 fairwinds=# \d+
-                                                       List of relations
-   Schema   |      Name      | Type |  Owner   |  Size   |                             Description                             
-+-----------+----------------+------+----------+---------+---------------------------------------------------------------------
- privileged | bond           | view | postgres | 0 bytes | List of issued and non-matured bonds.
- privileged | bond_ask       | view | postgres | 0 bytes | Finance market sell orders.
- privileged | bond_bid       | view | postgres | 0 bytes | Finance market buy orders.
- privileged | cash_journal   | view | postgres | 0 bytes | Record of cash transactions.
- privileged | connection     | view | postgres | 0 bytes | List of logged in players.
- privileged | fairian        | view | postgres | 0 bytes | List of player accounts.
- privileged | fairwinds      | view | postgres | 0 bytes | Fairwinds time parameters.
- privileged | food_ask       | view | postgres | 0 bytes | Commodity market sell orders.
- privileged | food_bid       | view | postgres | 0 bytes | Commodity market buy orders.
- privileged | food_journal   | view | postgres | 0 bytes | History of commodity market transfers.
- privileged | health_journal | view | postgres | 0 bytes | Record of changes in health status.
- privileged | land           | view | postgres | 0 bytes | List of land plots.
- privileged | land_ask       | view | postgres | 0 bytes | Real estate market sell orders.
- privileged | land_bid       | view | postgres | 0 bytes | Real estate market buy orders.
- privileged | land_journal   | view | postgres | 0 bytes | Record of changes to land ownership and productivity.
- privileged | note           | view | postgres | 0 bytes | List of demand notes which have yet to be called.
- privileged | note_ask       | view | postgres | 0 bytes | Debt market sell orders.
- privileged | note_bid       | view | postgres | 0 bytes | Debt market buy orders.
- privileged | skill          | view | postgres | 0 bytes | List of skilled labor categories and the associated rate of change.
- privileged | skill_journal  | view | postgres | 0 bytes | History of skill proficiency changes.
- privileged | work           | view | postgres | 0 bytes | List of active labor contracts.
- privileged | work_ask       | view | postgres | 0 bytes | Labor market sell orders.
- privileged | work_bid       | view | postgres | 0 bytes | Labor market buy orders.
-(23 rows)
+                                                              List of relations
+   Schema   |    Name        | Type |  Owner   |                             Description                             
+------------+----------------+------+----------+---------------------------------------------------------------------
+ privileged | bond           | view | postgres | List of issued and non-matured bonds.
+ privileged | bond_ask       | view | postgres | Finance market sell orders.
+ privileged | bond_bid       | view | postgres | Finance market buy orders.
+ privileged | cash_journal   | view | postgres | Record of cash transactions.
+ privileged | connection     | view | postgres | List of logged in players.
+ privileged | fairian        | view | postgres | List of player accounts.
+ privileged | fairwinds      | view | postgres | Fairwinds time parameters.
+ privileged | food_ask       | view | postgres | Commodity market sell orders.
+ privileged | food_bid       | view | postgres | Commodity market buy orders.
+ privileged | food_journal   | view | postgres | History of commodity market transfers.
+ privileged | health_journal | view | postgres | Record of changes in health status.
+ privileged | land           | view | postgres | List of land plots.
+ privileged | land_ask       | view | postgres | Real estate market sell orders.
+ privileged | land_bid       | view | postgres | Real estate market buy orders.
+ privileged | land_journal   | view | postgres | Record of changes to land ownership and productivity.
+ privileged | mine_journal   | view | postgres | Record of changes to land ownership and resource reserves.
+ privileged | note           | view | postgres | List of demand notes which have yet to be called.
+ privileged | note_ask       | view | postgres | Debt market sell orders.
+ privileged | note_bid       | view | postgres | Debt market buy orders.
+ privileged | skill          | view | postgres | List of skilled labor categories and the associated rate of change.
+ privileged | skill_journal  | view | postgres | History of skill proficiency changes.
+ privileged | work           | view | postgres | List of active labor contracts.
+ privileged | work_ask       | view | postgres | Labor market sell orders.
+ privileged | work_bid       | view | postgres | Labor market buy orders.
+(24 rows)
 .......................................
 
 === Placing Trade Orders
@@ -330,10 +331,10 @@ and sell orders, respectively, on the markets.
 
 === Activity History
 
-The 'journal' relations
-record history of cash transactions, food production and consumption,
-changes to 'Fairian' health status, land plot productivity and ownership, 
-and skill proficiency.
+The 'journal' relations record history of cash transactions, food
+production and consumption, changes to 'Fairian' health status, land
+plot productivity and ownership, resource extraction history, and skill
+proficiency.
 
 === The Connection Relation
 
@@ -346,8 +347,8 @@ show a list of currently-active players you could run:
 fairwinds=> select * from connection;
 
  fairian_name |          login_time           
-+-------------+-------------------------------
-alice         | 2015-11-11 18:52:31.487421-05
+--------------+-------------------------------
+alice         | 2016-03-08 21:11:21.730667
 (1 row)
 .......................................
 
@@ -358,15 +359,19 @@ connected to the game.
 
 === The Fairian Relation
 
-The fairian relation holds the player accounts. A similar SQL
-statement is used to produce that list:
+The fairian relation holds the player accounts. Note that this has
+the same name as the fairian relation we saw earlier while creating
+an account.  The difference is that that earlier relation existed in the
+'public' schema name space, but as a logged in player you are seeing the
+'privileged' schema name space, which provides and expanded view into
+the game. A similar SQL statement is used to produce this list:
 
 
 .......................................
 fairwinds=> select * from fairian;
 
  fairian_name |   email_address   |        created_date        | click_order_count | click_select_count | mill_rate 
-+-------------+-------------------+----------------------------+-------------------+--------------------+-----------
+--------------+-------------------+----------------------------+-------------------+--------------------+-----------
  alice        | alice@example.com | 2016-03-08 21:09:51.730667 |                 0 |                  0 |         0
 (1 row)
 
@@ -482,7 +487,7 @@ are any open orders to sell land by querying the land_ask relation:
 .......................................
 fairwinds=> select * from land_ask;
  serial_number | expiration | productivity | price | fairian_name 
-+--------------+------------+--------------+-------+--------------
+---------------+------------+--------------+-------+--------------
 (0 rows)
 .......................................
 
@@ -497,7 +502,7 @@ Alice reminds herself of the land_bid relation structure:
 fairwinds=> \dS land_bid
              View "privileged.land_bid"
     Column    |        Type         | Modifiers
-+-------------+---------------------+-----------
+--------------+---------------------+-----------
  expiration   | bigint              |
  productivity | probability         |
  price        | faircoin            |
@@ -534,7 +539,7 @@ and finds ...
 .......................................
 fairwinds=> select * from land_bid;
  expiration | productivity | price | fairian_name 
-+-----------+--------------+-------+--------------
+------------+--------------+-------+--------------
 (0 rows)
 .......................................
 
@@ -546,7 +551,7 @@ sees the result of the land bootstrap protocol:
 .......................................
 fairwinds=> select * from land_ask;
  serial_number  | expiration | productivity | price | fairian_name 
-+---------------+------------+--------------+-------+--------------
+----------------+------------+--------------+-------+--------------
  356a192b7913b0 |            |            0 |     0 | 
 (1 row)
 .......................................
@@ -589,7 +594,7 @@ Alice can confirm that she purchased the land by quering the land relation:
 .......................................
 fairwinds=> select * from land;
  serial_number  | productivity | fairian_name 
-+---------------+--------------+--------------
+----------------+--------------+--------------
  356a192b7913b0 |              | alice
 (1 row)
 .......................................
@@ -637,7 +642,7 @@ Alice reminds herself of the +work+ view structure:
 fairwinds=> \dS work
                   View "privileged.work"
      Column      |         Type          | Modifiers 
-+----------------+-----------------------+-----------
+-----------------+-----------------------+-----------
  contract_number | character varying(14) | 
  issue_date      | bigint                | 
  term            | bigint                | 
@@ -696,7 +701,7 @@ listing the work view:
 .......................................
 fairwinds=> select * from work;
  contract_number | issue_date | term | customer | supplier |   work_place   | active | skill_name 
-+----------------+------------+------+----------+----------+----------------+--------+------------
+-----------------+------------+------+----------+----------+----------------+--------+------------
  da4b9237bacccd  |         12 |    1 | alice    | alice    | 356a192b7913b0 | t      | farmer
 (1 row)
 
@@ -721,7 +726,7 @@ fairwinds=> select click, skill_name, debit, credit, balance, description
 				from skill_journal where fairian_name = 'alice';
 
  click | skill_name |   debit   | credit |  balance  |                    description                     
-+------+------------+-----------+--------+-----------+----------------------------------------------------
+-------+------------+-----------+--------+-----------+----------------------------------------------------
     13 | farmer     | 0.0129875 |        | 0.0129875 | skill improvement based on contract da4b9237bacccd
     14 | farmer     | 0.0128188 |        | 0.0258063 | skill improvement based on contract da4b9237bacccd
     15 | farmer     | 0.0126524 |        | 0.0384587 | skill improvement based on contract da4b9237bacccd
@@ -767,7 +772,7 @@ fairwinds=> select click, serial_number, debit, credit, balance, description
 		where fairian_name = 'alice';
 
  click | serial_number  |   debit   | credit |  balance  |              description               
-+------+----------------+-----------+--------+-----------+----------------------------------------
+-------+----------------+-----------+--------+-----------+----------------------------------------
     13 | 356a192b7913b0 | 0.0006884 |        | 0.0006884 | land improvement based on cultivation 
     14 | 356a192b7913b0 | 0.0006879 |        | 0.0013763 | land improvement based on cultivation 
     15 | 356a192b7913b0 | 0.0006874 |        | 0.0020637 | land improvement based on cultivation 
@@ -803,7 +808,7 @@ fairwinds=> select click, debit, credit, balance, description
 				from food_journal where fairian_name = 'alice';
 
  click |   debit   | credit  |   balance   |                description                
-+------+-----------+---------+-------------+-------------------------------------------
+-------+-----------+---------+-------------+-------------------------------------------
      2 |         0 |       0 |           0 | Initial food balance
     13 |         1 |         |           1 | total production from land 356a192b7913b0
     13 |           |       1 |           0 | daily sustenance
@@ -886,7 +891,7 @@ fairwinds=> select click, debit, credit, balance, description
 			from health_journal where fairian_name = 'alice';
 
  click |   debit   |  credit   | balance  |                           description                           
-+------+-----------+-----------+----------+-----------------------------------------------------------------
+-------+-----------+-----------+----------+-----------------------------------------------------------------
      2 |         1 |           |        1 | Initial health
      3 |           | 0.0196354 | 0.980365 | health deterioration based on insufficient sustenance balance 0
      4 |           | 0.0192499 | 0.961115 | health deterioration based on insufficient sustenance balance 0
@@ -991,7 +996,7 @@ see the email address of other registered players, only his own:
 fairwinds=> select * from fairian;
 
  fairian_name |  email_address  |        created_date        | click_order_count | click_select_count | mill_rate 
-+-------------+-----------------+----------------------------+-------------------+--------------------+-----------
+--------------+-----------------+----------------------------+-------------------+--------------------+-----------
  alice        |                 | 2016-03-18 22:04:30.549637 |                 0 |                  0 |         0
  bob          | bob@example.com | 2016-03-18 22:04:30.549637 |                 0 |                  0 |         0
 (2 rows)
@@ -1015,7 +1020,7 @@ because there were no open land sell orders:
 fairwinds=> select * from land_bid;
 
  expiration | productivity | price | fairian_name 
-+-----------+--------------+-------+--------------
+------------+--------------+-------+--------------
 (0 rows)
 .......................................
 
@@ -1026,7 +1031,7 @@ bootstrapping:
 fairwinds=> select * from land;
 
  serial_number  | productivity | fairian_name 
-+---------------+--------------+--------------
+----------------+--------------+--------------
  356a192b7913b0 |     0.004341 | alice
  77de68daecd823 |            0 | 
 (2 rows)
@@ -1038,7 +1043,7 @@ And that new land appears offered for sale:
 fairwinds=> select * from land_ask;
 
  serial_number  | expiration | productivity |  price   | fairian_name 
-+---------------+------------+--------------+----------+--------------
+----------------+------------+--------------+----------+--------------
  77de68daecd823 |            |            0 | 0.001028 | 
 (1 row)
 .......................................
@@ -1084,7 +1089,7 @@ Bob first reminds himself of the bond_ask relation structure:
 fairwinds=> \dS bond_ask
             View "privileged.bond_ask"
     Column    |       Type       | Modifiers 
-+-------------+------------------+-----------
+--------------+------------------+-----------
  expiration   | bigint           | 
  term         | bigint           | 
  price        | faircoin         |        
@@ -1121,7 +1126,7 @@ a bond buy order has been created by the governing market authority:
 fairwinds=> select * from bond_bid;
 
  expiration | term | price | fairian_name 
-+-----------+------+-------+--------------
+------------+------+-------+--------------
             |    4 |  1000 | 
 (1 row)
 .......................................
@@ -1154,7 +1159,7 @@ and confirms that the bond has been issued:
 fairwinds=> select * from bond;    
 
  serial_number  | issue_date | term | face_amount | bond_owner | bond_issuer 
-+---------------+------------+------+-------------+------------+-------------
+----------------+------------+------+-------------+------------+-------------
  1b6453892473a4 |         24 |    4 |        1000 |            | bob
 (1 row)
 .......................................
@@ -1179,7 +1184,7 @@ And then confirms that he is now the owner of land plot \'77de68daecd823':
 fairwinds=> select * from land;
 
  serial_number  | productivity | fairian_name 
-+---------------+--------------+--------------
+----------------+--------------+--------------
  356a192b7913b0 |     0.004341 | alice
  77de68daecd823 |            0 | bob
 (2 rows)
@@ -1203,7 +1208,7 @@ involving Alice on her land:
 fairwinds=> select * from work;
 
  contract_number | issue_date | term | customer | supplier |   work_place   | active | skill_name 
-+----------------+------------+------+----------+----------+----------------+--------+------------
+-----------------+------------+------+----------+----------+----------------+--------+------------
  da4b9237bacccd  |         12 |    1 | alice    | alice    | 356a192b7913b0 | t      | farmer
  ac3478d69a3c81  |         24 |    1 | bob      | bob      | 77de68daecd823 | t      | farmer
 (2 rows)
@@ -1234,7 +1239,7 @@ fairwinds=> select click, fairian_name, debit, credit, balance, description
 		from cash_journal;
 
  click | fairian_name | debit |   credit   |   balance   |         description          
-+------+--------------+-------+------------+-------------+------------------------------
+-------+--------------+-------+------------+-------------+------------------------------
      2 | alice        |     0 |          0 |           0 | Initial cash balance
      9 | alice        |       |          0 |           0 | Bought land 356a192b7913b0
     18 | bob          |     0 |          0 |           0 | Initial cash balance
@@ -1293,7 +1298,7 @@ in the note relation, which can be listed with a simple query:
 fairwinds=> select * from note;
 
  serial_number  | issue_date |      amount      | factor | debtor | called 
-+---------------+------------+------------------+--------+--------+--------
+----------------+------------+------------------+--------+--------+--------
  c1dfd96eea8cc2 |         40 | 1.53424099999995 |        | bob    | f
 (1 row)
 .......................................
@@ -1333,7 +1338,7 @@ First she lists the note_bid structure
 fairwinds=# \d note_bid
             View "privileged.note_bid"
     Column     |         Type          | Modifiers
-+--------------+-----------------------+-----------
+---------------+-----------------------+-----------
  fairian_name  | name                  |
  serial_number | character varying(14) |
  expiration    | bigint                |
@@ -1356,7 +1361,7 @@ INSERT 0 1
 fairwinds=> select * from note_bid;
 
  fairian_name | serial_number  | expiration | price 
-+-------------+----------------+------------+-------
+--------------+----------------+------------+-------
  alice        | c1dfd96eea8cc2 |         40 |     0
 (1 row)
 .......................................
@@ -1369,7 +1374,7 @@ bid "wins" and she becomes the note owner:
 fairwinds=> select * from note;
 
  serial_number  | issue_date |      amount      | factor | debtor | called 
-+---------------+------------+------------------+--------+--------+--------
+----------------+------------+------------------+--------+--------+--------
  c1dfd96eea8cc2 |         40 | 1.00102800000002 | alice  | bob    | f
 (1 row)
 .......................................
@@ -1390,7 +1395,7 @@ an earlier tutorial:
 fairwinds=> select * from cash_journal;
 
  click | fairian_name | account | debit |   credit   |                  description                  
-+------+--------------+---------+-------+------------+-----------------------------------------------
+-------+--------------+---------+-------+------------+-----------------------------------------------
      2 | alice        | cash    |     0 |          0 | Initial cash balance
      9 | alice        | land    |       |          0 | Bought land 356a192b7913b0
     18 | bob          | cash    |     0 |          0 | Initial cash balance
@@ -1442,7 +1447,7 @@ the orders are placed, they appear in the work_ask view as
 fairwinds=> select *, price/term as rate from work_ask;
 
  skill_name | expiration | term | effectiveness | price | fairian_name |       rate       
-+-----------+------------+------+---------------+-------+--------------+------------------
+------------+------------+------+---------------+-------+--------------+------------------
  farmer     |         48 |   20 |             0 |    50 | cathy        |              2.5
  farmer     |         48 |   19 |             0 |    45 | david        | 2.36842105263158
 (2 rows)
@@ -1462,7 +1467,7 @@ order to raise capital in support of her planned bid to buy a labor contract.
 fairwinds=> select * from bond;    
 
  serial_number  | issue_date | term | face_amount | bond_owner | bond_issuer 
-+---------------+------------+------+-------------+------------+-------------
+----------------+------------+------+-------------+------------+-------------
  902ba3cda18838 |         44 |    4 |        1000 |            | alice
 (1 row)
 .......................................
@@ -1485,7 +1490,7 @@ to place the labor contract bid:
 fairwinds=# select click, fairian_name, account, debit, credit, description 
 		from cash_journal where click > 42;
  click | fairian_name | account | debit |   credit   |                  description                  
-+------+--------------+---------+-------+------------+-----------------------------------------------
+-------+--------------+---------+-------+------------+-----------------------------------------------
     43 | david        | cash    |     0 |          0 | Initial cash balance
     44 | alice        | bond    |  1000 |            | Issued bond 902ba3cda18838
     45 | alice        | work    |       |         45 | Ratified contract fe5dbbcea5ce7e
@@ -1500,7 +1505,7 @@ fairwinds=> select contract_number, issue_date, term, customer,
 			supplier, work_place, skill_name from work;
 
  contract_number | issue_date | term | customer | supplier |   work_place   | skill_name 
-+----------------+------------+------+----------+----------+----------------+------------
+-----------------+------------+------+----------+----------+----------------+------------
  da4b9237bacccd  |         12 |    1 | alice    | alice    | 356a192b7913b0 | farmer
  ac3478d69a3c81  |         24 |    1 | bob      | bob      | 77de68daecd823 | farmer
  fe5dbbcea5ce7e  |         45 |   10 | alice    | david    | 356a192b7913b0 | farmer
@@ -1519,7 +1524,7 @@ fairwinds=# select click, debit, credit, description
 		from food_journal where fairian_name = 'alice';
 
  click |  debit   |  credit  |                        description                        
-+------+----------+----------+-----------------------------------------------------------
+-------+----------+----------+-----------------------------------------------------------
    ... | ...      | ...      | ...
     31 | 1.003277 |          | total production from land 356a192b7913b0
     31 |          |        1 | daily sustenance
@@ -1558,7 +1563,7 @@ fairwinds=# select click, debit, credit, description
 		where fairian_name = 'david' and click>20;
 
  click |  debit   | credit  |                           description                           
-+------+----------+---------+-----------------------------------------------------------------
+-------+----------+---------+-----------------------------------------------------------------
     33 | 1.002677 |         | supplier production share received from contract fe5dbbcea5ce7e
     33 |          |       1 | daily sustenance
     33 |          | 1.7e-05 | spoilage
@@ -1582,7 +1587,7 @@ fairwinds=> select contract_number, issue_date, term, customer,
 
                                      Labor Contracts
  contract_number | issue_date | term | customer | supplier |   work_place   | skill_name 
-+----------------+------------+------+----------+----------+----------------+------------
+-----------------+------------+------+----------+----------+----------------+------------
  da4b9237bacccd  |         11 |    1 | alice    | alice    | 356a192b7913b0 | farmer
  ac3478d69a3c81  |         17 |    1 | bob      | bob      | 77de68daecd823 | farmer
  fe5dbbcea5ce7e  |         32 |   10 | alice    | david    | 356a192b7913b0 | farmer
@@ -1601,7 +1606,7 @@ fairwinds=> select click, debit, credit, description
                  where fairian_name = 'alice' and click>34;
                  
  click |  debit   |  credit  |                        description                        
-+------+----------+----------+-----------------------------------------------------------
+-------+----------+----------+-----------------------------------------------------------
     35 | 2.009735 |          | total production from land 356a192b7913b0
     35 |          | 1.003245 | supplier production share paid on contract fe5dbbcea5ce7e
     35 |          |        1 | daily sustenance
@@ -1623,7 +1628,7 @@ the game:
 fairwinds=> select fairian_name from fairian order by 1;
 
  fairian_name 
-+-------------+
+--------------+
  alice
  bob
  cathy
@@ -1691,7 +1696,7 @@ and he verifies his offers:
 fairwinds=> select *, price/term as rate from work_bid order by rate desc;
 
  skill_name | expiration | term | effectiveness | price | fairian_name |   work_place   | rate 
-+-----------+------------+------+---------------+-------+--------------+----------------+------
+------------+------------+------+---------------+-------+--------------+----------------+------
  farmer     |         66 |   10 |             0 |    25 | bob          | 77de68daecd823 | 2.5
  farmer     |         66 |   10 |             0 |    22 | bob          | 77de68daecd823 | 2.2
  farmer     |         66 |   10 |             0 |    20 | bob          | 77de68daecd823 | 2
@@ -1727,7 +1732,7 @@ fairwinds=> select contract_number, issue_date, term, customer,
 		from work where customer='bob' order by issue_date, supplier;
 
  contract_number | issue_date | term | customer | supplier |   work_place   | skill_name 
-+----------------+------------+------+----------+----------+----------------+------------
+-----------------+------------+------+----------+----------+----------------+------------
  ac3478d69a3c81  |         17 |    1 | bob      | bob      | 77de68daecd823 | farmer
  7b52009b64fd0a  |         37 |   15 | bob      | edwin    | 77de68daecd823 | farmer
  bd307a3ec329e1  |         37 |   15 | bob      | fredrick | 77de68daecd823 | farmer
@@ -1763,7 +1768,7 @@ food unit.
 fairwinds=# select * from food_journal where click = 26 and fairian_name='bob';
 
  click | fairian_name | debit | credit |                        description                        
-+------+--------------+-------+--------+-----------------------------------------------------------
+-------+--------------+-------+--------+-----------------------------------------------------------
     39 | bob          |    16 |        | total production from land 77de68daecd823
     39 | bob          |       |      1 | supplier production share paid on contract 1574bddb75c78a
     39 | bob          |       |      1 | supplier production share paid on contract 7b52009b64fd0a
@@ -1811,7 +1816,7 @@ insert into work_ask (skill_name,expiration,price) values ('farmer', 20, 20);
 .......................................
                                  Labor Contract Asks
  skill_name | expiration | term | effectiveness | price | rate | fairian_name | side 
-+-----------+------------+------+---------------+-------+------+--------------+------
+------------+------------+------+---------------+-------+------+--------------+------
  farmer     |        200 |    1 |       0.92045 |    20 |   20 | cathy        | ask
 (1 row)
 .......................................
@@ -1828,7 +1833,7 @@ placed by Cathy. A labor contract is created between Bob and Cathy:
 .......................................
                                      Labor Contracts
    work_place   | skill_name | contract_number | issue_date | term | customer | supplier 
-+---------------+------------+-----------------+------------+------+----------+----------
+----------------+------------+-----------------+------------+------+----------+----------
  ...            | ...        | ...             | ...        | ...  | ...      | ...  
  77de68daecd823 | farmer     | f1f836cb4ea6ef  |        180 |    1 | bob      | cathy
  ...            | ...        | ...             | ...        | ...  | ...      | ...  
@@ -1843,7 +1848,7 @@ have developed a food surplus:
 
        Food Balance
  fairian_name |  balance  
-+-------------+-----------
+--------------+-----------
  alice        | 34.553808
  bob          | 45.455726
  cathy        | 23.884388
@@ -1900,7 +1905,7 @@ insert into food_ask (expiration, quantity, price) values (40, 11, 15);
 fairwinds=> select * from food_ask;
 
  fairian_name | expiration | quantity | price |    unit_price     
-+-------------+------------+----------+-------+-------------------
+--------------+------------+----------+-------+-------------------
  james        |        465 |       11 |    15 |  1.36363636363636
  ingrid       |        465 |       10 |    15 |               1.5
  gina         |        465 |        9 |     5 | 0.555555555555556
@@ -1925,7 +1930,7 @@ since now only the sell orders for James and Ingrid remain:
 fairwinds=> select * from food_ask;
 
  fairian_name | expiration | quantity | price |    unit_price    
-+-------------+------------+----------+-------+------------------
+--------------+------------+----------+-------+------------------
  james        |        465 |       11 |    15 | 1.36363636363636
  ingrid       |        465 |       10 |    15 |              1.5
 (2 rows)
@@ -1939,7 +1944,7 @@ fairwinds=> select click, fairian_name, account, debit, credit, description
 			from cash_journal where click >= 400;
 
  click | fairian_name | account | debit | credit |          description          
-+------+--------------+---------+-------+--------+-------------------------------
+-------+--------------+---------+-------+--------+-------------------------------
    411 | zachary      | bond    |  1000 |        | Issued bond fc074d501302eb
    412 | gina         | food    |     5 |        | Sold food quantity 7 units.
    412 | zachary      | food    |       |      5 | Bought food quantity 7 units.
@@ -1953,7 +1958,7 @@ fairwinds=> select * from food_journal where  fairian_name = 'zachary';
 
                            Food Journal - Zachary
  click | fairian_name | debit | credit |      description     
-+------+--------------+-------+--------+----------------------
+-------+--------------+-------+--------+----------------------
    412 | zachary      |     7 |        | Bought food for fc5
 (1 row)
 .......................................
@@ -1987,7 +1992,7 @@ Notice from the standings that Bob has negative net wealth
 .......................................
                                    Fairwinds Tournament Standings
  fairian_name | health_balance | food_balance | wealth  | cash_balance | bond_balance | note_balance 
-+-------------+----------------+--------------+---------+--------------+--------------+--------------
+--------------+----------------+--------------+---------+--------------+--------------+--------------
   ...         |    ...         |    ...       |  ...    |      ...     |              |    ...    
  bob          |         1.0000 |       45.819 | -465.00 |         0.00 |              |      -465.00
   ...         |    ...         |    ...       |  ...    |      ...     |              |    ...    
@@ -2001,7 +2006,7 @@ from prior activity, as seen in the note table:
 .......................................
                           Notes
  serial_number  | issue_date | amount  | factor | debtor  
-+---------------+------------+---------+--------+---------
+----------------+------------+---------+--------+---------
     ...         |            |         |        |
  91032ad7bbcb6c |         48 | 374.000 |        | bob
  972a67c4819272 |        215 |  91.000 |        | bob
@@ -2022,7 +2027,7 @@ He has cash on hand.
 .......................................
                                    Fairwinds Tournament Standings
  fairian_name | health_balance | food_balance | wealth  | cash_balance | bond_balance | note_balance 
-+-------------+----------------+--------------+---------+--------------+--------------+--------------
+--------------+----------------+--------------+---------+--------------+--------------+--------------
   ...         |       ...      |      ...     |   ...   |     ...      |     ...      |     ...
  bob          |         1.0000 |       45.819 | -465.00 |      1000.00 |     -1000.00 |      -465.00
   ...         |       ...      |      ...     |   ...   |     ...      |     ...      |     ...
@@ -2047,7 +2052,7 @@ which results in Bob becoming listed as factor as well as the debtor on both not
 .......................................
                           Notes
  serial_number  | issue_date | amount  | factor | debtor  
-+---------------+------------+---------+--------+---------
+----------------+------------+---------+--------+---------
       ...       |     ...    |   ...   |  ...   |  ...
  91032ad7bbcb6c |         48 | 374.000 | bob    | bob
  972a67c4819272 |        215 |  91.000 | bob    | bob
@@ -2063,7 +2068,7 @@ call to his own debt, making for a wash with respect debts.
 .......................................
                                    Fairwinds Tournament Standings
  fairian_name | health_balance | food_balance | wealth  | cash_balance | bond_balance | note_balance 
-+-------------+----------------+--------------+---------+--------------+--------------+--------------
+--------------+----------------+--------------+---------+--------------+--------------+--------------
   ...         |       ...      |      ...     |   ...   |     ...      |     ...      |     ...
  bob          |         1.0000 |       46.182 |    0.00 |         0.00 |              |       0.00
   ...         |       ...      |      ...     |   ...   |     ...      |     ...      |     ...
@@ -2085,7 +2090,7 @@ notes no longer appear in the note relation:
 .......................................
                           Notes
  serial_number  | issue_date | amount  | factor | debtor  
-+---------------+------------+---------+--------+---------
+----------------+------------+---------+--------+---------
  0ade7c2cf97f75 |         43 |  45.000 |        | alice
  cb7a1d775e800f |        423 |   5.000 |        | zachary
 (4 rows)
