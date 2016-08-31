@@ -8,7 +8,7 @@
 :max-width: 75em
 :data-uri:
 :icons:
-:date: 14-Jul-2016
+:date: 30-Aug-2016
 
 == Fairwinds Game Tutorial 0 - What is Fairwinds
 
@@ -140,7 +140,7 @@ echo "\set VERBOSITY terse" >> ~/.psqlrc
 The syntax for running the +psql+ command and establishing a game connection is 
 
 .......................................
-psql fairwinds -h hostname -U fairwinds
+psql fairwinds -h fairwinds.btober.net -U fairwinds
 .......................................
 
 where
@@ -272,7 +272,7 @@ game specifies the Internet location where the game is hosted, the game
 name, and your 'Fairian' name (alice, in this example):
 
 .......................................
-psql -h hostname fairwinds alice
+psql -h fairwinds.btober.net fairwinds alice
 .......................................
 
 When you successfully connect to the game, this is the interface you are
@@ -477,7 +477,7 @@ Utilizing the psql client application, Alice connects to 'Fairwinds' and
 is presented with the command prompt:
 
 .......................................
-psql -h hostname fairwinds alice
+psql -h fairwinds.btober.net fairwinds alice
 fairwinds=>
 .......................................
 
@@ -1069,7 +1069,7 @@ Utilizing the +psql+ client application, Bob connects to 'Fairwinds' and
 is presented with the command prompt:
 
 .......................................
-psql -h hostname fairwinds bob
+psql -h fairwinds.btober.net fairwinds bob
 fairwinds=>
 .......................................
 

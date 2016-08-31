@@ -2,14 +2,19 @@
 :author:    Berend Tober <btober@computer.org>
 :copyright: 2015, Berend Tober
 
-'Fairwinds' is a multi-player on-line, command-line interface game that
-involves real-time, competitive trading on five simulated markets.
-Players interact with the game by using either the Postgresql psql 
-client to enter basic SQL commands or an interactive menu system
-that creates and executes the SQL statements.
+'Fairwinds' is a multi-player on-line, command-line interface game
+that involves real-time, competitive trading on five simulated markets.
+Players interact with the game by using either the Postgresql psql client
+to enter basic SQL commands or an interactive menu system that creates
+and executes the SQL statements.
+
+Players leverage the similarities and the nuanced differences between
+these markets and master the interplay amongst them to create wealth while
+striking a balance of cooperation and competition with other players to
+acquire wealth and to develop and maintain resources.
 
 This talk will present an overview of the application and discuss some
-design and architecture issues underlying its development. 
+design and architecture issues underlying its development.
 
 We will devote the final half of the meeting to actually playing the
 game, so bring your computer with wireless network connectivity and the
