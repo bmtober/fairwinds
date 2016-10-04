@@ -1,0 +1,2240 @@
+= Fairwinds SQL Tutorial
+:author:    Berend Tober <btober@computer.org>
+:copyright: 2015, Berend Tober
+///////////////////////////
+:backend:   slidy
+///////////////////////////
+:toc:
+:max-width: 75em
+:data-uri:
+:icons:
+:date: 03-Oct-2016
+
+== Fairwinds Game Tutorial 0 - What is Fairwinds
+
+* Multi-Player On-Line Game Simulating Five Double-Auction Markets
+
+* Played Using Structured Query Language (SQL)
+
+* Command-Line Interface (psql)
+
+The objective is to improve your standings relative to other
+players. A sample of the standings report is shown in the
+table below.
+
+
+.......................................
+                           Fairwinds Tournament Standings
+ fairian_name | health |  rank  | wealth  |  cash  |  food   | bonds | land  | notes 
+--------------+--------+--------+---------+--------+---------+-------+-------+-------
+ bob          | 0.6771 | 1.0000 | 185.590 |  5.714 | 206.576 | 0.000 | 3.300 |   -30
+ cathy        | 0.5737 | 0.9583 | 172.288 | 69.000 | 103.288 | 0.000 | 0.000 |     0
+ edwin        | 0.5386 | 0.8750 | 120.751 |  5.000 | 112.961 | 0.000 | 3.300 | -0.51
+ david        | 0.5565 | 0.7500 | 112.187 | 45.000 |  67.187 | 0.000 | 0.000 |     0
+ fredrick     | 0.4803 | 0.7917 | 113.288 | 10.000 | 103.288 | 0.000 | 0.000 |     0
+ gina         | 0.4373 | 0.8333 | 117.288 | 14.000 | 103.288 | 0.000 | 0.000 |     0
+ hendrik      | 0.4373 | 0.7083 | 111.288 |  8.000 | 103.288 | 0.000 | 0.000 |     0
+ vincent      | 0.2273 | 0.9167 | 127.251 |  0.714 | 132.537 | 0.000 | 3.300 |  -9.3
+ ingrid       | 0.4261 | 0.6667 | 110.288 |  7.000 | 103.288 | 0.000 | 0.000 |     0
+ james        | 0.4146 | 0.6250 | 109.288 |  6.000 | 103.288 | 0.000 | 0.000 |     0
+ karen        | 0.4029 | 0.5833 | 108.288 |  5.000 | 103.288 | 0.000 | 0.000 |     0
+ leonard      | 0.4029 | 0.5417 | 107.288 |  4.000 | 103.288 | 0.000 | 0.000 |     0
+ michelle     | 0.3787 | 0.4583 | 106.288 |  3.000 | 103.288 | 0.000 | 0.000 |     0
+ norman       | 0.3406 | 0.4583 | 106.288 |  3.000 | 103.288 | 0.000 | 0.000 |     0
+ alice        | 0.6573 | 0.1250 |  59.782 |  4.286 |  97.196 | 0.000 | 3.300 |   -45
+ olivia       | 0.3274 | 0.4167 | 105.288 |  2.000 | 103.288 | 0.000 | 0.000 |     0
+ peter        | 0.3139 | 0.3750 | 104.288 |  1.000 | 103.288 | 0.000 | 0.000 |     0
+ ursula       | 0.2424 | 0.3333 | 103.565 |  0.000 | 102.395 | 0.000 | 3.300 | -2.13
+ quincy       | 0.3139 | 0.2500 | 103.288 |  0.000 | 103.288 | 0.000 | 0.000 |     0
+ wendy        | 0.2273 | 0.2917 | 103.399 |  0.000 | 102.889 | 0.000 | 3.300 | -2.79
+ robert       | 0.3002 | 0.2083 |  79.589 | 10.000 |  69.589 | 0.000 | 0.000 |     0
+ zachary      | 0.1635 | 0.1667 |  76.630 | 10.000 |  71.630 | 0.000 | 0.000 |    -5
+ xavier       | 0.0000 | 0.0000 |   0.000 |  0.000 |   0.000 | 0.000 | 0.000 |     0
+ thomas       | 0.0000 | 0.0000 |   0.000 |  0.000 |   0.000 | 0.000 | 0.000 |     0
+ samantha     | 0.0000 | 0.0000 |   0.000 |  0.000 |   0.000 | 0.000 | 0.000 |     0
+.......................................
+
+
+The first column lists the Fairian name. Players are scored
+according to the sum of health and wealth rank, as appear in the second,
+and third columns, where the "health" value is a percentage
+and the "rank" value is the percentile rank calculated based 
+the the the "wealth" column. Wealth is the sum of the remaining
+column values which show the breakdown of
+the individual consituents of total
+wealth.
+
+There is a lot going behind this standings table, but generally
+speaking, the flow of the game is driven by the standings
+score since sustaining health requires food, food is
+produced by cultivating land, land is acquired using capital,
+and capital is raised through financing and assumption of debt.
+
+As will be demonstrated subsequently, achieving and maintaining
+perfect 100% health is expected to be realizable by multiple
+players and so, as the game progresses, most likely wealth will
+be the discriminating ranking factor.
+
+Therefore, it pays to remain cognizant of the balance between the
+separate wealth components, as listed in the remaining table
+columns, as the worth of food and land will vary according to
+fluctuating market values for those assets.
+
+
+== Fairwinds Game Tutorial 1 - Basic Requirements: Client Software
+
+Playing 'Fairwinds' requires that your computer establish a connection to the
+game. The preferred way of connecting is with the free +psql+ client software
+application. This client is named, and operates the same, on Mac-, Windows- and
+Linux-based operating systems.
+
+=== Obtaining PSQL Client Software
+
+==== PSQL on Linux
+
+The +psql+ client is part of the +postgresql+ package. On Linux this is
+installed with 
+
+.......................................
+yum install postgresql
+.......................................
+
+==== PSQL on Windows
+
+On Windows systems, +postgresql+ is available through the 'Cygwin' software
+tools package. Visit the Cygwin web site https://www.cygwin.com/ to download
+and install 'Cygwin'. During the installation, be sure to select the
++postgresql+ package.
+
+After installing Cygwin, double-click the Cygwin icon. This will open a local
+terminal window, and at this point the instructions are the same as for running
++psql+ on Linux.
+
+=== PSQL Configuration
+
+The 'Fairwinds' game communicates certain error conditions by means of
+interally raising execptions and emitting an associated, explanatory
+error message. In the default configuration, +psql+ emits additional
+contextual information which, while helpful to an administrative
+operator, may obscure the essential error message for a typical player.
+
+The verbosity of these outputs can be reduced with a configuration
+setting. If you are already running the +psql+ client, then you should
+run the following command at the +psql+ prompt:
+
+.......................................
+\set VERBOSITY terse
+.......................................
+
+Alternatively, you can easily create or modify the +psql+ client
+resource configuration file by copy-and-pasting the following command
+at the shell command prompt:
+
+.......................................
+echo "\set VERBOSITY terse" >> ~/.psqlrc
+.......................................
+
+
+=== PSQL Connection Parameters
+
+The syntax for running the +psql+ command and establishing a game connection is 
+
+.......................................
+psql fairwinds -h fairwinds.btober.net -U fairwinds
+.......................................
+
+where
+
+* the first +fairwinds+ specifies the game name
+* the +-h+ option specifes the hostname or IP address where the game is hosted
+* the +-U+ option specifies the 'Fairian' name to connect as
+
+
+The +fairwinds+ user name illustrated with the +-U+ option above is a generic
+username that a prospective player may use to establish an initial connection
+without requiring a password. The pre-defined +fairwinds+ user account allows
+connecting to the game but allows only very limited privileges, namely, it
+provides the privilege for creating a user account. 
+
+If this is the first time you have connected to the game, then you should 
+use the +fairwinds+ user account; if you have gone through this process already 
+and created a 'Fairian' user account of your own, then you should specify that 
+instead.
+
+When you initially connect to the game, this is the interface you are presented
+with:
+
+.......................................
+fairwinds=>
+.......................................
+
+
+== Fairwinds Game Tutorial 2 - Creating a user account
+
+When you initially connect to the game, this is the interface you are
+presented with:
+
+.......................................
+fairwinds=>
+.......................................
+
+This is the game waiting for you to make a move, 'i.e.', to enter a
+command specifying what you want to accomplish. This tutorial will
+demonstrate some basic commands for listing information about the game and
+creating a new 'Fairian' user account.
+
+Commands to list technical information about the environment generally
+start with a back-slash ("+\+") character. 
+
+For example, you can display a list of currently-visible relations with
+the +\d+ command: 
+
+.......................................
+fairwinds=> \d
+           List of relations
+ Schema |    Name    | Type |  Owner
+--------+------------+------+----------
+ public | fairian    | view | postgres
+(1 row)
+.......................................
+
+This table shows the fairian view defined in the 'public' schema and
+owned by the special administrative user 'postgres'. A schema
+serves to limit what game elements are visible to, and the  privileges
+available on, those elements. 'public' in this context means that this 
+is visible to anyone connecting to the game even if they do
+not have an account. The public schema presents very limited
+functionality, namely the ability to create a
+new account, as described below.
+
+In addition to the technical information commands demonstrated so far,
+you will utilize structured query language (SQL) commands to actually
+play the game, and more pertinenty for our present interest, to
+create an account. 
+
+The first SQL command you will learn is the +insert+ command, which, as the
+name implies adds data to a relation. This is how you create a
+'Fairian', but to do so, you first need to know what data to add.
+
+Use the +\dS+ command to the display the structure of the fairian
+view:
+
+.......................................
+fairwinds=> \dS fairian
+      View "public.fairian"
+    Column     | Type | Modifiers
+---------------+------+-----------
+ fairian_name  | name |
+ passwd        | name |
+ email_address | name |
+.......................................
+
+This listing shows that the fairian view has three columns. You must
+specify values for each of these in order to insert a new entry, thereby
+creating an account to play 'Fairwinds'.
+
+Here is an example of the insert command to create a 'Fairian' named
+"alice":
+
+
+.......................................
+fairwinds=> insert into fairian (fairian_name, passwd, email_address) 
+        values ('alice', '*******', 'alice@example.com');
+.......................................
+
+The passwd column value is shown as asteriks for illustration only. In
+actuality you would specify a password. Specifying an email address for 
+the third column is important so
+that you can receive news and announcements about the game.
+
+At this point you can re-connect to the game as your new 'Fairian' with
+the +\c+ command:
+
+.......................................
+\c fairwinds alice
+.......................................
+ 
+
+or you can terminate your connection with the +\q+ command.
+
+
+== Fairwinds Game Tutorial 3 - Connecting to the Game
+
+This tutorial explains how to connect to the game and run some
+privileged informative commands to gather information about the state of
+the game using your 'Fairian' account, and explains the various game
+elements you will use to interact with and monitor status of game
+activities.
+
+As explained in an earlier tutorial, you must have the +psql+ client application
+available on your computer. The command to connect to the 'Fairwinds'
+game specifies the Internet location where the game is hosted, the game
+name, and your 'Fairian' name (alice, in this example):
+
+.......................................
+psql -h fairwinds.btober.net fairwinds alice
+.......................................
+
+When you successfully connect to the game, this is the interface you are
+presented with:
+
+.......................................
+fairwinds=>
+.......................................
+
+
+=== Privileged Relations
+
+When connected as a valid player, you have a significantly expanded view into
+the game showing the privileged relations used to participate in the finance
+(+bond+), real estate (+land+), commodity (+food+), labor (+work+), and debt
+(+note+) markets. Adding a "+" to the "\d" command includes additional
+descriptive infomation to the listing, in particular it adds a short
+description explaining the purpose of each relation:
+
+.......................................
+fairwinds=# \d+
+                                                              List of relations
+   Schema   |    Name        | Type |  Owner   |                             Description                             
+------------+----------------+------+----------+---------------------------------------------------------------------
+ privileged | bond           | view | postgres | List of issued and non-matured bonds.
+ privileged | bond_ask       | view | postgres | Finance market sell orders.
+ privileged | bond_bid       | view | postgres | Finance market buy orders.
+ privileged | cash_journal   | view | postgres | Record of cash transactions.
+ privileged | connection     | view | postgres | List of logged in players.
+ privileged | fairian        | view | postgres | List of player accounts.
+ privileged | fairwinds      | view | postgres | Fairwinds time parameters.
+ privileged | food_ask       | view | postgres | Commodity market sell orders.
+ privileged | food_bid       | view | postgres | Commodity market buy orders.
+ privileged | food_journal   | view | postgres | History of commodity market transfers.
+ privileged | health_journal | view | postgres | Record of changes in health status.
+ privileged | land           | view | postgres | List of land plots.
+ privileged | land_ask       | view | postgres | Real estate market sell orders.
+ privileged | land_bid       | view | postgres | Real estate market buy orders.
+ privileged | land_journal   | view | postgres | Record of changes to land ownership and productivity.
+ privileged | mine_journal   | view | postgres | Record of changes to land ownership and resource reserves.
+ privileged | note           | view | postgres | List of demand notes which have yet to be called.
+ privileged | note_ask       | view | postgres | Debt market sell orders.
+ privileged | note_bid       | view | postgres | Debt market buy orders.
+ privileged | skill          | view | postgres | List of skilled labor categories and the associated rate of change.
+ privileged | skill_journal  | view | postgres | History of skill proficiency changes.
+ privileged | work           | view | postgres | List of active labor contracts.
+ privileged | work_ask       | view | postgres | Labor market sell orders.
+ privileged | work_bid       | view | postgres | Labor market buy orders.
+(24 rows)
+.......................................
+
+=== Placing Trade Orders
+
+Generally speaking, you insert rows in the 'bid' and 'ask' relations to issue buy
+and sell orders, respectively, on the markets. 
+
+=== Activity History
+
+The 'journal' relations record history of cash transactions, food
+production and consumption, changes to 'Fairian' health status, land
+plot productivity and ownership, resource extraction history, and skill
+proficiency.
+
+=== The Connection Relation
+
+The +connection+ relation lists the currently-active players. A SQL
++select+ statement is used to list the data stored in a relation, so to
+show a list of currently-active players you could run:
+
+
+.......................................
+fairwinds=> select * from connection;
+
+ fairian_name |          login_time           
+--------------+-------------------------------
+alice         | 2016-03-08 21:11:21.730667
+(1 row)
+.......................................
+
+The "+*+" in this statement denotes "list all columns", so you do not
+really have to know the structure of the relation to get a listing of
+the data it contains. This listing shows that +alice+ is the only player
+connected to the game.
+
+=== The Fairian Relation
+
+The fairian relation holds the player accounts. Note that this has
+the same name as the fairian relation we saw earlier while creating
+an account.  The difference is that that earlier relation existed in the
+'public' schema name space, but as a logged in player you are seeing the
+'privileged' schema name space, which provides and expanded view into
+the game. A similar SQL statement is used to produce this list:
+
+
+.......................................
+fairwinds=> select * from fairian;
+
+ fairian_name |   email_address   |        created_date        | click_order_count | click_select_count | mill_rate 
+--------------+-------------------+----------------------------+-------------------+--------------------+-----------
+ alice        | alice@example.com | 2016-03-08 21:09:51.730667 |                 0 |                  0 |         0
+(1 row)
+
+.......................................
+
+which shows (no surpize, since this is a tutorial) that +alice+ is the
+sole 'Fairian' account currently registered in the game. It also shows
+three columns used to keep track of the number of orders, the number 
+of select queries placed during the current click, and a tax rate value. 
+The count values are used for assessing fees for excessive transactions
+and data base queries, respectively. The mill_rate column models 
+real world property taxes and is explained more fully subsequently.
+
+=== The Fairwinds Relation
+
+The fairwinds relation holds a single row that stores the current time
+('i.e.' the current click), a time stamp of when the game began and when
+it will end, if specified, the approximate real-world click interval in
+seconds, and three values related to the game version. The value of the
+click column is usually what you will be most interested in so as to
+know how soon scheduled events in the game will occur, such as the
+expiration of trade orders or redemption of bonds, for example.  By
+specifying the columns you want rather than the asterik in a +select+
+statement you limit the output to only the information you are
+interested in:
+
+.......................................
+fairwinds=> \x
+Expanded display is on.
+
+fairwinds=> select click, click_interval from fairwinds;
+
+-[ RECORD 1 ]--+--
+click          | 5
+click_interval | 20
+
+.......................................
+
+The example above also demonstrates utilizing the "expanded view"
+feature of the +psql+ client software: The +\x+ command toggles expanded
+view on and off. 'Off' produces output in the traditional tabular (rows
+and columns) output. 'On' is useful for results that have a single
+or small number of rows, as it pivots the columnar arrangment and lists
+each row in a separate group.
+
+=== Instruments of Trade
+
+The other relations are briefly described below, but these and others
+will get greater attention in subsequent tutorials:
+
+[horizontal] 
+*+bond+*:: The +bond+ relation stores a list of, well, 'bonds'. Literally
+a 'bond' is just that, a promise (as in "my word is my bond") to re-pay
+a fixed amount of money at some specified future time. It represents a
+contract between two 'Fairians' or between a 'Fairian' and the governing
+market authority (which you can think of as "the government"). From the
+bond buyer's (the lender) perspective, bonds are guaranteed investments:
+regardless of the issuer's (the borrower) ability to repay, the governing
+market will create enough money to cover any shortfall and repay the
+full face amount at maturity.
+
+*+note+*:: If a bond issuing 'Fairian' does not have sufficient cash
+on hand to repay at bond maturity, then a +note+ is written listing the
+borrower as a debtor, and that +note+ is then factored (offered for sale
+at discount) and listed in the +note+ relation.
+
+*+land+*:: The +land+ relation lists all the plots of land which have
+been surveyed (note that "surveyed" is merely a notional term in this
+context meaning only "created by the game") and offered for sale, as
+well as listing the owner, if the land has been purchased.
+
+*+work+*:: Lastly, the +work+ relation, similar to the +bond+ relation,
+represents an agreement between 'Fairians', but in this case the subject
+is a list of labor contracts. Labor contracts specify that one 'Fairian'
+will work for another for at least a specified amount of time.  Entries in
+the +work+ relation are created when buyers (customers), offering to hire,
+and sellers (suppliers), offering to work, offer mutually compatible terms
+with respect to time, skill, effectiveness, and payment.
+
+
+
+== Fairwinds Game Tutorial 4 - Bootstrapping the Land Market
+
+When 'Fairwinds' is initialized, there are no 'Fairians', no land, no
+food, and no money. As players enter the game, resources must be brought
+into existence by means of market activity that creates demand. The
+market response that creates the land and money needed for the game to
+progress is called "bootstrapping", 'i.e.', the game is figuratively
+"lifted by the bootstraps" to create wealth out of nothing.
+
+This tutorial illustrates that bootstrapping protocol for the land market
+and the role you play in making it happen.
+
+For purposes of illustration, in this tutorial there will be only a
+single 'Fairian', named Alice, participating in the game.  This
+obviously is a circumstance almost all players will not encounter (since
+only one player is ever the first player to enter the game!), but
+the techniques employed are sufficiently illustrative as to be
+instructive on how general play proceeds.
+
+Utilizing the psql client application, Alice connects to 'Fairwinds' and
+is presented with the command prompt:
+
+.......................................
+psql -h fairwinds.btober.net fairwinds alice
+fairwinds=>
+.......................................
+
+Alice endeavors to buy a plot of land, and so she checks to see if there
+are any open orders to sell land by querying the land_ask relation:
+
+.......................................
+fairwinds=> select * from land_ask;
+ serial_number | expiration | productivity | price | fairian_name 
+---------------+------------+--------------+-------+--------------
+(0 rows)
+.......................................
+
+In this circumstance with no extant sell offers, when a market order
+to buy is placed for a zero-productivity land plot, the 'bootstrapping'
+protocol is invoked and a new land plot is created by the game and
+offered for sale. 
+
+Alice reminds herself of the land_bid relation structure:
+
+.......................................
+fairwinds=> \dS land_bid
+             View "privileged.land_bid"
+    Column    |        Type         | Modifiers
+--------------+---------------------+-----------
+ expiration   | bigint              |
+ productivity | probability         |
+ price        | faircoin            |
+ fairian_name | name                |
+
+.......................................
+
+and sees that it has four columns. She does not have to specify the
+fairian_name, as the game will fill in her name automatically. The price
+value is also optional: omitting it implies a 'market order', similar
+to the real-world financial markets where a market order means "I will
+match and trade at as good an offer as any other offer." Which leaves
+only the expiration and productivity values to specify. The former
+allows Alice to specify how many clicks the offer will stand for and at
+which point, if it has not been executed, will be deleted. The latter is
+the minimum land productivity value she will accept. Productivity is a
+measure of land quality, and, as the name implies, is a value between
+zero and one indicating how much food the land can produce when 
+cultivated -- so more productive land is more valuable than less
+productive land. In this case Alice specifies a productivity value of
+zero in order to invoke bootstrapping:
+
+.......................................
+fairwinds=> insert into land_bid (expiration,productivity) values (5,0);
+INSERT 0 1
+.......................................
+
+The +INSERT 0 1+ response indicates successful order processing.
+
+Alice reviews her order by querying the +land_bid+ view 
+and finds ... 
+
+
+.......................................
+fairwinds=> select * from land_bid;
+ expiration | productivity | price | fairian_name 
+------------+--------------+-------+--------------
+(0 rows)
+.......................................
+
+that her order does not appear! This is because a market
+order is not recorded when there are no open sell orders to match
+against.  However, she then again examines the land_ask relation and
+sees the result of the land bootstrap protocol:
+
+.......................................
+fairwinds=> select * from land_ask;
+ serial_number  | expiration | productivity | price | fairian_name 
+----------------+------------+--------------+-------+--------------
+ 356a192b7913b0 |            |            0 |     0 | 
+(1 row)
+.......................................
+
+which shows that a new, zero-productivity, un-owned land plot has been
+created and offered for sale. 'Bootstrapped' land sell orders have no
+expiration date: land, once surveyed and entered into the land
+records is never destroyed or deleted from the game, so this land_ask
+order will persist until a 'Fairian' buys the land.
+
+The serial_number, which serves as a unique identifier for the plot, is
+set randomly by the game for each new plot of land. 
+
+The offer price is determined by a land-scarcity pricing formula
+according to a simple quadratic polynomial. For the very first plot of
+land, the plot is offered for sale at zero cost, and subsequent plots
+are priced at monotonically-increasing values.
+
+Note that this bootstrapped land sell order is available to all 
+players generally. That is, while Alice's bid order may have invoked 
+the bootstrapping protocol, she has no special right to own the 
+land plot thereby created. Any 'Fairian' may bid for it. In fact, if 
+there had been open bid orders that the bootstrap sell order may have 
+matched against, it may have been executed against one of those, resulting
+in some other 'Fairian' buying the land plot.
+
+But since Alice enjoys the non-competitive situation of being the sole
+player, she places another order with a productivity value to match
+the open ask order so as to acquire the land plot:
+
+.......................................
+fairwinds=> insert into land_bid (expiration,productivity) values (1,0);
+INSERT 0 1
+.......................................
+
+Again, the +INSERT 0 1+ result indicates success.
+
+Alice can confirm that she purchased the land by quering the land relation:
+
+.......................................
+fairwinds=> select * from land;
+ serial_number  | productivity | fairian_name 
+----------------+--------------+--------------
+ 356a192b7913b0 |              | alice
+(1 row)
+.......................................
+
+showing that she is now listed as the owner.
+
+Note that the serial numbers in the description column you see will
+likely differ during actual play from that shown above, as they 
+are assigned pseudo-randomly.
+
+Now that Alice is a land owner, she can cultivate the land to produce
+food.
+
+== Fairwinds Game Tutorial 5 - Cultivating Self-Owned Land
+
+'Fairians' require sustenance ('i.e.', food) as the game advances.
+Provisioning sufficient sustenance has implications that will be
+dicussed in subsequent tutorials, but suffice it to say for now that
+food is important, just like in the real world.
+
+Sustenance is derived from plots of land by cultivation (or 'farming' in
+game terminology). The activity of cultivation is an example of
+skilled labor, and 'Fairwinds' labor activity is executed under contract. 
+
+Labor contracts are recorded in the +work+ relation. Normally, a labor
+contract is made between two 'Fairians': a customer (the land-owning
+buyer of a labor contract seeking to employ others) and a 
+supplier (the seller of a labor contract seeking to earn 
+'Faircoin' by working for another 'Fairian').
+
+That more typical, competitive/cooperative arrangement is the topic of a
+later tutorial.
+
+This tutorial explains how a 'Fairian' can engage in cultivation of
+their own land.  The self-owned land cultivation scenario is less
+complicated than labor contracts between 'Fairians' because the land
+owner is both the customer and the supplier, and neither bidding nor
+exchange of money is involved: A contract for self-owned land labor is
+added directly to the work table without using the market bid/ask
+process.
+
+Alice reminds herself of the +work+ view structure:
+
+.......................................
+fairwinds=> \dS work
+                  View "privileged.work"
+     Column      |         Type          | Modifiers 
+-----------------+-----------------------+-----------
+ contract_number | character varying(14) | 
+ issue_date      | bigint                | 
+ term            | bigint                | 
+ customer        | name                  | 
+ supplier        | name                  | 
+ work_place      | name                  | 
+ active          | boolean               | 
+ skill_name      | skill_type            |        
+.......................................
+
+and sees eight columns. The contract_number, issue_date, and active
+column values are determined automatically when a labor contract is
+created.  As mentioned above, the customer and supplier will both
+automatially be set to the land-owning 'Fairian'. The term will be
+automatically set to a value of one (which is discussed further below). 
+
+Only the work_place and skill_name need be specified for the self-owned
+land cultivation scenario.
+
+The work_place should be specified as the serial_number value
+corresponding to the land to be cultivated. The skill_name corresponding
+to land cultivation is "farmer". (Currently "farmer" is the only skill
+category, but future game versions will expand to include other
+categories.)
+
+The term column specifies the minimum
+time period committment (in clicks) that the labor supplier makes to the
+customer. That is, while the customer can terminate a labor contract at
+any time, the supplier can do so only after the contract term has
+expired. For the self-owned land scenario, since the land owner is both
+customer and supplier there is no need to limit the authority to
+terminate the labor contract, so a term value of one is automatically
+assigned, and it need not be specified in the insert statement.
+
+Note, though, that a labor contract does not terminate automatically
+upon time advancing beyond the contract term. The supplier will
+continue in the activity of cultivation on the contracted plot of land
+until one or the other party to the contract explicitly de-activates
+the contract by changing the active attribute to false. Consequently,
+it makes no sense for the self-owned land labor contract to set
+the value to anything larger than one, which is the
+automatically-assigned value.
+
+Alice embarks on cultivation by creating a self-owned land labor
+contract with herself using an insert statement:
+
+.......................................
+fairwinds=> insert into work (work_place,skill_name) values ('356a192b7913b0','farmer');
+INSERT 0 1
+.......................................
+
+As described above, Alice has specified the land plot serial number and
+the skill category and then confirms the labor contract entry by
+listing the work view:
+
+.......................................
+fairwinds=> select * from work;
+ contract_number | issue_date | term | customer | supplier |   work_place   | active | skill_name 
+-----------------+------------+------+----------+----------+----------------+--------+------------
+ da4b9237bacccd  |         12 |    1 | alice    | alice    | 356a192b7913b0 | t      | farmer
+(1 row)
+
+.......................................
+			
+A contract_number has been assigned to serve as unique identifier, and the 
+contract is annotated as active. 
+
+== Fairwinds Game Tutorial 6 - Skills Development and the Skill Journal
+
+Once Alice has engaged herself in cultivation of her own plot of land,
+there are a few important implications.
+
+The first important implication is that Alice develops proficiency at a
+skill, namely, by engaging in cultivation, she gets better at it.  A
+record of her developing skill proficiency is recorded in the skill_journal 
+view (note that the game time in clicks has advanced since the contract
+issue_date):
+
+.......................................
+fairwinds=> select click, skill_name, debit, credit, balance, description 
+				from skill_journal where fairian_name = 'alice';
+
+ click | skill_name |   debit   | credit |  balance  |                    description                     
+-------+------------+-----------+--------+-----------+----------------------------------------------------
+    13 | farmer     | 0.0129875 |        | 0.0129875 | skill improvement based on contract da4b9237bacccd
+    14 | farmer     | 0.0128188 |        | 0.0258063 | skill improvement based on contract da4b9237bacccd
+    15 | farmer     | 0.0126524 |        | 0.0384587 | skill improvement based on contract da4b9237bacccd
+    16 | farmer     | 0.0124880 |        | 0.0509467 | skill improvement based on contract da4b9237bacccd
+    17 | farmer     | 0.0123259 |        | 0.0632726 | skill improvement based on contract da4b9237bacccd
+(5 rows)
+.......................................
+
+Note that in this select query, Alice specified explicity the columns
+for viewing.
+
+As in the real world, proficiency at any skill will improve with
+practise and will atrophy with neglect. The rows resulting from
+querying the skill_journal shows that Alice, engaging in farming, 
+improved her proficiency by a small, decreasing amount each
+click (proficiency is always a number between zero and one). The growth
+and atrophy rates for each skill are small numbers pseudo-randomly fixed
+when the game starts.
+
+Her proficiency will continue to improve so long as she is the supplier
+to an active labor contract, but the improvement exhibits 'diminishing
+returns' as the value approaches unity and will never exceed 100%. 
+
+When the contract is terminated, her proficiency will atrophy unless she
+engages as a supplier on a new contract.
+
+Proficiency atrophies at a constant percentage rate (which thus also exhibits
+diminishing returns behavior in that the amount by which proficiency
+decreases each click continually itself diminishes).
+
+== Fairwinds Game Tutorial 7 - Cultivation and the Land Journal
+
+The second consequence of Alice engaging in cultivation of her own land
+plot is that the land productivity improves.
+
+A record of the productivity improvement is recorded in the land_journal
+view:
+
+
+.......................................
+fairwinds=> select click, serial_number, debit, credit, balance, description 
+		from land_journal 
+		where fairian_name = 'alice';
+
+ click | serial_number  |   debit   | credit |  balance  |              description               
+-------+----------------+-----------+--------+-----------+----------------------------------------
+    13 | 356a192b7913b0 | 0.0006884 |        | 0.0006884 | land improvement based on cultivation 
+    14 | 356a192b7913b0 | 0.0006879 |        | 0.0013763 | land improvement based on cultivation 
+    15 | 356a192b7913b0 | 0.0006874 |        | 0.0020637 | land improvement based on cultivation 
+    16 | 356a192b7913b0 | 0.0006870 |        | 0.0027507 | land improvement based on cultivation 
+    17 | 356a192b7913b0 | 0.0006865 |        | 0.0034372 | land improvement based on cultivation 
+    18 | 356a192b7913b0 | 0.0006860 |        | 0.0041232 | land improvement based on cultivation 
+(6 rows)
+.......................................
+
+The rows resulting from this query show that during each click, the 
+productivity improved by a small amount. The behavior of
+land productivity is very similar to the way proficiency changes as a
+'Fairian' engages in activity: when land is cultivated, the productivity
+improves, and when left fallow, the productivity diminishes. And in both
+cases the amount of change exhibits dimishing returns behavior as the
+net balance approaches one or zero, respectively.
+
+Proficiency and productivity together influence the total food
+production yield.
+
+
+== Fairwinds Game Tutorial 8 - Cultivation and the Food Journal
+
+Another important consequence of Alice engaging in cultivation of her
+own plot of land is that this activity results in food production.
+
+A record of the fruits of her labor is recorded in the food_journal
+view:
+
+
+.......................................
+fairwinds=> select click, debit, credit, balance, description 
+				from food_journal where fairian_name = 'alice';
+
+ click |   debit   | credit  |   balance   |                description                
+-------+-----------+---------+-------------+-------------------------------------------
+     2 |         0 |       0 |           0 | Initial food balance
+    13 |         1 |         |           1 | total production from land 356a192b7913b0
+    13 |           |       1 |           0 | daily sustenance
+    14 | 1.0000073 |         |     1.00001 | total production from land 356a192b7913b0
+    14 |           |       1 | 7.27177e-06 | daily sustenance
+    15 | 1.0000292 |         |     1.00004 | total production from land 356a192b7913b0
+    15 |           |       1 |  3.6478e-05 | daily sustenance
+    15 |           |   2e-07 |  3.6278e-05 | spoilage
+    16 | 1.0000655 |         |      1.0001 | total production from land 356a192b7913b0
+    16 |           |       1 | 0.000101805 | daily sustenance
+    16 |           |   7e-07 | 0.000101105 | spoilage
+    17 | 1.0001160 |         |     1.00022 | total production from land 356a192b7913b0
+    17 |           |       1 |  0.00021708 | daily sustenance
+    17 |           | 1.4e-06 |  0.00021568 | spoilage
+    18 | 1.0001806 |         |      1.0004 | total production from land 356a192b7913b0
+    18 |           |       1 | 0.000396252 | daily sustenance
+    18 |           | 2.5e-06 | 0.000393752 | spoilage
+(17 rows)
+.......................................
+
+The rows resulting from this query show that Alice entered 
+the game with zero food balance, and then during each click 
+while engaged in cultivation Alice received the total food 
+production (by virtue of her owning the land) associated with 
+the particular contract.  Note the trend of increasing total 
+food production. This increase is a due to a
+combination of Alice's improving effectiveness and the increasing land
+productivity, as discussed in the previous tutorials, and results in a
+food surplus (i.e., a net balance of excess food).
+
+Daily sustenance is a game constant: every 'Fairian' consumes one unit
+of food per click, or the net balance if the net balance is less than
+one. The consequence of this latter situation (i.e., having insufficient
+food to meet the sustenance requirement) adversely affects 'Fairian'
+health and is discussed more fully in a subsequent tutorial.
+
+The deduction for spoilage is a small constant percentage calculated on
+the 'Fairian''s net balance of food. This ensures that no 'Fairian' can
+hoard food indefinitely.
+
+Over time, as cultivation maximizes the land productivity
+and labor supplier proficiency and health improve, this net surplus will
+grow. As it grows, the amount of food spoilage will accordingly
+increase until the net surplus growth reaches an equilibrium point.
+Exactly how much food can be maximally retained and how quickly
+that maximum is achieved will be dependent upon the various game
+parameters randomly determined at game start up.
+
+== Fairwinds Game Tutorial 9 - Sustenance and the Health Journal
+
+When a new 'Fairian' joins the game, they have no money, no land, and no food.
+A newly-created 'Fairian' has health status that depends upon when the player
+enters the game: The first 'Fairian' entering the game is endowed with
+perfect (100%) health. For subsequent entrants, initial 'Fairian' health status
+is the lowest health percentage value of all other players.  
+
+
+=== Maintaining Health
+
+Maintaining health requires sustenance (food): during each click that a
+'Fairian' has a food surplus over the amount to meet the sustenance requirement
+of one food unit per click, health improves; during each click that a 'Fairian'
+has less than one sustenance unit, health deteriorates. Otherwise, health
+status remains unchanged.
+
+=== Heath Status Changes
+
+In both the first two cases, the change over time exhibits
+diminishing returns behavior in that as improving health
+approaches 100%, the per click improvement decreases so that
+the balance never exceeds unity, and conversely as health
+degenerates, the per-click amount of atrophy itself decreases
+so that the balance is never less than zero.
+ 
+The changes to 'Fairian' health are recorded in the health_journal.
+
+
+.......................................
+fairwinds=> select click, debit, credit, balance, description 
+			from health_journal where fairian_name = 'alice';
+
+ click |   debit   |  credit   | balance  |                           description                           
+-------+-----------+-----------+----------+-----------------------------------------------------------------
+     2 |         1 |           |        1 | Initial health
+     3 |           | 0.0196354 | 0.980365 | health deterioration based on insufficient sustenance balance 0
+     4 |           | 0.0192499 | 0.961115 | health deterioration based on insufficient sustenance balance 0
+     5 |           | 0.0188719 | 0.942243 | health deterioration based on insufficient sustenance balance 0
+     6 |           | 0.0185013 | 0.923742 | health deterioration based on insufficient sustenance balance 0
+     7 |           | 0.0181380 | 0.905604 | health deterioration based on insufficient sustenance balance 0
+     8 |           | 0.0177819 | 0.887822 | health deterioration based on insufficient sustenance balance 0
+     9 |           | 0.0174327 | 0.870389 | health deterioration based on insufficient sustenance balance 0
+    10 |           | 0.0170904 | 0.853299 | health deterioration based on insufficient sustenance balance 0
+    11 |           | 0.0167549 | 0.836544 | health deterioration based on insufficient sustenance balance 0
+    12 |           | 0.0164259 | 0.820118 | health deterioration based on insufficient sustenance balance 0
+    14 | 0.0026490 |           | 0.822767 | health improvement based on sustenance balance 1.000007
+    15 | 0.0026100 |           | 0.825377 | health improvement based on sustenance balance 1.000036
+    16 | 0.0025716 |           | 0.827948 | health improvement based on sustenance balance 1.000102
+    17 | 0.0025337 |           | 0.830482 | health improvement based on sustenance balance 1.000217
+    18 | 0.0024964 |           | 0.832978 | health improvement based on sustenance balance 1.000396
+(16 rows)
+.......................................
+
+These seventeen rows show that:
+
+* When Alice entered the game, she was endowed with perfect initial health (100%).
+* Immediately from then, Alice's health decreased by a small percentage each click since she had no food.
+* Alice's health improved once she began producing a food surplus through cultivation.
+
+The transition to improving health corresponds to when Alice began her
+engagement in cultivation and thereby satisfied the periodic sustenance
+requirement. Note further that during deterioration, the per-click health 
+decrease itself decreases, that is, her health decreases by a continually 
+smaller amount.
+Conversely, during reinvigoration, health improves by decreasing
+amounts. And lastly note in the description column annotates these effects.
+
+The balance column shows the running total of the difference between the
+additions (debit) and reductions (credit) columns, thus for each row, while
+the debit and credit columns show changes to health, the balance column indicates
+her actual health at that click.
+
+The rate of health improvement and deterioration are small percentage
+constants fixed when the game is initialized.
+
+Note that a 'Fairian'''s' net health value influences their ability to
+perform skilled tasks, 'e.g.', a 'Fairian'''s' 'effectiveness' is adversely
+affected by poor health and decreases their food production.
+
+=== Stationary Zero Health Status
+
+The third case, 'i.e.', when a 'Fairian' enters a click with exactly one food
+unit, results in no change to health status. Of particular note is the circumstance
+of zero health and being a sole cultivator of a land plot, where health status
+remains at zero. 
+
+=== Emerging from Stationary Zero Health Status
+
+There are three ways to emerge from stationary zero health, and they all
+involve, as a necessary condition, a food surplus.
+
+
+[horizontal] 
+Buy Food:: Maybe the most straightforward means of emerging from
+stationarity is to buy food. This works, of course, only if other 'Fairians'
+have generated a food surplus and are willing to sell some.
+
+Sell Labor:: Another means is to hire on as a supplier on the labor market.
+Provided that the work site is being cultivated by at least one other 'Fairian'
+with non-zero effectiveness, you will share in the fruits of the combined team
+effectiveness and get a share of the excess production.
+
+Buy Labor:: Similar to hiring out as a supplier as above, you can alternatively
+hire another 'Fairian' to jointly cultivate a land plot you own. Provided they
+have non-zero effectiveness, you will similarly share in the fruits of the
+combined team effectiveness and get a share of the excess production.
+
+
+
+
+
+== Fairwinds Game Tutorial A - We Have Company
+
+At this point we introduce a second player, Bob. Bob goes through
+similar initial steps as Alice:
+
+Bob creates a Fairian account,
+
+.......................................
+fairwinds=> insert into fairian (fairian_name, passwd, email_address)
+        values ('bob', '********', 'bob@example.com');
+INSERT 0 1
+.......................................
+
+and then logs in as that new Fairian,
+
+.......................................
+fairwinds=> \c fairwinds bob
+Password for user bob: 
+.......................................
+
+Note that upon listing other players, the system does not allow Bob to
+see the email address of other registered players, only his own:
+
+.......................................
+fairwinds=> select * from fairian;
+
+ fairian_name |  email_address  |        created_date        | click_order_count | click_select_count | mill_rate 
+--------------+-----------------+----------------------------+-------------------+--------------------+-----------
+ alice        |                 | 2016-03-18 22:04:30.549637 |                 0 |                  0 |         0
+ bob          | bob@example.com | 2016-03-18 22:04:30.549637 |                 0 |                  0 |         0
+(2 rows)
+.......................................
+
+
+Then he places a market bid order to buy land:
+
+.......................................
+fairwinds=> insert into land_bid default values;
+INSERT 0 1
+.......................................
+
+Note Bob has employed the +default values+ shorthand, effectively
+specifying an expiration of one and productivity of zero.
+
+As Alice experienced previously, Bob's market buy order was not stored 
+because there were no open land sell orders:
+
+.......................................
+fairwinds=> select * from land_bid;
+
+ expiration | productivity | price | fairian_name 
+------------+--------------+-------+--------------
+(0 rows)
+.......................................
+
+And similarly, a new land plot (plot \'77de68daecd823') was created by
+bootstrapping:
+
+.......................................
+fairwinds=> select * from land;
+
+ serial_number  | productivity | fairian_name 
+----------------+--------------+--------------
+ 356a192b7913b0 |     0.004341 | alice
+ 77de68daecd823 |            0 | 
+(2 rows)
+.......................................
+
+And that new land appears offered for sale:
+
+.......................................
+fairwinds=> select * from land_ask;
+
+ serial_number  | expiration | productivity |  price   | fairian_name 
+----------------+------------+--------------+----------+--------------
+ 77de68daecd823 |            |            0 | 0.001028 | 
+(1 row)
+.......................................
+
+At this point, Bob's experience differs from that of Alice earlier:
+This second land plot, rather than being given away free, has a non-zero
+price, so Bob needs cash.
+
+
+== Fairwinds Game Tutorial B - Bootstrapping the Bond Market
+
+As described earlier, when 'Fairwinds' is initialized, there are no
+'Fairians', no land, no food, and no money.  As players enter the game,
+resources must be brought into existence by means of market activity
+that creates demand.  We have already seen bootstrapping the land 
+market. Bootstrapping money happens on the bond
+market.
+
+This tutorial illustrates the bootstrapping protocol for the bond
+market.
+
+Utilizing the +psql+ client application, Bob connects to 'Fairwinds' and
+is presented with the command prompt:
+
+.......................................
+psql -h fairwinds.btober.net fairwinds bob
+fairwinds=>
+.......................................
+
+Bob borrows money by issuing ('i.e.', selling) a bond, that is, he makes a
+promise to repay a fixed, bond face amount at some future time. 'Fairian' bonds
+always have a face value of +fc1000+ (1000 'Faircoin') and trade at a
+discount from this. That is, in 'Fairwinds', bonds are more similar to
+real-world Treasury Bills, having no coupon, than to Treasury Bonds
+('i.e.' real-world bonds pay periodic interest as well as derive value by 
+discount trading; 'Fairwinds' bonds employ the discount mechanisim 
+only). An effective interest rate is implied by the discount from face
+value and the term length to maturity.
+
+Bob first reminds himself of the bond_ask relation structure:
+
+.......................................
+fairwinds=> \dS bond_ask
+            View "privileged.bond_ask"
+    Column    |       Type       | Modifiers 
+--------------+------------------+-----------
+ expiration   | bigint           | 
+ term         | bigint           | 
+ price        | faircoin         |        
+ fairian_name | name             | 
+.......................................
+
+and sees that it has four columns. He does not have to specify the
+fairian_name, as the game will fill in his name automatically. The
+price value is also optional: omitting the price implies a 
+'market order', similar to the real-world financial markets 
+where a market order means "I will match and trade at as good 
+an offer as any other offer." Which leaves only the expiration and 
+term values to specify. The former allows Bob to specify how many 
+clicks the offer will stand for and at which point, if it has not been
+executed, will be deleted. The latter is the minimum number of
+clicks he wants to have before re-payment of the bond is
+required.
+
+For the case of bootstrapping, none of the values at all are 
+required: the +default values+ shorthand suffices:
+
+.......................................
+fairwinds=> insert into bond_ask default values;
+
+.......................................
+
+The +default values+ short-hand effectively specifies a market order 
+selling a bond with a term of one click, but, as with bootstrapping 
+the land market, since there were no open orders on the opposite
+side, the sell order is not recorded in the order book. However,
+a bond buy order has been created by the governing market authority:
+
+.......................................
+fairwinds=> select * from bond_bid;
+
+ expiration | term | price | fairian_name 
+------------+------+-------+--------------
+            |    4 |  1000 | 
+(1 row)
+.......................................
+
+Note that the price for this buy order is not discounted, 'i.e.',
+bootstrapped bond buy orders are offered at zero effective 
+interest rate. Note also though, that it is a very short-term
+maturity. The implication here is that when no 
+other 'Fairians' are willing to lend money ('i.e.', to buy bonds),
+then the game will create money and lend it short term for free.
+This provides a degree of liquidity, making it possible for 
+new players to buy a land plot.
+
+As with the land bootstrapping protocol, the 'Fairian' who 
+triggers demand invoking the bootstrapping protocol has 
+no special right to the proceeds. The bootstrapped bond 
+bid order will be matched against the best of any 'Fairians'
+open bond issue sell order.
+
+Bob (re-)places his bond market ask order:
+
+.......................................
+fairwinds=> insert into bond_ask default values;
+INSERT 0 1
+.......................................
+
+and confirms that the bond has been issued:
+
+.......................................
+fairwinds=> select * from bond;    
+
+ serial_number  | issue_date | term | face_amount | bond_owner | bond_issuer 
+----------------+------------+------+-------------+------------+-------------
+ 1b6453892473a4 |         24 |    4 |        1000 |            | bob
+(1 row)
+.......................................
+
+
+Bob has borrowed +fc1000+ of cash created by the governing market authority.
+
+
+=== Deploying Bond Proceeds
+
+Now that Bob has cash, he can proceed to buy the land plot, so 
+he (re-)places his land market order to buy:
+
+.......................................
+fairwinds=>  insert into land_bid default values;
+INSERT 0 1
+.......................................
+
+And then confirms that he is now the owner of land plot \'77de68daecd823':
+
+.......................................
+fairwinds=> select * from land;
+
+ serial_number  | productivity | fairian_name 
+----------------+--------------+--------------
+ 356a192b7913b0 |     0.004341 | alice
+ 77de68daecd823 |            0 | bob
+(2 rows)
+.......................................
+
+
+Once Bob succeeds in buying the land plot, he proceeds similarly to as Alice
+did and creates a self-owned land labor contract and commences cultivation:
+
+.......................................
+fairwinds=> insert into work (work_place,skill_name) values ('77de68daecd823','farmer');
+INSERT 0 1
+.......................................
+
+and checks the status of existing labor contracts. As expected he sees
+his own, newly established labor contract as well as the earlier one
+involving Alice on her land:
+
+.......................................
+
+fairwinds=> select * from work;
+
+ contract_number | issue_date | term | customer | supplier |   work_place   | active | skill_name 
+-----------------+------------+------+----------+----------+----------------+--------+------------
+ da4b9237bacccd  |         12 |    1 | alice    | alice    | 356a192b7913b0 | t      | farmer
+ ac3478d69a3c81  |         24 |    1 | bob      | bob      | 77de68daecd823 | t      | farmer
+(2 rows)
+.......................................
+
+
+== Fairwinds Game Tutorial C - The Cash Journal
+
+The cash_journal records transactions involving Faircoin. For 
+example, all executed buy and sell transactions, bond issues 
+and redemptions, etc., are recorded.
+
+There is also a fee imposed for "excessive"
+transactions. During each click, a count is maintained of the 
+number of transactions each 'Fairian' makes. The first transaction during
+each click is free; additional transactions are assessed a fee. The 
+amount of the fee increases for each additional transaction
+during the click, but the counter is reset to zero when the next 
+click begins.
+
+The entire transaction log is available to all 'Fairians' for 
+viewing, so 
+either Bob or Alice, or any other player, could run this query:
+
+
+.......................................
+fairwinds=> select click, fairian_name, debit, credit, balance, description 
+		from cash_journal;
+
+ click | fairian_name | debit |   credit   |   balance   |         description          
+-------+--------------+-------+------------+-------------+------------------------------
+     2 | alice        |     0 |          0 |           0 | Initial cash balance
+     9 | alice        |       |          0 |           0 | Bought land 356a192b7913b0
+    18 | bob          |     0 |          0 |           0 | Initial cash balance
+    24 | bob          |       |   0.534242 |     998.466 | Bought land 77de68daecd823
+    24 | bob          |  1000 |            |        1000 | Issued bond 1b6453892473a4
+    24 | bob          |       |          1 |         999 | Trade order transaction fee
+    30 | bob          |       | 998.465759 |           0 | Redeemed bond 1b6453892473a4
+(7 rows)
+.......................................
+
+This listing shows Alices zero initial cash balance and her zero-cost land 
+purchase. Then the subsequent activity for Bob, starting with the 
+similar initial zero balance and then transactions, including the
+distribution of bond issue proceeds, the land purchase, and a
+transaction fee, which was incurred because he executed more than one 
+transaction during that click.
+
+Lastly the bond matured. Since Bob spent some of the money on land and
+additionally incurred a transaction fee, he did not have sufficient funds to
+fully repay the loan, i.e., the +fc1000+ bond face amount.
+
+Note that, from the lenders perspective Bob's cash shortfall is irrelevant:
+Bonds are guaranteed investments as far as the lender is concerned. The
+governing market authority creates enough Faircoin to fully repay the lender
+at bond maturity.
+
+But Bob does not necessarily get let off the hook for the cash shortfall.
+
+
+
+
+== Fairwinds Game Tutorial D - The Debt Market
+
+In the previous tutorial, Bob was short of cash to repay a bond he issued.
+When this happens, a demand note is issued listing Bob as a debtor for the
+amount of the shortfall. Demand notes are a mechanism for factoring ('i.e.',
+re-selling) debt. The factor ('i.e.', the owner) of a note incurs the
+right to call the debt at any time. Any cash the debtor has at the time of
+call, up to the note face amount, is relinquished by the debtor and
+transferred to the factor.
+
+Demand notes are traded somewhat similarly to bonds in that they are
+purchased at a discount from "face value".  Face value in this case is the
+corresponding bond redemption shortfall amount.
+
+Note however that there is no secondary market for notes. They are sold by
+the governing market authority once, and the buyer has no mechanism to resell
+(in contrast to as is the case, for example, with the real estate or
+commodity markets for land or food).
+
+For Bob's case the shortfall is the sum of the +fc1+ transaction fee and the
+cost of the purchased land plot.  When the bond matured, a note was created
+in the note relation, which can be listed with a simple query:
+
+.......................................
+fairwinds=> select * from note;
+
+ serial_number  | issue_date |      amount      | factor | debtor | called 
+----------------+------------+------------------+--------+--------+--------
+ c1dfd96eea8cc2 |         40 | 1.53424099999995 |        | bob    | f
+(1 row)
+.......................................
+
+The serial_number serves as a unique identifier and is automatically assigned
+when the note is created.
+
+The issue_date is automatically set for a future click. This allows for other
+players to discover the bidding opportunity and consider how much, if at all,
+they want to bid on the debt. 
+
+When game time advances to the issue_date click, a market sell order is added
+to the note_ask table and is automatically matched against any open limit buy
+orders in the note_bid relation for that specific note serial number: the
+highest bid amount trade executes and the others are expired on the
+subsequent click. If there are no open bid orders for a specific note at
+issue time, then the note order is changed from a market order to a limit
+order with price zero.
+
+The factor of a note is equivalent to the owner of a bond, and calling a note
+is something like redemption at maturity of a bond. Upon demand note
+redemption, cash is transferred from the debtor to the factor, provided the
+debtor has cash when the note is called.
+
+Demand notes are redeemed by calling them, 'i.e.', by updating the called
+attribute to equal true.  Calling a note is literally a demand for payment.
+
+A demand note can be called only once, after which it is expired and no
+longer listed in the note view nor accessible to the factor or other players.
+
+Alice proceeds to place a buy order for the note.  (This particular case is
+not very lucrative, but it serves to illustrate the process.)
+
+First she lists the note_bid structure 
+
+.......................................
+fairwinds=# \d note_bid
+            View "privileged.note_bid"
+    Column     |         Type          | Modifiers
+---------------+-----------------------+-----------
+ fairian_name  | name                  |
+ serial_number | character varying(14) |
+ expiration    | bigint                |
+ price         | faircoin              |
+.......................................
+
+As in past examples, it is not necessary to specify the fairian_name, as that
+will be automatically filled in. The serial_number is essential and must be
+specified since a note bid is made for specific notes individually.  The
+expiration, if not specified, defaults to one, but generally should be long
+enough to last until the future note issue date.
+
+Since Alice knows she is the only bidder, she "low-balls" by making a bid for
+zero Faircoin and confirms her entry by listing the bids:
+
+.......................................
+fairwinds=> insert into note_bid (serial_number, expiration, price) values ('c1dfd96eea8cc2', 10, 0);
+INSERT 0 1
+
+fairwinds=> select * from note_bid;
+
+ fairian_name | serial_number  | expiration | price 
+--------------+----------------+------------+-------
+ alice        | c1dfd96eea8cc2 |         40 |     0
+(1 row)
+.......................................
+
+
+Ten clicks later, when the note is actually sold, Alice's 
+bid "wins" and she becomes the note owner:
+
+.......................................
+fairwinds=> select * from note;
+
+ serial_number  | issue_date |      amount      | factor | debtor | called 
+----------------+------------+------------------+--------+--------+--------
+ c1dfd96eea8cc2 |         40 | 1.00102800000002 | alice  | bob    | f
+(1 row)
+.......................................
+
+
+Although it makes little sense for Alice to do so now, since Bob has no cash,
+for purposes of illustration we show how Alice would call the note:
+
+.......................................
+update note set called = true where serial_number = 'c1dfd96eea8cc2';
+.......................................
+
+The effect of the demand is evident in the cash_journal view that we saw in
+an earlier tutorial:
+
+
+.......................................
+fairwinds=> select * from cash_journal;
+
+ click | fairian_name | account | debit |   credit   |                  description                  
+-------+--------------+---------+-------+------------+-----------------------------------------------
+     2 | alice        | cash    |     0 |          0 | Initial cash balance
+     9 | alice        | land    |       |          0 | Bought land 356a192b7913b0
+    18 | bob          | cash    |     0 |          0 | Initial cash balance
+    24 | bob          | land    |       |   0.534242 | Bought land 77de68daecd823
+    24 | bob          | bond    |  1000 |            | Issued bond 1b6453892473a4
+    24 | bob          | cost    |       |          1 | Trade order transaction fee
+    30 | bob          | bond    |       | 998.465759 | Redeemed bond 1b6453892473a4
+    41 | alice        | note    |       |          0 | Bought note c1dfd96eea8cc2
+    41 | alice        | note    |     0 |            | Collection c1dfd96eea8cc2: Debtor is indigent
+    41 | bob          | note    |       |          0 | Collection c1dfd96eea8cc2: Debtor is indigent
+(10 rows)
+.......................................
+
+
+This table shows the transactions seen earlier and additionally, 
+the note was sold to the highest bidder (Alice), and then Alice called 
+the note. Annotated in the description column is the detail
+indicating the resulting action: zero Faircoin was transferred from Bob to
+Alice since Bob had no cash available at the time of call. Other possible
+results are partial payment or full payment.
+
+== Fairwinds Game Tutorial E - Hiring Labor
+
+In the earlier examples with Alice and Bob, they each
+bought a land plot and became cultivating land owners, 
+working their own plot of land.
+
+We now introduce third and fourth players, Cathy and David, 
+who offer to provide labor under contract for pay 
+cultivating other\'s land.
+
+Cathy places a limit order to sell a labor contract by
+inserting a row in the +work_ask+ relation specifying that 
+she offers to work as a farmer. The offer is good for 
+5 clicks and offers a committment to contract for as much 
+as 20 clicks, and for a up-front fee of +fc50+, which 
+is equivalent to +fc2.5+ per click:
+
+.......................................
+fairwinds=> insert into work_ask (skill_name,expiration,term,price) values ('farmer', 5, 20, 50);
+INSERT 0 1
+.......................................
+
+David similarly offers to work, but at a lower effective 
+hourly rate of approximately +fc2.3684+ per click. Once 
+the orders are placed, they appear in the work_ask view as 
+
+.......................................
+fairwinds=> select *, price/term as rate from work_ask;
+
+ skill_name | expiration | term | effectiveness | price | fairian_name |       rate       
+------------+------------+------+---------------+-------+--------------+------------------
+ farmer     |         48 |   20 |             0 |    50 | cathy        |              2.5
+ farmer     |         48 |   19 |             0 |    45 | david        | 2.36842105263158
+(2 rows)
+.......................................
+
+Since Cathy and David are new players, their proficiency, and hence their
+effectiveness, at the farming skill is zero, since neither has worked in that
+capacity yet.
+
+Alice is on the lookout to hire a laborer because she wants to build a food
+surplus and so takes notice of these labor contract sell offers.
+
+Alice invokes the bond bootstrapping process seen in an earlier tutorial in
+order to raise capital in support of her planned bid to buy a labor contract.
+
+.......................................
+fairwinds=> select * from bond;    
+
+ serial_number  | issue_date | term | face_amount | bond_owner | bond_issuer 
+----------------+------------+------+-------------+------------+-------------
+ 902ba3cda18838 |         44 |    4 |        1000 |            | alice
+(1 row)
+.......................................
+
+Alice places a market order bid for labor with
+
+.......................................
+fairwinds=> insert into work_bid (work_place, skill_name) values ('356a192b7913b0','farmer');
+INSERT 0 1
+.......................................
+
+and then confirms that her trade executed at the best price 
+as seen in the the cash_journal, which shows the +fc45+ payment
+by Alice to David ratifying contract 'fe5dbbcea5ce7e',
+Also appearing is redemption of the short-term bond 
+that had been earlier issued by Alice to raise the cash needed
+to place the labor contract bid:
+
+.......................................
+fairwinds=# select click, fairian_name, account, debit, credit, description 
+		from cash_journal where click > 42;
+ click | fairian_name | account | debit |   credit   |                  description                  
+-------+--------------+---------+-------+------------+-----------------------------------------------
+    43 | david        | cash    |     0 |          0 | Initial cash balance
+    44 | alice        | bond    |  1000 |            | Issued bond 902ba3cda18838
+    45 | alice        | work    |       |         45 | Ratified contract fe5dbbcea5ce7e
+    45 | david        | work    |    45 |            | Ratified contract fe5dbbcea5ce7e
+.......................................
+
+This new labor contract between her and David issued at click 
+32 appears in the work view:
+
+.......................................
+fairwinds=> select contract_number, issue_date, term, customer, 
+			supplier, work_place, skill_name from work;
+
+ contract_number | issue_date | term | customer | supplier |   work_place   | skill_name 
+-----------------+------------+------+----------+----------+----------------+------------
+ da4b9237bacccd  |         12 |    1 | alice    | alice    | 356a192b7913b0 | farmer
+ ac3478d69a3c81  |         24 |    1 | bob      | bob      | 77de68daecd823 | farmer
+ fe5dbbcea5ce7e  |         45 |   10 | alice    | david    | 356a192b7913b0 | farmer
+(3 rows)
+.......................................
+
+Note that the term of this new contract is +10+. The game assigns the average
+of the bid and ask terms to the labor buyer in the case of a market order.
+
+The effect on food production of hired help after some time has 
+elapsed is illustrated below. The most recent food_journal 
+entries for Alice appear as follows:
+
+.......................................
+fairwinds=# select click, debit, credit, description 
+		from food_journal where fairian_name = 'alice';
+
+ click |  debit   |  credit  |                        description                        
+-------+----------+----------+-----------------------------------------------------------
+   ... | ...      | ...      | ...
+    31 | 1.003277 |          | total production from land 356a192b7913b0
+    31 |          |        1 | daily sustenance
+    31 |          | 0.000136 | spoilage
+    32 | 1.003638 |          | total production from land 356a192b7913b0
+    32 |          |        1 | daily sustenance
+    32 |          | 0.000158 | spoilage
+    33 | 2.008032 |          | total production from land 356a192b7913b0
+    33 |          | 1.002677 | supplier production share paid on contract fe5dbbcea5ce7e
+    33 |          |        1 | daily sustenance
+    33 |          | 0.000191 | spoilage
+    34 | 2.008845 |          | total production from land 356a192b7913b0
+    34 |          | 1.002948 | supplier production share paid on contract fe5dbbcea5ce7e
+    34 |          |        1 | daily sustenance
+    34 |          | 0.000228 | spoilage
+    35 | 2.009735 |          | total production from land 356a192b7913b0
+    35 |          | 1.003245 | supplier production share paid on contract fe5dbbcea5ce7e
+    35 |          |        1 | daily sustenance
+    35 |          | 0.000268 | spoilage
+.......................................
+
+
+During each of clicks 31 and 32, the slowly increasing excess production 
+is evident due to Alice's self-owned cultivation. At click 33 the 
+effect of hiring David is apparent in two ways. First, the total
+production doubles, since now two Fairians are working the land plot; 
+second, Alice makes a distribution of a share of the production 
+with David. 
+
+Listing a similar query result for David shows receipt of that 
+distribution:
+
+.......................................
+fairwinds=# select click, debit, credit, description 
+		from food_journal 
+		where fairian_name = 'david' and click>20;
+
+ click |  debit   | credit  |                           description                           
+-------+----------+---------+-----------------------------------------------------------------
+    33 | 1.002677 |         | supplier production share received from contract fe5dbbcea5ce7e
+    33 |          |       1 | daily sustenance
+    33 |          | 1.7e-05 | spoilage
+    34 | 1.002948 |         | supplier production share received from contract fe5dbbcea5ce7e
+    34 |          |       1 | daily sustenance
+    34 |          | 3.6e-05 | spoilage
+    35 | 1.003245 |         | supplier production share received from contract fe5dbbcea5ce7e
+    35 |          |       1 | daily sustenance
+    35 |          | 5.6e-05 | spoilage
+(9 rows)
+.......................................
+
+Alice thinks this is working out pretty well, so she places
+another market order to hire Cathy. The result on the 
+contracts view listing the new contract between her and Cathy
+shows up as:
+
+.......................................
+fairwinds=> select contract_number, issue_date, term, customer,
+                        supplier, work_place, skill_name from work;
+
+                                     Labor Contracts
+ contract_number | issue_date | term | customer | supplier |   work_place   | skill_name 
+-----------------+------------+------+----------+----------+----------------+------------
+ da4b9237bacccd  |         11 |    1 | alice    | alice    | 356a192b7913b0 | farmer
+ ac3478d69a3c81  |         17 |    1 | bob      | bob      | 77de68daecd823 | farmer
+ fe5dbbcea5ce7e  |         32 |   10 | alice    | david    | 356a192b7913b0 | farmer
+ b1d5781111d84f  |         35 |   11 | alice    | cathy    | 356a192b7913b0 | farmer
+(4 rows)
+.......................................
+
+
+and the effect on the food production shows the resulting increase
+in total production as well as the additional equal distribution to 
+both Cathy and David:
+
+.......................................
+fairwinds=> select click, debit, credit, description
+                 from food_journal
+                 where fairian_name = 'alice' and click>34;
+                 
+ click |  debit   |  credit  |                        description                        
+-------+----------+----------+-----------------------------------------------------------
+    35 | 2.009735 |          | total production from land 356a192b7913b0
+    35 |          | 1.003245 | supplier production share paid on contract fe5dbbcea5ce7e
+    35 |          |        1 | daily sustenance
+    35 |          | 0.000268 | spoilage
+    36 |  3.01605 |          | total production from land 356a192b7913b0
+    36 |          | 1.004013 | supplier production share paid on contract b1d5781111d84f
+    36 |          | 1.004013 | supplier production share paid on contract fe5dbbcea5ce7e
+    36 |          |        1 | daily sustenance
+    36 |          | 0.000317 | spoilage
+.......................................
+
+
+=== More Players and More Hiring
+
+Bob notices that suddenly a number of new players have entered 
+the game:
+
+.......................................
+fairwinds=> select fairian_name from fairian order by 1;
+
+ fairian_name 
+--------------+
+ alice
+ bob
+ cathy
+ david
+ edwin
+ fredrick
+ gina
+ hendrik
+ ingrid
+ james
+ karen
+ leonard
+ michelle
+ norman
+ olivia
+ peter
+ quincy
+ robert
+ samantha
+ thomas
+ ursula
+ vincent
+ wendy
+ xavier
+(24 rows)
+.......................................
+
+and wants to emulate and expand upon Alice's success with hiring.
+
+After bootstrapping the bond market, Bob has cash and places many  
+labor market bid orders, hoping to entice the newcomers to work
+cultivating his land plot. He offers a graded variety of labor 
+rates, hoping to entice earlier adopters to commit:
+
+
+.......................................
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 25);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 22);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 20);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 18);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 16);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 15);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 14);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 13);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 12);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 10);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 9);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 8);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 7);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 6);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 5);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 4);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 3);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 3);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 2);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 1);
+insert into work_bid (work_place, skill_name, expiration, term, price) values ('77de68daecd823','farmer', 5, 10, 0);
+.......................................
+
+
+and he verifies his offers:
+
+
+.......................................
+fairwinds=> select *, price/term as rate from work_bid order by rate desc;
+
+ skill_name | expiration | term | effectiveness | price | fairian_name |   work_place   | rate 
+------------+------------+------+---------------+-------+--------------+----------------+------
+ farmer     |         66 |   10 |             0 |    25 | bob          | 77de68daecd823 | 2.5
+ farmer     |         66 |   10 |             0 |    22 | bob          | 77de68daecd823 | 2.2
+ farmer     |         66 |   10 |             0 |    20 | bob          | 77de68daecd823 | 2
+ farmer     |         66 |   10 |             0 |    18 | bob          | 77de68daecd823 | 1.8
+ farmer     |         66 |   10 |             0 |    16 | bob          | 77de68daecd823 | 1.6
+ farmer     |         66 |   10 |             0 |    15 | bob          | 77de68daecd823 | 1.5
+ farmer     |         66 |   10 |             0 |    14 | bob          | 77de68daecd823 | 1.4
+ farmer     |         66 |   10 |             0 |    13 | bob          | 77de68daecd823 | 1.3
+ farmer     |         66 |   10 |             0 |    12 | bob          | 77de68daecd823 | 1.2
+ farmer     |         66 |   10 |             0 |    10 | bob          | 77de68daecd823 | 1
+ farmer     |         66 |   10 |             0 |     9 | bob          | 77de68daecd823 | 0.9
+ farmer     |         66 |   10 |             0 |     8 | bob          | 77de68daecd823 | 0.8
+ farmer     |         66 |   10 |             0 |     7 | bob          | 77de68daecd823 | 0.7
+ farmer     |         66 |   10 |             0 |     6 | bob          | 77de68daecd823 | 0.6
+ farmer     |         66 |   10 |             0 |     5 | bob          | 77de68daecd823 | 0.5
+ farmer     |         66 |   10 |             0 |     4 | bob          | 77de68daecd823 | 0.4
+ farmer     |         66 |   10 |             0 |     3 | bob          | 77de68daecd823 | 0.3
+ farmer     |         66 |   10 |             0 |     3 | bob          | 77de68daecd823 | 0.3
+ farmer     |         66 |   10 |             0 |     2 | bob          | 77de68daecd823 | 0.2
+ farmer     |         66 |   10 |             0 |     1 | bob          | 77de68daecd823 | 0.1
+ farmer     |         66 |   10 |             0 |     0 | bob          | 77de68daecd823 | 0
+(21 rows)
+.......................................
+
+
+For illustration purposes in this tutorial, all the newcomers 
+enter market orders to sell and so ratify contracts 
+with Bob:
+
+.......................................
+fairwinds=> select contract_number, issue_date, term, customer, 
+			supplier, work_place, skill_name 
+		from work where customer='bob' order by issue_date, supplier;
+
+ contract_number | issue_date | term | customer | supplier |   work_place   | skill_name 
+-----------------+------------+------+----------+----------+----------------+------------
+ ac3478d69a3c81  |         17 |    1 | bob      | bob      | 77de68daecd823 | farmer
+ 7b52009b64fd0a  |         37 |   15 | bob      | edwin    | 77de68daecd823 | farmer
+ bd307a3ec329e1  |         37 |   15 | bob      | fredrick | 77de68daecd823 | farmer
+ fa35e192121eab  |         37 |   15 | bob      | gina     | 77de68daecd823 | farmer
+ f1abd670358e03  |         37 |   15 | bob      | hendrik  | 77de68daecd823 | farmer
+ 1574bddb75c78a  |         37 |   15 | bob      | ingrid   | 77de68daecd823 | farmer
+ 0716d9708d321f  |         37 |   15 | bob      | james    | 77de68daecd823 | farmer
+ 9e6a55b6b4563e  |         37 |   15 | bob      | karen    | 77de68daecd823 | farmer
+ b3f0c7f6bb763a  |         37 |   15 | bob      | leonard  | 77de68daecd823 | farmer
+ 472b07b9fcf2c2  |         38 |   15 | bob      | michelle | 77de68daecd823 | farmer
+ 12c6fc06c99a46  |         38 |   15 | bob      | norman   | 77de68daecd823 | farmer
+ d435a6cdd78630  |         38 |   15 | bob      | olivia   | 77de68daecd823 | farmer
+ 4d134bc072212a  |         38 |   15 | bob      | peter    | 77de68daecd823 | farmer
+ f6e1126cedebf2  |         38 |   15 | bob      | quincy   | 77de68daecd823 | farmer
+ 887309d048beef  |         38 |   15 | bob      | robert   | 77de68daecd823 | farmer
+ bc33ea4e26e5e1  |         38 |   15 | bob      | samantha | 77de68daecd823 | farmer
+ 0a57cb53ba59c4  |         39 |   15 | bob      | thomas   | 77de68daecd823 | farmer
+ 7719a1c782a1ba  |         39 |   15 | bob      | ursula   | 77de68daecd823 | farmer
+ 22d200f8670dbd  |         39 |   15 | bob      | vincent  | 77de68daecd823 | farmer
+ 632667547e7cd3  |         39 |   15 | bob      | wendy    | 77de68daecd823 | farmer
+ cb4e5208b4cd87  |         39 |   15 | bob      | xavier   | 77de68daecd823 | farmer
+(21 rows)
+.......................................
+
+
+Showing only food_journal records for Bob for one click reveals the
+minimal production due all suppliers having zero effectiveness.
+Despite that bob has contracted a sizeable team in cultivation,
+there is no excess production: everyone receives exactly one
+food unit.
+
+.......................................
+fairwinds=# select * from food_journal where click = 26 and fairian_name='bob';
+
+ click | fairian_name | debit | credit |                        description                        
+-------+--------------+-------+--------+-----------------------------------------------------------
+    39 | bob          |    16 |        | total production from land 77de68daecd823
+    39 | bob          |       |      1 | supplier production share paid on contract 1574bddb75c78a
+    39 | bob          |       |      1 | supplier production share paid on contract 7b52009b64fd0a
+    39 | bob          |       |      1 | supplier production share paid on contract 472b07b9fcf2c2
+    39 | bob          |       |      1 | supplier production share paid on contract bc33ea4e26e5e1
+    39 | bob          |       |      1 | supplier production share paid on contract bd307a3ec329e1
+    39 | bob          |       |      1 | supplier production share paid on contract 12c6fc06c99a46
+    39 | bob          |       |      1 | supplier production share paid on contract 0716d9708d321f
+    39 | bob          |       |      1 | supplier production share paid on contract f6e1126cedebf2
+    39 | bob          |       |      1 | supplier production share paid on contract 887309d048beef
+    39 | bob          |       |      1 | supplier production share paid on contract 4d134bc072212a
+    39 | bob          |       |      1 | supplier production share paid on contract f1abd670358e03
+    39 | bob          |       |      1 | supplier production share paid on contract d435a6cdd78630
+    39 | bob          |       |      1 | supplier production share paid on contract b3f0c7f6bb763a
+    39 | bob          |       |      1 | supplier production share paid on contract fa35e192121eab
+    39 | bob          |       |      1 | supplier production share paid on contract 9e6a55b6b4563e
+    39 | bob          |       |      1 | daily sustenance
+.......................................
+
+
+== Fairwinds Game Tutorial F - The Commodity Market
+
+The final market to illustrate is the commodity market, which  
+is used to buy and sell food. 
+
+At the close of the previous tutorial, Bob had hired a team 
+of workers to cultivate his land plot, but they were generating 
+no food surplus because all suppliers had zero effectiveness:
+Bob and his team were stuck in a zero-effectiveness stationary
+point.
+
+An action by Cathy makes it possible to emerge from that 
+zero-production stationary point. Cathy notices that Bob 
+was aggressively hiring, so she abandons her contract with
+Alice and puts herself on the labor market, offering a 
+for a fee of +fc20+:
+
+Cathy:
+
+.......................................
+update work set active=false where contract_number = 'b1d5781111d84f';
+insert into work_ask (skill_name,expiration,price) values ('farmer', 20, 20);
+.......................................
+
+.......................................
+                                 Labor Contract Asks
+ skill_name | expiration | term | effectiveness | price | rate | fairian_name | side 
+------------+------------+------+---------------+-------+------+--------------+------
+ farmer     |        200 |    1 |       0.92045 |    20 |   20 | cathy        | ask
+(1 row)
+.......................................
+
+Even though Cathy offerred a committment of only a single click, effectively
+asking for a comparitively high rate of +fc20+ per click, Bob decides it 
+is worth it to improve his combined team productivity so as to start 
+generating a food surplus.
+Bob bootstraps the bond market, borrowing money, and places a market order
+to buy the labor contract, which executes the open limit order precedingly
+placed by Cathy. A labor contract is created between Bob and Cathy:
+
+
+.......................................
+                                     Labor Contracts
+   work_place   | skill_name | contract_number | issue_date | term | customer | supplier 
+----------------+------------+-----------------+------------+------+----------+----------
+ ...            | ...        | ...             | ...        | ...  | ...      | ...  
+ 77de68daecd823 | farmer     | f1f836cb4ea6ef  |        180 |    1 | bob      | cathy
+ ...            | ...        | ...             | ...        | ...  | ...      | ...  
+.......................................
+
+Thus with a food surplus now being generated by Bob's team, after the game
+has advanced several hundred clicks, all 'Fairians' engaged in cultivation 
+have developed a food surplus:
+
+.......................................
+     food_balance
+
+       Food Balance
+ fairian_name |  balance  
+--------------+-----------
+ alice        | 34.553808
+ bob          | 45.455726
+ cathy        | 23.884388
+ david        | 17.275817
+ edwin        |  22.72787
+ fredrick     |  22.72787
+ gina         |  22.72787
+ hendrik      |  22.72787
+ ingrid       |  22.72787
+ james        |  22.72787
+ karen        |  22.72787
+ leonard      |  22.72787
+ michelle     |  22.72787
+ norman       |  22.72787
+ olivia       |  22.72787
+ peter        |  22.72787
+ quincy       |  22.72787
+ robert       |  22.72787
+ samantha     |  22.72787
+ thomas       |  22.72787
+ ursula       |  22.72787
+ vincent      |  22.72787
+ wendy        |  22.72787
+ xavier       |  22.72787
+(24 rows)
+.......................................
+
+James, Ingrid, and Gina decide to sell a portion of 
+their respective food surplus at various prices by placing
+limit orders, resulting 
+in different per-food-unit asking prices.
+
+
+Gina:
+
+.......................................
+insert into food_ask (expiration, quantity, price) values (40, 9, 5); 
+.......................................
+
+Ingrid:
+
+.......................................
+insert into food_ask (expiration, quantity, price) values (40, 10, 15);
+.......................................
+
+James:
+
+.......................................
+insert into food_ask (expiration, quantity, price) values (40, 11, 15);
+.......................................
+
+
+.......................................
+fairwinds=> select * from food_ask;
+
+ fairian_name | expiration | quantity | price |    unit_price     
+--------------+------------+----------+-------+-------------------
+ james        |        465 |       11 |    15 |  1.36363636363636
+ ingrid       |        465 |       10 |    15 |               1.5
+ gina         |        465 |        9 |     5 | 0.555555555555556
+(3 rows)
+.......................................
+
+Then new player Zachary enters the game, issues a bond to raise
+cash, and then places a market order to buy five food units:
+
+.......................................
+fairwinds=> insert into food_bid (quantity) values (5);
+.......................................
+
+
+We can see the effect of these transactions in few different 
+ways. First, re-listing the open commodity market sell orders 
+after Zachary's purchase shows that the "best" (i.e, the lowest) 
+unit price limit order was matched with Zachary's market order, 
+since now only the sell orders for James and Ingrid remain:
+
+.......................................
+fairwinds=> select * from food_ask;
+
+ fairian_name | expiration | quantity | price |    unit_price    
+--------------+------------+----------+-------+------------------
+ james        |        465 |       11 |    15 | 1.36363636363636
+ ingrid       |        465 |       10 |    15 |              1.5
+(2 rows)
+.......................................
+
+Next we can see the record of relevent cash transactions in the
+cash_journal:
+
+.......................................
+fairwinds=> select click, fairian_name, account, debit, credit, description 
+			from cash_journal where click >= 400;
+
+ click | fairian_name | account | debit | credit |          description          
+-------+--------------+---------+-------+--------+-------------------------------
+   411 | zachary      | bond    |  1000 |        | Issued bond fc074d501302eb
+   412 | gina         | food    |     5 |        | Sold food quantity 7 units.
+   412 | zachary      | food    |       |      5 | Bought food quantity 7 units.
+(3 rows)
+.......................................
+
+And we can see the effect of the food purchase in the food_journal:
+
+.......................................
+fairwinds=> select * from food_journal where  fairian_name = 'zachary';
+
+                           Food Journal - Zachary
+ click | fairian_name | debit | credit |      description     
+-------+--------------+-------+--------+----------------------
+   412 | zachary      |     7 |        | Bought food for fc5
+(1 row)
+.......................................
+
+
+Note the food_journal shows Zachary buying 7 food units even though he
+had bid for 5 units. This apparent discrepancy results from the fact
+that the best match open sell order (that of Gina) was to sell 9 units,
+consequently the market order matching process struck a compromise
+quantity half-way between the quantity specifications on either
+side of the transaction and then executed the transaction at the
+limit price Gina had specified. The net result is that Gina sells
+at her specified Faircoin limit price but at a per-unit price
+better than what she implicitely specified, i.e.,
+
+
+$$ fc5 / 7 food units = 0.71428571428571428571 fc per unit $$
+
+
+From Zachary the buyer's perspective, his cost matched the lowest 
+offered selling price and he received more food than he bid for, 
+and no other seller offered food at a lower unit cost that he 
+ended up paying to Gina.
+
+
+== Fairwinds Game Tutorial 10 - Extinguishing Debt
+
+Notice from the standings that Bob has negative net wealth 
+
+
+.......................................
+                                   Fairwinds Tournament Standings
+ fairian_name | health_balance | food_balance | wealth  | cash_balance | bond_balance | note_balance 
+--------------+----------------+--------------+---------+--------------+--------------+--------------
+  ...         |    ...         |    ...       |  ...    |      ...     |              |    ...    
+ bob          |         1.0000 |       45.819 | -465.00 |         0.00 |              |      -465.00
+  ...         |    ...         |    ...       |  ...    |      ...     |              |    ...    
+
+.......................................
+ 
+which is a consequence of the two demand notes written against him as a debtor
+from prior activity, as seen in the note table:
+
+
+.......................................
+                          Notes
+ serial_number  | issue_date | amount  | factor | debtor  
+----------------+------------+---------+--------+---------
+    ...         |            |         |        |
+ 91032ad7bbcb6c |         48 | 374.000 |        | bob
+ 972a67c4819272 |        215 |  91.000 |        | bob
+    ...         |            |         |        |
+.......................................
+
+In a non-competitive market, Bob may have the opportunity to extinquish that
+debt by first issuing a bond in order to raise money, and then make a bid to
+buy the outstanding notes. (The reason Bob needs to issue a bond is because
+having a negative net cash balance means that he will not be permitted to
+place any buy orders.)
+
+Bob raises cash by bootstrapping the bond market and borrowing.
+This leaves him in the same place in the standings overall, 
+but the details of his wealth are altered by borrowing Faircoin:
+He has cash on hand.
+
+.......................................
+                                   Fairwinds Tournament Standings
+ fairian_name | health_balance | food_balance | wealth  | cash_balance | bond_balance | note_balance 
+--------------+----------------+--------------+---------+--------------+--------------+--------------
+  ...         |       ...      |      ...     |   ...   |     ...      |     ...      |     ...
+ bob          |         1.0000 |       45.819 | -465.00 |      1000.00 |     -1000.00 |      -465.00
+  ...         |       ...      |      ...     |   ...   |     ...      |     ...      |     ...
+
+.......................................
+
+That is, his net wealth remains unchanged at negative fc465, but he temporarily
+has cash on hand and so can place an order to buy the demand notes upon which he
+is listed as the debtor:
+
+
+.......................................
+fairwinds=> insert into note_bid (serial_number, expiration, price) values ('91032ad7bbcb6c', 15,  0);
+fairwinds=> insert into note_bid (serial_number, expiration, price) values ('972a67c4819272', 15,  0);
+INSERT 0 1
+.......................................
+
+
+which results in Bob becoming listed as factor as well as the debtor on both notes:
+
+
+.......................................
+                          Notes
+ serial_number  | issue_date | amount  | factor | debtor  
+----------------+------------+---------+--------+---------
+      ...       |     ...    |   ...   |  ...   |  ...
+ 91032ad7bbcb6c |         48 | 374.000 | bob    | bob
+ 972a67c4819272 |        215 |  91.000 | bob    | bob
+      ...       |     ...    |   ...   |  ...   |  ...
+(4 rows)
+.......................................
+
+And it is apparent from the standings that his position is improved
+because his net wealth has increased to +fc0+ from -fc465 because his taking
+ownership of the notes offsets the debt. That is, he has the rights
+call to his own debt, making for a wash with respect debts.
+
+.......................................
+                                   Fairwinds Tournament Standings
+ fairian_name | health_balance | food_balance | wealth  | cash_balance | bond_balance | note_balance 
+--------------+----------------+--------------+---------+--------------+--------------+--------------
+  ...         |       ...      |      ...     |   ...   |     ...      |     ...      |     ...
+ bob          |         1.0000 |       46.182 |    0.00 |         0.00 |              |       0.00
+  ...         |       ...      |      ...     |   ...   |     ...      |     ...      |     ...
+
+.......................................
+
+
+
+
+Lastly, Bob can call the notes he owns:
+
+.......................................
+update note set called=true where debtor='bob';
+.......................................
+
+so that he has completely extinguished his debti and the 
+notes no longer appear in the note relation:
+
+.......................................
+                          Notes
+ serial_number  | issue_date | amount  | factor | debtor  
+----------------+------------+---------+--------+---------
+ 0ade7c2cf97f75 |         43 |  45.000 |        | alice
+ cb7a1d775e800f |        423 |   5.000 |        | zachary
+(4 rows)
+.......................................
+
+Take care to recall, however, as mentioned at the outset, this strategy likely
+works this well only if other 'Fairians' are not attentive. In a competitive
+market, others would be watching for profitable opportunities and likely make
+bids competing with those shown above for illustration, thus altering the
+outcome. 'Caveat emptor'.
+
+== Fairwinds Game Tutorial 11 - Economic Friction
+
+Fairwinds imposes four different fees for market activity intended to
+discourage player behavior that could make the game less interesting for
+other players.
+
+=== Excessive Trade Fee
+
+As discussed earlier, Fairwinds maintains a count of how many trade orders each
+Fairian enters. The counter is reset to zero at the beginning of each click,
+and during a click the first trade is free. Subsequent trades during a
+click are assessed a fee which increases arithmetically with each trade
+order, so the second trade costs one Faircoin, the third trade order
+costs two Faircoins, the fourth costs three Faircoins, etc.
+
+
+=== Excessive Query Fee
+
+Fairains can learn information about the state of the markets by
+refreshing their web browser view of the standings report, which is
+updated at least once per click. Fairians can also execute SELECT
+queries directly against the various bid and ask relations to obtain
+more current information. Fairwinds keeps a count of each of these
+queries, and similarly to the Excessive Trade Fee, this counter is reset to
+zero at the start of each click.  The first sixteen queries are free,
+and then an arithmetically increasing fee is assessed so that the
+seventeenth query costs one Faircoin, the eighteenth costs two
+Faircoin, etc.
+
+
+=== Usury Fee
+
+Fairians can act as lenders by placing bond bid orders on the finance market.
+The fee for each bond bid order is one-half the discount amount. The fee is
+assessed when the bond bid order is placed and is non-refundable regardless of
+whether or not the order executes before expiring. This fee is intented to
+discourage usurious interest rates and instead encourage prospective lenders to
+offer enticing loan terms.
+
+=== Real Estate Transfer Fee
+
+When a land plot is sold, a fee is charged equal to the difference between
+the asking price and the current virgin land price for new land plots. As
+with the usury fee, this fee is charged when the land ask limit order is 
+placed and is not refundable even if the order never executes.
+
+
+== Fairwinds Game Tutorial 12 - Death and Taxes
+
+The real world inescapables are modelled in Fairwinds by old age and
+infirmity, and by partial or complete forteiture of assets.
+
+=== It Happens to Everyone
+
+Fairians die as a consequence of old age or as a consequence of health
+atrophying to, and maintaining, a zero value. While death is an eventual
+certainty, the precise time is stochastic. That is, for each click,
+a random value is computed, and this random value is employed in a
+comparison against each Fairian's age. If the age exceeds the randomized
+threshold value, then the Fairian deceased status is toggled to true.
+
+While a Fairian is deceased, any attempts by a player to engage in
+activity will be rejected by triggering of an exception.
+
+Parameters defining the Fairian life span probability density function are
+fixed pseudo-randomly at game start up. The mean and standard deviation
+of the density function are available by querying the fairwinds view:
+
+.......................................
+fairwinds=> select ls_mean, ls_std_dev from fairwinds;
+
+ ls_mean | ls_std_dev 
++--------+------------
+     601 |        289
+(1 row)
+.......................................
+
+=== The Cost of Deliverance
+
+When a Fairian dies, all the deceased's assets and debts are transferred
+to an heir, if one has been designated by updating the fairian view (for
+example, while logged in as alice): 
+
+.......................................
+fairwinds=> select fairian_name, heir from fairian;
+
+ fairian_name | heir  
+--------------+-------
+ david        | 
+ cathy        | 
+ bob          | david
+ elaine       | 
+ alice        |
+(5 rows)
+
+.......................................
+
+.......................................
+fairwinds=> update fairian set heir = 'cathy';
+.......................................
+
+.......................................
+fairwinds=> select fairian_name, heir from fairian;
+
+ fairian_name | heir  
+--------------+-------
+ david        | 
+ cathy        | 
+ bob          | david
+ elaine       | 
+ alice        | cathy
+(5 rows)
+
+.......................................
+
+
+
+Land, labor contracts, bond, and note ownership and obligations are
+transferred directly to the specified heir. Food and cash are transferred
+subject to a 50% tax.
+
+If no heir has been designated, then all assets are simply forfeited.
+
+=== Resurrection for All
+
+Unlike in the real world, all Fairians are eligible for resurrection. In
+Fairwinds, resurrection is merely a matter of resetting the Fairian
+deceased status to false with a simple update statement:
+
+
+.......................................
+fairwinds=> update fairian set deceased = false;
+.......................................
+
+Resetting a Fairian's life is similar to initial game entry in that
+the Fairian has no assets, skills, or health and must engage in trading
+activity to improve standing.

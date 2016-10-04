@@ -59,25 +59,6 @@ update note set called = true where factor = current_user;
 update work set active = false where contract_number = '';
 update work set active = false where customer = current_user;
 update work set active = false where supplier= current_user;
-
-update cash_journal set acknowledged = true where fairian_name = current_user;
-update food_journal set acknowledged = true where fairian_name = current_user;
-update health_journal set acknowledged = true where fairian_name = current_user;
-update skill_journal set acknowledged = true where fairian_name = current_user;
-update land_journal set acknowledged = true where fairian_name = current_user;
-
-with running_total as (
-   select fairian_name, click, debit, credit, sum(debit)
-     over w as d, sum(credit)
-     over w as c
-     from health_journal
-   window w as (
-  partition by fairian_name
-    order by click
-      )
-   )
-   select fairian_name, click, debit, credit, d-c as net
-     from running_total
-    order by fairian_name, click;
+update work set work_place = '' where contract_number = '';
 
 -----------------------------------------------------------------------

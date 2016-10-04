@@ -74,9 +74,9 @@ export PGAPPNAME="${me}"
 
 [[ -n "${file}" ]] && printf "%s\n%s\n" "\set QUIET on" "\set VERBOSITY terse" >> "${file}"
   
-display_game_info="select click, start_time, end_time, click_interval from fairwinds;"
+display_game_info="select click, start_time, end_time, click_interval, ls_mean, ls_std_dev from fairwinds;"
 display_connections="select * from connection;"
-display_players="select fairian_name, email_address, created_date, click_order_count, click_select_count, mill_rate from fairian order by fairian_name;"
+display_players="select fairian_name, email_address, created_date, click_order_count, click_select_count, mill_rate, case when deceased = true then deceased else null end as deceased, heir from fairian order by fairian_name;"
 display_health_journal="select click, fairian_name, debit, credit, balance, description from health_journal where fairian_name = current_user order by click, seq;"
 display_cash_journal="select click, fairian_name, debit, credit, balance, description from cash_journal where fairian_name = current_user order by click, seq;"
 display_food_journal="select click, fairian_name, debit, credit, balance, description from food_journal where fairian_name = current_user order by click, seq;"
