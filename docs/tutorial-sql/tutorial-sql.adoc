@@ -8,7 +8,7 @@
 :max-width: 75em
 :data-uri:
 :icons:
-:date: 03-Oct-2016
+:date: 03-Dec-2016
 
 == Fairwinds Game Tutorial 0 - What is Fairwinds
 
@@ -140,26 +140,26 @@ echo "\set VERBOSITY terse" >> ~/.psqlrc
 The syntax for running the +psql+ command and establishing a game connection is 
 
 .......................................
-psql fairwinds -h fairwinds.btober.net -U fairwinds
+psql fairwinds -h fairwinds.btober.net -U anonymous
 .......................................
 
 where
 
 * the first +fairwinds+ specifies the game name
 * the +-h+ option specifes the hostname or IP address where the game is hosted
-* the +-U+ option specifies the 'Fairian' name to connect as
+* the +-U+ option specifies the username 'anonymous' to connect as
 
 
-The +fairwinds+ user name illustrated with the +-U+ option above is a generic
+The +anonymous+ user name illustrated with the +-U+ option above is a generic
 username that a prospective player may use to establish an initial connection
-without requiring a password. The pre-defined +fairwinds+ user account allows
+without requiring a password. The pre-defined +anonymous+ user account allows
 connecting to the game but allows only very limited privileges, namely, it
 provides the privilege for creating a user account. 
 
 If this is the first time you have connected to the game, then you should 
-use the +fairwinds+ user account; if you have gone through this process already 
+use the +anonymous+ user account; if you have gone through this process already 
 and created a 'Fairian' user account of your own, then you should specify that 
-instead.
+name instead.
 
 When you initially connect to the game, this is the interface you are presented
 with:
@@ -272,7 +272,7 @@ game specifies the Internet location where the game is hosted, the game
 name, and your 'Fairian' name (alice, in this example):
 
 .......................................
-psql -h fairwinds.btober.net fairwinds alice
+psql -h fairwinds.btober.net fairwinds -U alice
 .......................................
 
 When you successfully connect to the game, this is the interface you are
@@ -364,26 +364,27 @@ the same name as the fairian relation we saw earlier while creating
 an account.  The difference is that that earlier relation existed in the
 'public' schema name space, but as a logged in player you are seeing the
 'privileged' schema name space, which provides and expanded view into
-the game. A similar SQL statement is used to produce this list:
+the game. A similar SQL statement is used to produce this list. 
 
 
 .......................................
-fairwinds=> select * from fairian;
+fairwinds=> select fairian_name, email_address, created_date, click_order_count, 
+                    click_select_count from fairian;
 
- fairian_name |   email_address   |        created_date        | click_order_count | click_select_count | mill_rate 
---------------+-------------------+----------------------------+-------------------+--------------------+-----------
- alice        | alice@example.com | 2016-03-08 21:09:51.730667 |                 0 |                  0 |         0
-(1 row)
+  fairian_name |   email_address   |    created_date     | click_order_count | click_select_count 
+ --------------+-------------------+---------------------+-------------------+--------------------
+  alice        | alice@example.com | 2016-10-04 20:30:28 |                 0 |                  2
+  (1 row)
 
 .......................................
 
 which shows (no surpize, since this is a tutorial) that +alice+ is the
 sole 'Fairian' account currently registered in the game. It also shows
-three columns used to keep track of the number of orders, the number 
-of select queries placed during the current click, and a tax rate value. 
-The count values are used for assessing fees for excessive transactions
-and data base queries, respectively. The mill_rate column models 
-real world property taxes and is explained more fully subsequently.
+three columns used to keep track of the number of orders, the number of
+select queries placed during the current click.  These count values are
+used for assessing fees for excessive transactions and data base queries,
+respectively. 
+
 
 === The Fairwinds Relation
 
@@ -858,20 +859,17 @@ parameters randomly determined at game start up.
 
 == Fairwinds Game Tutorial 9 - Sustenance and the Health Journal
 
-When a new 'Fairian' joins the game, they have no money, no land, and no food.
-A newly-created 'Fairian' has health status that depends upon when the player
-enters the game: The first 'Fairian' entering the game is endowed with
-perfect (100%) health. For subsequent entrants, initial 'Fairian' health status
-is the lowest health percentage value of all other players.  
+When a new 'Fairian' joins the game, they have no money, no land, and no food, 
+and zero health.     
 
 
 === Maintaining Health
 
-Maintaining health requires sustenance (food): during each click that a
-'Fairian' has a food surplus over the amount to meet the sustenance requirement
-of one food unit per click, health improves; during each click that a 'Fairian'
-has less than one sustenance unit, health deteriorates. Otherwise, health
-status remains unchanged.
+Improving and maintaining health requires sustenance (food): during
+each click that a 'Fairian' has a food surplus over the amount to meet
+the sustenance requirement of one food unit per click, health improves;
+during each click that a 'Fairian' has less than one sustenance unit,
+health deteriorates. Otherwise, health status remains unchanged.
 
 === Heath Status Changes
 
@@ -879,7 +877,7 @@ In both the first two cases, the change over time exhibits
 diminishing returns behavior in that as improving health
 approaches 100%, the per click improvement decreases so that
 the balance never exceeds unity, and conversely as health
-degenerates, the per-click amount of atrophy itself decreases
+deteriorates, the per-click amount of atrophy itself decreases
 so that the balance is never less than zero.
  
 The changes to 'Fairian' health are recorded in the health_journal.
@@ -910,7 +908,7 @@ fairwinds=> select click, debit, credit, balance, description
 (16 rows)
 .......................................
 
-These seventeen rows show that:
+This tables shows that:
 
 * When Alice entered the game, she was endowed with perfect initial health (100%).
 * Immediately from then, Alice's health decreased by a small percentage each click since she had no food.
@@ -946,23 +944,25 @@ remains at zero.
 === Emerging from Stationary Zero Health Status
 
 There are three ways to emerge from stationary zero health, and they all
-involve, as a necessary condition, a food surplus.
+involve, as a necessary condition, establishing a food surplus.
 
 
 [horizontal] 
 Buy Food:: Maybe the most straightforward means of emerging from
-stationarity is to buy food. This works, of course, only if other 'Fairians'
-have generated a food surplus and are willing to sell some.
+stationarity is to buy food. This works, of course, only if some other
+Fairian is willing to sell some.
 
-Sell Labor:: Another means is to hire on as a supplier on the labor market.
-Provided that the work site is being cultivated by at least one other 'Fairian'
-with non-zero effectiveness, you will share in the fruits of the combined team
-effectiveness and get a share of the excess production.
+Sell Labor:: Another means is to hire on as a supplier on the labor
+market.  Provided that the work site is being cultivated by at least
+one other 'Fairian' with non-zero effectiveness, you will share in the
+fruits of the combined team effectiveness and get a share of the excess
+production.
 
-Buy Labor:: Similar to hiring out as a supplier as above, you can alternatively
-hire another 'Fairian' to jointly cultivate a land plot you own. Provided they
-have non-zero effectiveness, you will similarly share in the fruits of the
-combined team effectiveness and get a share of the excess production.
+Buy Labor:: Similar to hiring out as a supplier as above, you can
+alternatively hire another 'Fairian' to jointly cultivate a land plot
+you own. Provided that at least one laborer has non-zero cultivation
+effectiveness, you will similarly share in the fruits of the combined
+team effectiveness and get a share of the excess production.
 
 
 
@@ -2083,7 +2083,7 @@ Lastly, Bob can call the notes he owns:
 update note set called=true where debtor='bob';
 .......................................
 
-so that he has completely extinguished his debti and the 
+so that he has completely extinguished his debt and the 
 notes no longer appear in the note relation:
 
 .......................................
@@ -2156,9 +2156,9 @@ infirmity, and by partial or complete forteiture of assets.
 === It Happens to Everyone
 
 Fairians die as a consequence of old age or as a consequence of health
-atrophying to, and maintaining, a zero value. While death is an eventual
-certainty, the precise time is stochastic. That is, for each click,
-a random value is computed, and this random value is employed in a
+deteriorating to, and maintaining, a zero value. While death is an
+eventual certainty, the precise time is stochastic. That is, for each
+click, a random value is computed, and this random value is employed in a
 comparison against each Fairian's age. If the age exceeds the randomized
 threshold value, then the Fairian deceased status is toggled to true.
 

@@ -104,7 +104,7 @@ function createmenu {
 
   sql="insert into fairian (fairian_name, passwd, email_address) values ('${fairian_name}', '${PGPASSWORD}', '${email}');"
   prompt="insert into fairian (fairian_name, passwd, email_address) values ('${fairian_name}', '******', '${email}');"
-  export PGUSER="fairwinds"
+  export PGUSER="anonymous"
   executesql "${sql}"
   export PGUSER="${fairian_name}"
 }
