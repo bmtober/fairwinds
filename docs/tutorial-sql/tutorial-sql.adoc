@@ -8,7 +8,7 @@
 :max-width: 75em
 :data-uri:
 :icons:
-:date: 03-Dec-2016
+:date: 29-Jan-2017
 
 == Fairwinds Game Tutorial 0 - What is Fairwinds
 
@@ -59,7 +59,7 @@ The first column lists the Fairian name. Players are scored
 according to the sum of health and wealth rank, as appear in the second,
 and third columns, where the "health" value is a percentage
 and the "rank" value is the percentile rank calculated based 
-the the the "wealth" column. Wealth is the sum of the remaining
+on the "wealth" column. Wealth is the sum of the remaining
 column values which show the breakdown of
 the individual consituents of total
 wealth.
@@ -68,7 +68,8 @@ There is a lot going behind this standings table, but generally
 speaking, the flow of the game is driven by the standings
 score since sustaining health requires food, food is
 produced by cultivating land, land is acquired using capital,
-and capital is raised through financing and assumption of debt.
+capital is raised through financing and assumption of debt, and
+the latter activities influence net worth.
 
 As will be demonstrated subsequently, achieving and maintaining
 perfect 100% health is expected to be realizable by multiple
@@ -76,8 +77,8 @@ players and so, as the game progresses, most likely wealth will
 be the discriminating ranking factor.
 
 Therefore, it pays to remain cognizant of the balance between the
-separate wealth components, as listed in the remaining table
-columns, as the worth of food and land will vary according to
+separate wealth components, as listed in the remaining table columns,
+as, for instance, the worth of food and land will vary according to
 fluctuating market values for those assets.
 
 
@@ -153,7 +154,7 @@ where
 The +anonymous+ user name illustrated with the +-U+ option above is a generic
 username that a prospective player may use to establish an initial connection
 without requiring a password. The pre-defined +anonymous+ user account allows
-connecting to the game but allows only very limited privileges, namely, it
+connecting to the game but permits only very limited privileges, namely, it
 provides the privilege for creating a user account. 
 
 If this is the first time you have connected to the game, then you should 
@@ -355,7 +356,10 @@ alice         | 2016-03-08 21:11:21.730667
 The "+*+" in this statement denotes "list all columns", so you do not
 really have to know the structure of the relation to get a listing of
 the data it contains. This listing shows that +alice+ is the only player
-connected to the game.
+connected to the game. Note that this view is not a real-time listing 
+of connections but rather is updated periodically and so may lag in 
+listing recently-established connections.
+
 
 === The Fairian Relation
 
