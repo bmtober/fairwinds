@@ -3,19 +3,21 @@
 from tkinter import *
 
 class LabelledEntry:
+    """ defines a class included both a label and an entry """
     def __init__(self, owner, text=""):
         self.frame = Frame(owner)
-        self.entry = Entry(owner)
-        self.label = Label(owner, text=text)
+        self.entry = Entry(self.frame)
+        self.label = Label(self.frame, text=text)
     def pack(self):
-        self.frame.pack()
+        self.frame.pack(side=TOP, anchor="e")
         self.entry.pack(side=RIGHT)
         self.label.pack(side=RIGHT)
     def get(self):
         return self.entry.get()
 
 
-def buildsql():
+def buildsqlinsert():
+    """ constructs a sql insert statement """
     if not selected_market.get():
         print("ERROR: Market not selected")
         return
@@ -37,7 +39,7 @@ def buildsql():
 
     value_list = ""
     for c in column_values.keys():
-        value_list = value_list + ", " + column_values[c]
+        value_list = "{}, '{}'".format(value_list, column_values[c])
     value_list = value_list[2:]
 
     print("insert into {}_{} ({}) values ({});".format(
@@ -46,7 +48,9 @@ def buildsql():
                     column_list,
                     value_list
                     ))
-    root.destroy()
+
+    
+# Main program starts here
 
 markets = [
     # Market name, DB Table
@@ -86,7 +90,8 @@ selected_side = IntVar()
 for k, side in enumerate(sides):
     Radiobutton(side_frame, text = side[0], variable=selected_side, value=k+1).pack(anchor=W)
 
-parameters_frame = LabelFrame(root, text="Parameters", relief="raised", borderwidth=2).pack()
+parameters_frame = LabelFrame(root, text="Basic Parameters", relief="raised", borderwidth=2)
+parameters_frame.pack()
 
 price_entry = LabelledEntry(parameters_frame, text="Price")
 price_entry.pack()
@@ -94,10 +99,7 @@ price_entry.pack()
 expiration_entry = LabelledEntry(parameters_frame, text="Expiration")
 expiration_entry.pack()
 
-quantity_entry = LabelledEntry(parameters_frame, text="Quantity")
-quantity_entry.pack()
-
-ok_button = Button(root, text="OK", command=buildsql)
+ok_button = Button(root, text="OK", command=buildsqlinsert)
 ok_button.pack()
 
 root
