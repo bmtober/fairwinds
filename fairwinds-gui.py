@@ -2,6 +2,19 @@
 
 from tkinter import *
 
+class LabelledEntry:
+    def __init__(self, owner, text=""):
+        self.frame = Frame(owner)
+        self.entry = Entry(owner)
+        self.label = Label(owner, text=text)
+    def pack(self):
+        self.frame.pack()
+        self.entry.pack(side=RIGHT)
+        self.label.pack(side=RIGHT)
+    def get(self):
+        return self.entry.get()
+
+
 def buildsql():
     if not selected_market.get():
         print("ERROR: Market not selected")
@@ -53,7 +66,7 @@ sides = [
 root = Tk()
 root.title("Fairwinds Query Builder")
 
-market_frame = Frame(root)
+market_frame = LabelFrame(root, text="Market")
 market_frame['relief'] = "raised"
 market_frame['borderwidth'] = 2
 market_frame.pack()
@@ -63,7 +76,7 @@ selected_market = IntVar()
 for k, market in enumerate(markets):
     Radiobutton(market_frame, text = market[0], variable=selected_market, value=k+1).pack(anchor=W)
     
-side_frame = Frame(root)
+side_frame = LabelFrame(root, text="Trade Side")
 side_frame['relief'] = "raised"
 side_frame['borderwidth'] = 2
 side_frame.pack()
@@ -73,22 +86,15 @@ selected_side = IntVar()
 for k, side in enumerate(sides):
     Radiobutton(side_frame, text = side[0], variable=selected_side, value=k+1).pack(anchor=W)
 
-price_frame = Frame(root)
-price_frame.pack()
-price_label = Label(price_frame, text="Price").pack(side=LEFT)
-price_entry = Entry(price_frame)
-price_entry.pack(side=LEFT)
+parameters_frame = LabelFrame(root, text="Parameters", relief="raised", borderwidth=2).pack()
 
-expiration_frame = Frame(root)
-expiration_frame.pack()
-expiration_label = Label(expiration_frame, text="Expiration").pack(side=LEFT)
-expiration_entry = Entry(expiration_frame)
-expiration_entry.pack(side=LEFT)
+price_entry = LabelledEntry(parameters_frame, text="Price")
+price_entry.pack()
 
-quantity_frame = Frame(root)
-quantity_frame.pack()
-quantity_label = Label(quantity_frame, text="Quantity").pack(side=LEFT)
-quantity_entry = Entry(quantity_frame)
+expiration_entry = LabelledEntry(parameters_frame, text="Expiration")
+expiration_entry.pack()
+
+quantity_entry = LabelledEntry(parameters_frame, text="Quantity")
 quantity_entry.pack()
 
 ok_button = Button(root, text="OK", command=buildsql)
