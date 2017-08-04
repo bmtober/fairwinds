@@ -69,7 +69,6 @@ def trade_action():
                         column_list,
                         value_list
                         ))
-        trade_frame.destroy()
 
     trade_frame = Frame(root)
     trade_frame.pack()
@@ -80,7 +79,7 @@ def trade_action():
     for k, market in enumerate(markets):
         Radiobutton(
                 market_frame, text=market[0],
-                variable=selected_market, value=k+1).pack(anchor=W)
+                variable=selected_market, value=k+1).pack(anchor="w")
 
     side_frame = LabelFrame(
                 trade_frame, text="Trade Side", relief="raised", borderwidth=3)
@@ -102,8 +101,11 @@ def trade_action():
     expiration_entry = LabelledEntry(parameters_frame, text="Expiration")
     expiration_entry.pack()
 
-    next_button = Button(trade_frame, text="Next", command=buildsqlinsert)
-    next_button.pack()
+    button_frame = Frame(trade_frame)
+    button_frame.pack()
+
+    Button(button_frame, text="Exit", command=trade_frame.destroy).pack(side=LEFT, anchor="center")
+    Button(button_frame, text="Next", command=buildsqlinsert).pack(side=LEFT, anchor="center")
 
 
 root = Tk()
@@ -113,9 +115,10 @@ selected_market = IntVar()
 selected_side = IntVar()
 
 main_menu = Menu(root)
-root.config(menu=main_menu)
-
 action_menu = Menu(main_menu)
+
+main_menu.add_cascade(label="Actions", menu=action_menu)
+
 action_menu.add_command(label="Create Fairian")
 action_menu.add_command(label="Data Base Login Credentials")
 action_menu.add_command(label="Trade", command=trade_action)
@@ -123,5 +126,5 @@ action_menu.add_command(label="Manage Labor Contracts")
 action_menu.add_command(label="Demand Note Payment")
 action_menu.add_command(label="Set Property Tax")
 
-main_menu.add_cascade(label="Actions", menu=action_menu)
+root.config(menu=main_menu)
 root.mainloop()
