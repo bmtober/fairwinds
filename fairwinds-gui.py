@@ -70,9 +70,7 @@ sides = [
 root = Tk()
 root.title("Fairwinds Query Builder")
 
-market_frame = LabelFrame(root, text="Market")
-market_frame['relief'] = "raised"
-market_frame['borderwidth'] = 2
+market_frame = LabelFrame(root, text="Market", relief="raised", borderwidth=3)
 market_frame.pack()
     
 selected_market = IntVar()
@@ -80,9 +78,7 @@ selected_market = IntVar()
 for k, market in enumerate(markets):
     Radiobutton(market_frame, text = market[0], variable=selected_market, value=k+1).pack(anchor=W)
     
-side_frame = LabelFrame(root, text="Trade Side")
-side_frame['relief'] = "raised"
-side_frame['borderwidth'] = 2
+side_frame = LabelFrame(root, text="Trade Side", relief="raised", borderwidth=3)
 side_frame.pack()
 
 selected_side = IntVar()
@@ -90,7 +86,7 @@ selected_side = IntVar()
 for k, side in enumerate(sides):
     Radiobutton(side_frame, text = side[0], variable=selected_side, value=k+1).pack(anchor=W)
 
-parameters_frame = LabelFrame(root, text="Basic Parameters", relief="raised", borderwidth=2)
+parameters_frame = LabelFrame(root, text="Basic Parameters", relief="raised", borderwidth=3)
 parameters_frame.pack()
 
 price_entry = LabelledEntry(parameters_frame, text="Price")
