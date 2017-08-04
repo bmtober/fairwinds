@@ -70,6 +70,17 @@ sides = [
 root = Tk()
 root.title("Fairwinds Query Builder")
 
+main_menu = Menu(root)
+root.config(menu=main_menu)
+
+action_menu = Menu(main_menu)
+action_menu.add_command(label="Create Fairian")
+action_menu.add_command(label="Data Base Login Credentials")
+action_menu.add_command(label="Trade")
+
+
+main_menu.add_cascade(label="Actions", menu=action_menu)
+
 market_frame = LabelFrame(root, text="Market", relief="raised", borderwidth=3)
 market_frame.pack()
     
