@@ -68,19 +68,18 @@ class Configure(Toplevel):
             if password_entry.get():
                 os.environ["PGPASSWORD"] = password_entry.get()
 
-
         Toplevel.__init__(self, root)
         self.transient(root)
         self.title("Configuration")
-        self.geometry("250x100")
-        host_name_entry = LabelledEntry(self, text="Host", value=os.environ.get("PGHOST",""))
+        self.geometry("250x150")
+        host_name_entry = LabelledEntry(self, text="Host", value=os.environ.get("PGHOST", ""))
         host_name_entry.pack()
-        dbname_name_entry = LabelledEntry(self, text="Data Base", value=os.environ.get("PGDATABASE",""))
+        dbname_name_entry = LabelledEntry(self, text="Data Base", value=os.environ.get("PGDATABASE", ""))
         dbname_name_entry.pack()
-        fairian_entry = LabelledEntry(self, text="Fairian Name", value=os.environ.get("PGUSER",""))
+        fairian_entry = LabelledEntry(self, text="Fairian Name", value=os.environ.get("PGUSER", ""))
         fairian_entry.pack()
         fairian_entry.focus_set()
-        password_entry = LabelledEntry(self, text="Password", value=os.environ.get("PGPASSWORD",""), show="*")
+        password_entry = LabelledEntry(self, text="Password", value=os.environ.get("PGPASSWORD", ""), show="*")
         password_entry.pack()
 
         button_frame = Frame(self, borderwidth=3)
@@ -118,10 +117,10 @@ class CreateFairian(Toplevel):
         self.transient(root)
         self.title("Create Fairian")
         self.geometry("250x100")
-        fairian_entry = LabelledEntry(self, text="Fairian Name", value=os.environ["PGUSER"])
+        fairian_entry = LabelledEntry(self, text="Fairian Name", value=os.environ.get("PGUSER", ""))
         fairian_entry.pack()
         fairian_entry.focus_set()
-        password_entry = LabelledEntry(self, text="Password")
+        password_entry = LabelledEntry(self, text="Password", value=os.environ.get("PGPASSWORD", ""), show="*")
         password_entry.pack()
         email_address_entry = LabelledEntry(self, text="Email Address")
         email_address_entry.pack()
@@ -161,19 +160,30 @@ class NotePayment(Toplevel):
         Button(button_frame, text="Next", command=None).pack(side=LEFT, anchor="center")
 
 
-class PropertyTax(Toplevel):
+class TaxRate(Toplevel):
     def __init__(self):
+        def buildsql():
+            """ constructs a sql insert statement """
+
+            if property_tax_entry.get():
+                column_values = property_tax_entry.get()
+
+            executesql("update fairian set mill_rate = '{}' where fairian_name = current_user;".format(
+                            column_values))
+
         Toplevel.__init__(self, root)
         self.transient(root)
         self.title("Set Property Tax Rate")
-        self.geometry("250x100")
+        self.geometry("300x100")
 
         property_tax_entry = LabelledEntry(self, "Property tax mill rate")
+        property_tax_entry.pack()
+
         button_frame = Frame(self, borderwidth=3)
         button_frame.pack(anchor="s", side=BOTTOM)
 
         Button(button_frame, text="Exit", command=self.destroy).pack(side=LEFT, anchor="center")
-        Button(button_frame, text="Next", command=None).pack(side=LEFT, anchor="center")
+        Button(button_frame, text="Ok", command=buildsql).pack(side=LEFT, anchor="center")
 
 
 class TradeAction(Toplevel):
@@ -264,7 +274,7 @@ class Application(Tk):
 
     def __init__(self):
         Tk.__init__(self)
-        self.title("Fairwinds Game")
+        self.title("Fairwinds Game Query Builder")
         center_window(self, 600, 400)
 
         main_menu = Menu(self)
@@ -279,7 +289,7 @@ class Application(Tk):
         action_menu.add_command(label="Trade", command=TradeAction)
         action_menu.add_command(label="Manage Labor Contracts", command=LaborContracts)
         action_menu.add_command(label="Demand Note Payment", command=NotePayment)
-        action_menu.add_command(label="Set Property Tax", command=PropertyTax)
+        action_menu.add_command(label="Set Property Tax", command=TaxRate)
 
 
 root = Application()
