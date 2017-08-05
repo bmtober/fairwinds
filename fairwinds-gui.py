@@ -3,6 +3,18 @@
 from tkinter import *
 
 
+def center_window(window, width=300, height=200):
+    """ sizes and centers a window """
+    # get screen width and height
+    screen_width = window.winfo_screenwidth()
+    screen_height = window.winfo_screenheight()
+
+    # calculate position x and y coordinates
+    x = (screen_width/2) - (width/2)
+    y = (screen_height/2) - (height/2)
+    window.geometry('%dx%d+%d+%d' % (width, height, x, y))
+
+
 class LabelledEntry:
     """ defines a class included both a label and an entry """
     def __init__(self, owner, text=""):
@@ -35,18 +47,19 @@ class CreateFairian(Toplevel):
         Toplevel.__init__(self, root)
         self.transient(root)
         self.title("Create Fairian")
+        self.geometry("250x100")
         fairian_entry = LabelledEntry(self, text="Fairian Name")
         fairian_entry.pack()
         password_entry = LabelledEntry(self, text="Password")
         password_entry.pack()
+        email_address_entry = LabelledEntry(self, text="Email Address")
+        email_address_entry.pack()
 
+        button_frame = Frame(self, borderwidth=3)
+        button_frame.pack(anchor="s", side=BOTTOM)
 
-
-class LoginCredentials(Toplevel):
-    def __init__(self):
-        Toplevel.__init__(self, root)
-        self.transient(root)
-        self.title("Set Login Credentials")
+        Button(button_frame, text="Exit", command=self.destroy).pack(side=LEFT, anchor="center")
+        Button(button_frame, text="Next", command=None).pack(side=LEFT, anchor="center")
 
 
 class LaborContracts(Toplevel):
@@ -54,6 +67,13 @@ class LaborContracts(Toplevel):
         Toplevel.__init__(self, root)
         self.transient(root)
         self.title("Manage Labor Contracts")
+        self.geometry("250x100")
+
+        button_frame = Frame(self, borderwidth=3)
+        button_frame.pack(anchor="s", side=BOTTOM)
+
+        Button(button_frame, text="Exit", command=self.destroy).pack(side=LEFT, anchor="center")
+        Button(button_frame, text="Next", command=None).pack(side=LEFT, anchor="center")
 
 
 class NotePayment(Toplevel):
@@ -61,6 +81,13 @@ class NotePayment(Toplevel):
         Toplevel.__init__(self, root)
         self.transient(root)
         self.title("Demand Note Payment")
+        self.geometry("250x100")
+
+        button_frame = Frame(self, borderwidth=3)
+        button_frame.pack(anchor="s", side=BOTTOM)
+
+        Button(button_frame, text="Exit", command=self.destroy).pack(side=LEFT, anchor="center")
+        Button(button_frame, text="Next", command=None).pack(side=LEFT, anchor="center")
 
 
 class PropertyTax(Toplevel):
@@ -68,6 +95,14 @@ class PropertyTax(Toplevel):
         Toplevel.__init__(self, root)
         self.transient(root)
         self.title("Set Property Tax Rate")
+        self.geometry("250x100")
+
+        property_tax_entry = LabelledEntry(self, "Property tax mill rate")
+        button_frame = Frame(self, borderwidth=3)
+        button_frame.pack(anchor="s", side=BOTTOM)
+
+        Button(button_frame, text="Exit", command=self.destroy).pack(side=LEFT, anchor="center")
+        Button(button_frame, text="Next", command=None).pack(side=LEFT, anchor="center")
 
 
 class TradeAction(Toplevel):
@@ -158,8 +193,8 @@ class Application(Tk):
 
     def __init__(self):
         Tk.__init__(self)
-        self.geometry("600x400")
         self.title("Fairwinds Game")
+        center_window(self, 600, 400)
 
         main_menu = Menu(self)
         self.config(menu=main_menu)
@@ -169,7 +204,6 @@ class Application(Tk):
         main_menu.add_cascade(label="Actions", menu=action_menu)
 
         action_menu.add_command(label="Create Fairian", command=CreateFairian)
-        action_menu.add_command(label="Data Base Login Credentials", command=LoginCredentials)
         action_menu.add_command(label="Trade", command=TradeAction)
         action_menu.add_command(label="Manage Labor Contracts", command=LaborContracts)
         action_menu.add_command(label="Demand Note Payment", command=NotePayment)
