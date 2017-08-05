@@ -30,8 +30,27 @@ def parallelize(dictionary):
     return column_list[2:], value_list[2:]
 
 
-class trade_action(Frame):
+class CreateFairian(Frame):
+    pass
 
+
+class LoginCredentials(Frame):
+    pass
+
+
+class LaborContracts(Frame):
+    pass
+
+
+class NotePayment(Frame):
+    pass
+
+
+class PropertyTax(Frame):
+    pass
+
+
+class TradeAction(Frame):
     def __init__(self):
         Frame.__init__(self, root)
 
@@ -79,7 +98,7 @@ class trade_action(Frame):
 
         self.pack(fill=BOTH, expand=True)
         market_frame = LabelFrame(
-                    self, text="Market", relief="raised", borderwidth=3)
+                    self, text="Market", relief="raised", borderwidth=2)
         market_frame.pack(side=TOP)
 
         for k, market in enumerate(markets):
@@ -88,7 +107,7 @@ class trade_action(Frame):
                     variable=selected_market, value=k+1).pack(anchor="w")
 
         side_frame = LabelFrame(
-                    self, text="Trade Side", relief="raised", borderwidth=3)
+                    self, text="Trade Side", relief="raised", borderwidth=2)
         side_frame.pack()
 
         for k, side in enumerate(sides):
@@ -98,7 +117,7 @@ class trade_action(Frame):
 
         parameters_frame = LabelFrame(
                     self, text="Basic Parameters",
-                    relief="raised", borderwidth=3)
+                    relief="raised", borderwidth=2)
         parameters_frame.pack()
 
         price_entry = LabelledEntry(parameters_frame, text="Price")
@@ -128,13 +147,13 @@ class Application(Tk):
 
         main_menu.add_cascade(label="Actions", menu=action_menu)
 
-        action_menu.add_command(label="Create Fairian")
-        action_menu.add_command(label="Data Base Login Credentials")
-        action_menu.add_command(label="Trade", command=trade_action)
-        action_menu.add_command(label="Manage Labor Contracts")
-        action_menu.add_command(label="Demand Note Payment")
-        action_menu.add_command(label="Set Property Tax")
-    
+        action_menu.add_command(label="Create Fairian", command=CreateFairian)
+        action_menu.add_command(label="Data Base Login Credentials", command=LoginCredentials)
+        action_menu.add_command(label="Trade", command=TradeAction)
+        action_menu.add_command(label="Manage Labor Contracts", command=LaborContracts)
+        action_menu.add_command(label="Demand Note Payment", command=NotePayment)
+        action_menu.add_command(label="Set Property Tax", command=PropertyTax)
+
 
 root = Application()
 root.mainloop()
