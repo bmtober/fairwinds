@@ -30,29 +30,46 @@ def parallelize(dictionary):
     return column_list[2:], value_list[2:]
 
 
-class CreateFairian(Frame):
-    pass
-
-
-class LoginCredentials(Frame):
-    pass
-
-
-class LaborContracts(Frame):
-    pass
-
-
-class NotePayment(Frame):
-    pass
-
-
-class PropertyTax(Frame):
-    pass
-
-
-class TradeAction(Frame):
+class CreateFairian(Toplevel):
     def __init__(self):
-        Frame.__init__(self, root)
+        Toplevel.__init__(self, root)
+        self.transient(root)
+        self.title("Create Fairian")
+
+
+class LoginCredentials(Toplevel):
+    def __init__(self):
+        Toplevel.__init__(self, root)
+        self.transient(root)
+        self.title("Set Login Credentials")
+
+
+class LaborContracts(Toplevel):
+    def __init__(self):
+        Toplevel.__init__(self, root)
+        self.transient(root)
+        self.title("Manage Labor Contracts")
+
+
+class NotePayment(Toplevel):
+    def __init__(self):
+        Toplevel.__init__(self, root)
+        self.transient(root)
+        self.title("Demand Note Payment")
+
+
+class PropertyTax(Toplevel):
+    def __init__(self):
+        Toplevel.__init__(self, root)
+        self.transient(root)
+        self.title("Set Property Tax Rate")
+
+
+class TradeAction(Toplevel):
+    def __init__(self):
+        Toplevel.__init__(self, root)
+        self.transient(root)
+        self.title("Trading")
 
         selected_market = IntVar()
         selected_side = IntVar()
@@ -96,7 +113,6 @@ class TradeAction(Frame):
                             value_list
                             ))
 
-        self.pack(fill=BOTH, expand=True)
         market_frame = LabelFrame(
                     self, text="Market", relief="raised", borderwidth=2)
         market_frame.pack(side=TOP)
