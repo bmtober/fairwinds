@@ -35,6 +35,11 @@ class CreateFairian(Toplevel):
         Toplevel.__init__(self, root)
         self.transient(root)
         self.title("Create Fairian")
+        fairian_entry = LabelledEntry(self, text="Fairian Name")
+        fairian_entry.pack()
+        password_entry = LabelledEntry(self, text="Password")
+        password_entry.pack()
+
 
 
 class LoginCredentials(Toplevel):
