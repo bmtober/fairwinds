@@ -70,7 +70,7 @@ def trade_action():
                         value_list
                         ))
 
-    trade_frame = Frame(root)
+    trade_frame = Frame(app)
     trade_frame.pack()
     market_frame = LabelFrame(
                 trade_frame, text="Market", relief="raised", borderwidth=3)
@@ -102,29 +102,44 @@ def trade_action():
     expiration_entry.pack()
 
     button_frame = Frame(trade_frame)
-    button_frame.pack()
+    button_frame.pack(anchor="s", side=BOTTOM)
 
     Button(button_frame, text="Exit", command=trade_frame.destroy).pack(side=LEFT, anchor="center")
     Button(button_frame, text="Next", command=buildsqlinsert).pack(side=LEFT, anchor="center")
 
 
+class Application(Frame):
+
+    def __init__(self, owner=None):
+        Frame.__init__(self, owner)
+        self.owner = owner
+        self.init_window()
+
+    def init_window(self):
+        self.owner.title("Fairwinds Game")
+        self.pack(fill=BOTH, expand=True)
+
+        main_menu = Menu(self.owner)
+        self.owner.config(menu=main_menu)
+
+        action_menu = Menu(main_menu)
+
+        main_menu.add_cascade(label="Actions", menu=action_menu)
+
+        action_menu.add_command(label="Create Fairian")
+        action_menu.add_command(label="Data Base Login Credentials")
+        action_menu.add_command(label="Trade", command=trade_action)
+        action_menu.add_command(label="Manage Labor Contracts")
+        action_menu.add_command(label="Demand Note Payment")
+        action_menu.add_command(label="Set Property Tax")
+
 root = Tk()
-root.title("Fairwinds Game")
+root.geometry("600x400")
+
+app = Application(root)
 
 selected_market = IntVar()
 selected_side = IntVar()
 
-main_menu = Menu(root)
-action_menu = Menu(main_menu)
-
-main_menu.add_cascade(label="Actions", menu=action_menu)
-
-action_menu.add_command(label="Create Fairian")
-action_menu.add_command(label="Data Base Login Credentials")
-action_menu.add_command(label="Trade", command=trade_action)
-action_menu.add_command(label="Manage Labor Contracts")
-action_menu.add_command(label="Demand Note Payment")
-action_menu.add_command(label="Set Property Tax")
-
-root.config(menu=main_menu)
+trade_action()
 root.mainloop()
