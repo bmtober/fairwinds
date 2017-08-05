@@ -30,116 +30,106 @@ def parallelize(dictionary):
     return column_list[2:], value_list[2:]
 
 
-def trade_action():
-    markets = [
-        # Market name, DB Table
-        ("Finance", "bond"),
-        ("Real Estate", "land"),
-        ("Labor", "work"),
-        ("Commodity", "food"),
-        ("Debt", "note")
-        ]
+class trade_action(Frame):
 
-    sides = [
-        ("Buy", "bid"),
-        ("Sell", "ask")
-        ]
+    def __init__(self):
+        Frame.__init__(self, root)
 
-    def buildsqlinsert():
-        """ constructs a sql insert statement """
-        if not selected_market.get():
-            print("ERROR: Market not selected")
-            return
-        if not selected_side.get():
-            print("ERROR: Trade side not selected")
-            return
+        markets = [
+            # Market name, DB Table
+            ("Finance", "bond"),
+            ("Real Estate", "land"),
+            ("Labor", "work"),
+            ("Commodity", "food"),
+            ("Debt", "note")
+            ]
 
-        column_values = {}
+        sides = [
+            ("Buy", "bid"),
+            ("Sell", "ask")
+            ]
 
-        if price_entry.get():
-            column_values["price"] = price_entry.get()
-        if expiration_entry.get():
-            column_values["expiration"] = expiration_entry.get()
+        def buildsqlinsert():
+            """ constructs a sql insert statement """
+            if not selected_market.get():
+                print("ERROR: Market not selected")
+                return
+            if not selected_side.get():
+                print("ERROR: Trade side not selected")
+                return
 
-        column_list, value_list = parallelize(column_values)
+            column_values = {}
 
-        print("insert into {}_{} ({}) values ({});".format(
-                        markets[selected_market.get()-1][1],
-                        sides[selected_side.get()-1][1],
-                        column_list,
-                        value_list
-                        ))
+            if price_entry.get():
+                column_values["price"] = price_entry.get()
+            if expiration_entry.get():
+                column_values["expiration"] = expiration_entry.get()
 
-    trade_frame = Frame(app)
-    trade_frame.pack()
-    market_frame = LabelFrame(
-                trade_frame, text="Market", relief="raised", borderwidth=3)
-    market_frame.pack()
+            column_list, value_list = parallelize(column_values)
 
-    for k, market in enumerate(markets):
-        Radiobutton(
-                market_frame, text=market[0],
-                variable=selected_market, value=k+1).pack(anchor="w")
+            print("insert into {}_{} ({}) values ({});".format(
+                            markets[selected_market.get()-1][1],
+                            sides[selected_side.get()-1][1],
+                            column_list,
+                            value_list
+                            ))
 
-    side_frame = LabelFrame(
-                trade_frame, text="Trade Side", relief="raised", borderwidth=3)
-    side_frame.pack()
-
-    for k, side in enumerate(sides):
-        Radiobutton(
-                side_frame, text=side[0],
-                variable=selected_side, value=k+1).pack(anchor=W)
-
-    parameters_frame = LabelFrame(
-                trade_frame, text="Basic Parameters",
-                relief="raised", borderwidth=3)
-    parameters_frame.pack()
-
-    price_entry = LabelledEntry(parameters_frame, text="Price")
-    price_entry.pack()
-
-    expiration_entry = LabelledEntry(parameters_frame, text="Expiration")
-    expiration_entry.pack()
-
-    button_frame = Frame(trade_frame)
-    button_frame.pack(anchor="s", side=BOTTOM)
-
-    Button(button_frame, text="Exit", command=trade_frame.destroy).pack(side=LEFT, anchor="center")
-    Button(button_frame, text="Next", command=buildsqlinsert).pack(side=LEFT, anchor="center")
-
-
-class Application(Frame):
-
-    def __init__(self, owner=None):
-        Frame.__init__(self, owner)
-        self.owner = owner
-        self.init_window()
-
-    def init_window(self):
-        self.owner.title("Fairwinds Game")
         self.pack(fill=BOTH, expand=True)
+        market_frame = LabelFrame(
+                    self, text="Market", relief="raised", borderwidth=3)
+        market_frame.pack(side=TOP)
 
-        main_menu = Menu(self.owner)
-        self.owner.config(menu=main_menu)
+        for k, market in enumerate(markets):
+            Radiobutton(
+                    market_frame, text=market[0],
+                    variable=selected_market, value=k+1).pack(anchor="w")
 
-        action_menu = Menu(main_menu)
+        side_frame = LabelFrame(
+                    self, text="Trade Side", relief="raised", borderwidth=3)
+        side_frame.pack()
 
-        main_menu.add_cascade(label="Actions", menu=action_menu)
+        for k, side in enumerate(sides):
+            Radiobutton(
+                    side_frame, text=side[0],
+                    variable=selected_side, value=k+1).pack(anchor=W)
 
-        action_menu.add_command(label="Create Fairian")
-        action_menu.add_command(label="Data Base Login Credentials")
-        action_menu.add_command(label="Trade", command=trade_action)
-        action_menu.add_command(label="Manage Labor Contracts")
-        action_menu.add_command(label="Demand Note Payment")
-        action_menu.add_command(label="Set Property Tax")
+        parameters_frame = LabelFrame(
+                    self, text="Basic Parameters",
+                    relief="raised", borderwidth=3)
+        parameters_frame.pack()
+
+        price_entry = LabelledEntry(parameters_frame, text="Price")
+        price_entry.pack()
+
+        expiration_entry = LabelledEntry(parameters_frame, text="Expiration")
+        expiration_entry.pack()
+
+        button_frame = Frame(self)
+        button_frame.pack(anchor="s", side=BOTTOM)
+
+        Button(button_frame, text="Exit", command=self.destroy).pack(side=LEFT, anchor="center")
+        Button(button_frame, text="Next", command=buildsqlinsert).pack(side=LEFT, anchor="center")
+
 
 root = Tk()
 root.geometry("600x400")
+root.title("Fairwinds Game")
 
-app = Application(root)
+main_menu = Menu(root)
+root.config(menu=main_menu)
+
+action_menu = Menu(main_menu)
+
+main_menu.add_cascade(label="Actions", menu=action_menu)
+
+action_menu.add_command(label="Create Fairian")
+action_menu.add_command(label="Data Base Login Credentials")
+action_menu.add_command(label="Trade", command=trade_action)
+action_menu.add_command(label="Manage Labor Contracts")
+action_menu.add_command(label="Demand Note Payment")
+action_menu.add_command(label="Set Property Tax")
 
 selected_market = IntVar()
 selected_side = IntVar()
 
-trade_action()
 root.mainloop()
