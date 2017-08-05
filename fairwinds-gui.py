@@ -35,6 +35,9 @@ class trade_action(Frame):
     def __init__(self):
         Frame.__init__(self, root)
 
+        selected_market = IntVar()
+        selected_side = IntVar()
+
         markets = [
             # Market name, DB Table
             ("Finance", "bond"),
@@ -104,32 +107,34 @@ class trade_action(Frame):
         expiration_entry = LabelledEntry(parameters_frame, text="Expiration")
         expiration_entry.pack()
 
-        button_frame = Frame(self)
+        button_frame = Frame(self, borderwidth=3)
         button_frame.pack(anchor="s", side=BOTTOM)
 
         Button(button_frame, text="Exit", command=self.destroy).pack(side=LEFT, anchor="center")
         Button(button_frame, text="Next", command=buildsqlinsert).pack(side=LEFT, anchor="center")
 
 
-root = Tk()
-root.geometry("600x400")
-root.title("Fairwinds Game")
+class Application(Tk):
 
-main_menu = Menu(root)
-root.config(menu=main_menu)
+    def __init__(self):
+        Tk.__init__(self)
+        self.geometry("600x400")
+        self.title("Fairwinds Game")
 
-action_menu = Menu(main_menu)
+        main_menu = Menu(self)
+        self.config(menu=main_menu)
 
-main_menu.add_cascade(label="Actions", menu=action_menu)
+        action_menu = Menu(main_menu)
 
-action_menu.add_command(label="Create Fairian")
-action_menu.add_command(label="Data Base Login Credentials")
-action_menu.add_command(label="Trade", command=trade_action)
-action_menu.add_command(label="Manage Labor Contracts")
-action_menu.add_command(label="Demand Note Payment")
-action_menu.add_command(label="Set Property Tax")
+        main_menu.add_cascade(label="Actions", menu=action_menu)
 
-selected_market = IntVar()
-selected_side = IntVar()
+        action_menu.add_command(label="Create Fairian")
+        action_menu.add_command(label="Data Base Login Credentials")
+        action_menu.add_command(label="Trade", command=trade_action)
+        action_menu.add_command(label="Manage Labor Contracts")
+        action_menu.add_command(label="Demand Note Payment")
+        action_menu.add_command(label="Set Property Tax")
+    
 
+root = Application()
 root.mainloop()
