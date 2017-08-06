@@ -67,6 +67,7 @@ class Configure(Toplevel):
                 os.environ["PGUSER"] = fairian_entry.get()
             if password_entry.get():
                 os.environ["PGPASSWORD"] = password_entry.get()
+            self.destroy()
 
         Toplevel.__init__(self, root)
         self.transient(root)
@@ -75,13 +76,13 @@ class Configure(Toplevel):
 
         host_name_entry = LabelledEntry(self, text="Host", value=os.environ.get("PGHOST", ""))
         host_name_entry.pack()
+        host_name_entry.focus_set()
 
         dbname_name_entry = LabelledEntry(self, text="Data Base", value=os.environ.get("PGDATABASE", ""))
         dbname_name_entry.pack()
 
         fairian_entry = LabelledEntry(self, text="Fairian Name", value=os.environ.get("PGUSER", ""))
         fairian_entry.pack()
-        fairian_entry.focus_set()
 
         password_entry = LabelledEntry(self, text="Password", value=os.environ.get("PGPASSWORD", ""), show="*")
         password_entry.pack()
@@ -116,6 +117,7 @@ class CreateFairian(Toplevel):
                             value_list
                             ))
             os.environ["PGUSER"] = fairian_name
+            self.destroy()
 
         Toplevel.__init__(self, root)
         self.transient(root)
@@ -149,12 +151,12 @@ class LaborContracts(Toplevel):
             else:
                 work_place = "active = false"
 
-
             if contract_number_entry.get():
                 contract_number = contract_number_entry.get()
 
             executesql("update work set {} where contract_number = '{}'".format(
                         work_place, contract_number))
+            self.destroy()
 
         Toplevel.__init__(self, root)
         self.transient(root)
@@ -185,6 +187,7 @@ class NotePayment(Toplevel):
 
             executesql("update note set called = true where serial_number = '{}".format(
                             column_values))
+            self.destroy()
 
         Toplevel.__init__(self, root)
         self.transient(root)
@@ -212,6 +215,7 @@ class TaxRate(Toplevel):
 
             executesql("update fairian set mill_rate = '{}' where fairian_name = current_user;".format(
                             column_values))
+            self.destroy()
 
         Toplevel.__init__(self, root)
         self.transient(root)
@@ -231,6 +235,20 @@ class TaxRate(Toplevel):
 
 class TradeAction(Toplevel):
     def __init__(self):
+        markets = (
+            # Market name, DB Table, Bid Parameters, Ask Parameters
+            {"text": "Finance", "table": "bond", "bid": ("price", "expiration", "term"), "ask": ("price", "expiration", "term")},
+            {"text": "Real Estate", "table": "land", "bid": ("price", "expiration", "productivity"), "ask": ("price", "expiration", "serial_number")},
+            {"text": "Labor", "table": "work", "bid": ("price", "expiration", "skill_name", "term", "effectiveness"), "ask": ("price", "expiration", "skill_name", "term")},
+            {"text": "Commodity", "table": "food", "bid": ("price", "expiration", "quantity"), "ask": ("price", "expiration", "quantity")},
+            {"text": "Debt", "table": "note", "bid": ("price", "expiration", "serial_number"), "ask": ()}
+            )
+
+        sides = (
+            ("Buy", "bid"),
+            ("Sell", "ask")
+            )
+
         Toplevel.__init__(self, root)
         self.transient(root)
         self.title("Trading")
@@ -238,28 +256,8 @@ class TradeAction(Toplevel):
         selected_market = IntVar()
         selected_side = IntVar()
 
-        markets = [
-            # Market name, DB Table
-            ("Finance", "bond"),
-            ("Real Estate", "land"),
-            ("Labor", "work"),
-            ("Commodity", "food"),
-            ("Debt", "note")
-            ]
-
-        sides = [
-            ("Buy", "bid"),
-            ("Sell", "ask")
-            ]
-
         def buildsqlinsert():
             """ constructs a sql insert statement """
-            if not selected_market.get():
-                print("ERROR: Market not selected")
-                return
-            if not selected_side.get():
-                print("ERROR: Trade side not selected")
-                return
 
             column_values = {}
 
@@ -276,6 +274,42 @@ class TradeAction(Toplevel):
                             column_list,
                             value_list
                             ))
+            self.destroy()
+
+        class TradeParameters(Toplevel):
+            def __init__(self):
+                Toplevel.__init__(self, root)
+
+                market = selected_market.get()
+                if not market:
+                    print("ERROR: xMarket not selected")
+                    self.destroy()
+                    return
+                side = selected_side.get()
+                if not side:
+                    print("ERROR: xTrade side not selected")
+                    self.destroy()
+                    return
+
+                market = markets[market-1]
+                side = sides[side-1]
+
+                self.transient(root)
+                self.title("Parameters for {} {} Order".format(market["text"], side[0]))
+
+                controls = []
+                for p in market[side[1]]:
+                    c = LabelledEntry(self, p.replace("_", " "))
+                    controls.append(c)
+                    if len(controls) == 1:
+                        c.focus_set()
+                    c.pack()
+
+                button_frame = Frame(self, borderwidth=3)
+                button_frame.pack(anchor="s", side=BOTTOM)
+
+                Button(button_frame, text="Cancel", command=self.destroy).pack(side=LEFT, anchor="center")
+                Button(button_frame, text="Ok", command=None).pack(side=LEFT, anchor="center")
 
         market_frame = LabelFrame(
                     self, text="Market", relief="raised", borderwidth=2)
@@ -283,7 +317,7 @@ class TradeAction(Toplevel):
 
         for k, market in enumerate(markets):
             Radiobutton(
-                    market_frame, text=market[0],
+                    market_frame, text=market["text"],
                     variable=selected_market, value=k+1).pack(anchor="w")
 
         side_frame = LabelFrame(
@@ -295,22 +329,11 @@ class TradeAction(Toplevel):
                     side_frame, text=side[0],
                     variable=selected_side, value=k+1).pack(anchor=W)
 
-        parameters_frame = LabelFrame(
-                    self, text="Basic Parameters",
-                    relief="raised", borderwidth=2)
-        parameters_frame.pack()
-
-        price_entry = LabelledEntry(parameters_frame, text="Price")
-        price_entry.pack()
-
-        expiration_entry = LabelledEntry(parameters_frame, text="Expiration")
-        expiration_entry.pack()
-
         button_frame = Frame(self, borderwidth=3)
         button_frame.pack(anchor="s", side=BOTTOM)
 
         Button(button_frame, text="Exit", command=self.destroy).pack(side=LEFT, anchor="center")
-        Button(button_frame, text="Next", command=buildsqlinsert).pack(side=LEFT, anchor="center")
+        Button(button_frame, text="Next", command=TradeParameters).pack(side=LEFT, anchor="center")
 
 
 class Application(Tk):
