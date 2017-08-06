@@ -6,6 +6,7 @@ from tkinter import *
 
 def executesql(sql):
     cmd = ('psql -q <<< "\\set VERBOSITY terse\n\\set QUIET on\n{}"'.format(sql))
+    print(sql)
     os.system(cmd)
 
 
@@ -256,28 +257,31 @@ class TradeAction(Toplevel):
         selected_market = IntVar()
         selected_side = IntVar()
 
-        def buildsqlinsert():
-            """ constructs a sql insert statement """
-
-            column_values = {}
-
-            if price_entry.get():
-                column_values["price"] = price_entry.get()
-            if expiration_entry.get():
-                column_values["expiration"] = expiration_entry.get()
-
-            column_list, value_list = parallelize(column_values)
-
-            executesql("insert into {}_{} ({}) values ({});".format(
-                            markets[selected_market.get()-1][1],
-                            sides[selected_side.get()-1][1],
-                            column_list,
-                            value_list
-                            ))
-            self.destroy()
-
         class TradeParameters(Toplevel):
             def __init__(self):
+                def buildsql():
+                    """ constructs a sql insert statement """
+
+                    column_values = {}
+                    for f, c in controls:
+                        if c.get():
+                            column_values[f] = c.get()
+
+                    if column_values:
+                        column_list, value_list = parallelize(column_values)
+                        executesql("insert into {}_{} ({}) values ({});".format(
+                                    market["table"],
+                                    side[1],
+                                    column_list,
+                                    value_list
+                                    ))
+                    else:
+                        executesql("insert into {}_{} default values;".format(
+                                    market["table"],
+                                    side[1]
+                                    ))
+                    self.destroy()
+
                 Toplevel.__init__(self, root)
 
                 market = selected_market.get()
@@ -300,7 +304,7 @@ class TradeAction(Toplevel):
                 controls = []
                 for p in market[side[1]]:
                     c = LabelledEntry(self, p.replace("_", " "))
-                    controls.append(c)
+                    controls.append((p, c))
                     if len(controls) == 1:
                         c.focus_set()
                     c.pack()
@@ -309,7 +313,7 @@ class TradeAction(Toplevel):
                 button_frame.pack(anchor="s", side=BOTTOM)
 
                 Button(button_frame, text="Cancel", command=self.destroy).pack(side=LEFT, anchor="center")
-                Button(button_frame, text="Ok", command=None).pack(side=LEFT, anchor="center")
+                Button(button_frame, text="Ok", command=buildsql).pack(side=LEFT, anchor="center")
 
         market_frame = LabelFrame(
                     self, text="Market", relief="raised", borderwidth=2)
