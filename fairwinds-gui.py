@@ -72,13 +72,17 @@ class Configure(Toplevel):
         self.transient(root)
         self.title("Configuration")
         self.geometry("250x150")
+
         host_name_entry = LabelledEntry(self, text="Host", value=os.environ.get("PGHOST", ""))
         host_name_entry.pack()
+
         dbname_name_entry = LabelledEntry(self, text="Data Base", value=os.environ.get("PGDATABASE", ""))
         dbname_name_entry.pack()
+
         fairian_entry = LabelledEntry(self, text="Fairian Name", value=os.environ.get("PGUSER", ""))
         fairian_entry.pack()
         fairian_entry.focus_set()
+
         password_entry = LabelledEntry(self, text="Password", value=os.environ.get("PGPASSWORD", ""), show="*")
         password_entry.pack()
 
@@ -117,11 +121,14 @@ class CreateFairian(Toplevel):
         self.transient(root)
         self.title("Create Fairian")
         self.geometry("250x100")
+
         fairian_entry = LabelledEntry(self, text="Fairian Name", value=os.environ.get("PGUSER", ""))
         fairian_entry.pack()
         fairian_entry.focus_set()
+
         password_entry = LabelledEntry(self, text="Password", value=os.environ.get("PGPASSWORD", ""), show="*")
         password_entry.pack()
+
         email_address_entry = LabelledEntry(self, text="Email Address")
         email_address_entry.pack()
 
@@ -134,30 +141,65 @@ class CreateFairian(Toplevel):
 
 class LaborContracts(Toplevel):
     def __init__(self):
+        def buildsql():
+            """ constructs a sql insert statement """
+
+            if work_place_entry.get():
+                work_place = "work_place = '{}'".format(work_place_entry.get())
+            else:
+                work_place = "active = false"
+
+
+            if contract_number_entry.get():
+                contract_number = contract_number_entry.get()
+
+            executesql("update work set {} where contract_number = '{}'".format(
+                        work_place, contract_number))
+
         Toplevel.__init__(self, root)
         self.transient(root)
         self.title("Manage Labor Contracts")
-        self.geometry("250x100")
+        self.geometry("350x100")
+
+        work_place_entry = LabelledEntry(self, "Work Place")
+        work_place_entry.focus_set()
+        work_place_entry.pack()
+
+        contract_number_entry = LabelledEntry(self, "Contract Serial number")
+        contract_number_entry.pack()
 
         button_frame = Frame(self, borderwidth=3)
         button_frame.pack(anchor="s", side=BOTTOM)
 
         Button(button_frame, text="Exit", command=self.destroy).pack(side=LEFT, anchor="center")
-        Button(button_frame, text="Next", command=None).pack(side=LEFT, anchor="center")
+        Button(button_frame, text="Next", command=buildsql).pack(side=LEFT, anchor="center")
 
 
 class NotePayment(Toplevel):
     def __init__(self):
+        def buildsql():
+            """ constructs a sql insert statement """
+
+            if serial_number_entry.get():
+                column_values = serial_number_entry.get()
+
+            executesql("update note set called = true where serial_number = '{}".format(
+                            column_values))
+
         Toplevel.__init__(self, root)
         self.transient(root)
         self.title("Demand Note Payment")
         self.geometry("250x100")
 
+        serial_number_entry = LabelledEntry(self, "Serial number")
+        serial_number_entry.focus_set()
+        serial_number_entry.pack()
+
         button_frame = Frame(self, borderwidth=3)
         button_frame.pack(anchor="s", side=BOTTOM)
 
         Button(button_frame, text="Exit", command=self.destroy).pack(side=LEFT, anchor="center")
-        Button(button_frame, text="Next", command=None).pack(side=LEFT, anchor="center")
+        Button(button_frame, text="Ok", command=buildsql).pack(side=LEFT, anchor="center")
 
 
 class TaxRate(Toplevel):
@@ -177,6 +219,7 @@ class TaxRate(Toplevel):
         self.geometry("300x100")
 
         property_tax_entry = LabelledEntry(self, "Property tax mill rate")
+        property_tax_entry.focus_set()
         property_tax_entry.pack()
 
         button_frame = Frame(self, borderwidth=3)
