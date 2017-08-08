@@ -22,6 +22,34 @@ def center_window(window, width=300, height=200):
     window.geometry('%dx%d+%d+%d' % (width, height, x, y))
 
 
+class RadioButtonGroup(LabelFrame):
+    """ defines a frame containing radio buttons """
+    def __init__(self, owner, text="", relief="raised", borderwidth=2):
+        super().__init__(owner, text=text, relief=relief, borderwidth=borderwidth)
+        self.buttons = []
+        self._selected_button = IntVar()
+
+    def pack(self, side=TOP):
+        super().pack()
+        for r in self.buttons:
+            r.pack()
+
+    def add(self, text):
+        r = Radiobutton(
+                    self, text=text,
+                    variable=self._selected_button, value=len(self.buttons)+1)
+        r.pack(anchor="w")
+        self.buttons.append(r)
+
+    @property
+    def selected(self):
+        return self._selected_button.get()-1
+
+    @selected.setter
+    def selected(self, selected):
+        self._selected_button = selected + 1
+
+
 class LabelledEntry:
     """ defines a class included both a label and an entry """
     def __init__(self, owner, text="", value="", show=""):
@@ -250,13 +278,6 @@ class TradeAction(Toplevel):
             ("Sell", "ask")
             )
 
-        Toplevel.__init__(self, root)
-        self.transient(root)
-        self.title("Trading")
-
-        selected_market = IntVar()
-        selected_side = IntVar()
-
         class TradeParameters(Toplevel):
             def __init__(self):
                 def buildsql():
@@ -284,14 +305,14 @@ class TradeAction(Toplevel):
 
                 Toplevel.__init__(self, root)
 
-                market = selected_market.get()
+                market = market_frame.selected
                 if not market:
-                    print("ERROR: xMarket not selected")
+                    print("ERROR: Market not selected")
                     self.destroy()
                     return
                 side = selected_side.get()
                 if not side:
-                    print("ERROR: xTrade side not selected")
+                    print("ERROR: Trade side not selected")
                     self.destroy()
                     return
 
@@ -315,14 +336,18 @@ class TradeAction(Toplevel):
                 Button(button_frame, text="Cancel", command=self.destroy).pack(side=LEFT, anchor="center")
                 Button(button_frame, text="Ok", command=buildsql).pack(side=LEFT, anchor="center")
 
-        market_frame = LabelFrame(
-                    self, text="Market", relief="raised", borderwidth=2)
-        market_frame.pack(side=TOP)
+        Toplevel.__init__(self, root)
+        self.transient(root)
+        self.title("Trading")
+
+        selected_side = IntVar()
+
+        #market_frame = RadioButtonGroup(self, "Market", "raised", 2)
+        market_frame = RadioButtonGroup(self)
 
         for k, market in enumerate(markets):
-            Radiobutton(
-                    market_frame, text=market["text"],
-                    variable=selected_market, value=k+1).pack(anchor="w")
+            market_frame.add(market["text"])
+        market_frame.pack()
 
         side_frame = LabelFrame(
                     self, text="Trade Side", relief="raised", borderwidth=2)
