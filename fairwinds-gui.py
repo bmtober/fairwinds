@@ -5,9 +5,7 @@ from tkinter import *
 
 
 def executesql(sql):
-    cmd = ('psql -q <<< "\\set VERBOSITY terse\n\\set QUIET on\n{}"'.format(sql))
-    ofile.write(sql)
-    return
+    cmd = ('psql -q <<< "\\set VERBOSITY terse\n\\set QUIET on\n{}\n"'.format(sql))
     print(sql)
     os.system(cmd)
 
@@ -363,7 +361,5 @@ class Application(Tk):
         action_menu.add_command(label="Demand Note Payment", command=NotePayment)
         action_menu.add_command(label="Set Property Tax", command=TaxRate)
 
-ofile = open("ipc", "w")
 root = Application()
 root.mainloop()
-ofile.close()
