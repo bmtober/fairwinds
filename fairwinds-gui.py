@@ -307,7 +307,7 @@ class TradeAction(Toplevel):
                                     ))
                     self.destroy()
 
-                Toplevel.__init__(self, root)
+                Toplevel.__init__(self)
 
                 market = market_frame.selected
                 if not market:
@@ -323,7 +323,7 @@ class TradeAction(Toplevel):
                 market = markets[market-1]
                 side = sides[side-1]
 
-                self.transient(root)
+                self.transient(self.master)
                 self.title("Parameters for {} {} Order".format(market["text"], side["text"]))
 
                 controls = []
