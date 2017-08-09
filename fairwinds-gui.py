@@ -340,7 +340,7 @@ class TradeAction(Toplevel):
                 Button(button_frame, text="Cancel", command=self.destroy).pack(side=LEFT, anchor="center")
                 Button(button_frame, text="Ok", command=buildsql).pack(side=LEFT, anchor="center")
 
-        Toplevel.__init__(self, root)
+        super().__init__(root)
         self.transient(root)
         self.title("Trading")
 
