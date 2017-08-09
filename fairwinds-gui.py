@@ -7,7 +7,11 @@ from tkinter import *
 def executesql(sql):
     cmd = ('psql -q <<< "\\set VERBOSITY terse\n\\set QUIET on\n{}\n"'.format(sql))
     print(sql)
-    os.system(cmd)
+    return
+    try:
+        os.system(cmd)
+    except SyntaxError:
+        pass
 
 
 def center_window(window, width=300, height=200):
@@ -43,11 +47,11 @@ class RadioButtonGroup(LabelFrame):
 
     @property
     def selected(self):
-        return self._selected_button.get()-1
+        return self._selected_button.get()
 
     @selected.setter
-    def selected(self, selected):
-        self._selected_button = selected + 1
+    def selected(self, x):
+        self._selected_button = x
 
 
 class LabelledEntry:
@@ -274,8 +278,8 @@ class TradeAction(Toplevel):
             )
 
         sides = (
-            ("Buy", "bid"),
-            ("Sell", "ask")
+            {"text": "Buy", "trade_side":"bid"},
+            {"text": "Sell", "trade_side": "ask"}
             )
 
         class TradeParameters(Toplevel):
@@ -292,14 +296,14 @@ class TradeAction(Toplevel):
                         column_list, value_list = parallelize(column_values)
                         executesql("insert into {}_{} ({}) values ({});".format(
                                     market["table"],
-                                    side[1],
+                                    side["trade_side"],
                                     column_list,
                                     value_list
                                     ))
                     else:
                         executesql("insert into {}_{} default values;".format(
                                     market["table"],
-                                    side[1]
+                                    side["trade_side"]
                                     ))
                     self.destroy()
 
@@ -310,7 +314,7 @@ class TradeAction(Toplevel):
                     print("ERROR: Market not selected")
                     self.destroy()
                     return
-                side = selected_side.get()
+                side = side_frame.selected
                 if not side:
                     print("ERROR: Trade side not selected")
                     self.destroy()
@@ -320,10 +324,10 @@ class TradeAction(Toplevel):
                 side = sides[side-1]
 
                 self.transient(root)
-                self.title("Parameters for {} {} Order".format(market["text"], side[0]))
+                self.title("Parameters for {} {} Order".format(market["text"], side["text"]))
 
                 controls = []
-                for p in market[side[1]]:
+                for p in market[side["trade_side"]]:
                     c = LabelledEntry(self, p.replace("_", " "))
                     controls.append((p, c))
                     if len(controls) == 1:
@@ -342,21 +346,18 @@ class TradeAction(Toplevel):
 
         selected_side = IntVar()
 
-        #market_frame = RadioButtonGroup(self, "Market", "raised", 2)
-        market_frame = RadioButtonGroup(self)
+        market_frame = RadioButtonGroup(self, text="Market", relief="raised", borderwidth=2)
 
-        for k, market in enumerate(markets):
+        for market in markets:
             market_frame.add(market["text"])
         market_frame.pack()
 
-        side_frame = LabelFrame(
+        side_frame = RadioButtonGroup(
                     self, text="Trade Side", relief="raised", borderwidth=2)
-        side_frame.pack()
 
-        for k, side in enumerate(sides):
-            Radiobutton(
-                    side_frame, text=side[0],
-                    variable=selected_side, value=k+1).pack(anchor=W)
+        for side in sides:
+            side_frame.add(side["text"])
+        side_frame.pack()
 
         button_frame = Frame(self, borderwidth=3)
         button_frame.pack(anchor="s", side=BOTTOM)
