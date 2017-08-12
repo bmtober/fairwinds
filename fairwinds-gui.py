@@ -7,7 +7,6 @@ from tkinter import *
 def executesql(sql):
     cmd = ('psql -q <<< "\\set VERBOSITY terse\n\\set QUIET on\n{}\n"'.format(sql))
     print(sql)
-    return
     try:
         os.system(cmd)
     except SyntaxError:
